@@ -121,3 +121,6 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,java,gradle
+
+# 무시 규칙
+*.properties
