@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>베베접종수첩 - 메인페이지</title>
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f9fafb;
+      color: #333;
+      line-height: 1.5;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 12px;
+      color: #2a4d8f;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    /* 대시보드 영역 */
+    .dashboard {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      flex: 1 1 280px;
+      min-width: 250px;
+    }
+    .card h3 {
+      margin-bottom: 15px;
+      color: #336699;
+    }
+    /* 애기정보 스타일 */
+    .baby-info {
+      font-size: 16px;
+    }
+    .baby-info div {
+      margin-bottom: 8px;
+    }
+    /* 병원 리스트 스타일 */
+    .hospital-list {
+      list-style: none;
+      max-height: 150px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    .hospital-list li {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
+      font-weight: 500;
+    }
+    /* 예약 병원 스타일 */
+    .appointment-list {
+      list-style: none;
+      max-height: 150px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    .appointment-list li {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
+      color: #555;
+    }
+
+    /* -------------------------------- */
+    /* 접종스케줄 표 스타일 */
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 60px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 5px;
+      vertical-align: middle;
+      word-wrap: break-word;
+    }
+    thead th {
+      background: #bee6f7;
+      font-weight: 600;
+    }
+    /* 첫 번째 열 스타일 */
+    tbody tr td:first-child {
+      background: #fff0d4;
+      font-weight: 700;
+      white-space: nowrap;
+      text-align: left;
+      padding-left: 10px;
+      width: 180px;
+    }
+    /* 두 번째 열 (백신종류) */
+    tbody tr td:nth-child(2) {
+      background: #f5fddb;
+      text-align: left;
+      padding-left: 10px;
+      width: 160px;
+    }
+    /* 회색 음영 접종 시기 셀 */
+    .vaccination-cell {
+      background-color: #999999;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1.3;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>베베접종수첩 대시보드</h2>
+    <div class="dashboard">
+      <!-- 애기정보 -->
+      <section class="card baby-info">
+        <h3>애기 정보</h3>
+        <div>이름: 김하늘</div>
+        <div>생년월일: 2024-06-15</div>
+        <div>성별: 남아</div>
+        <div>몸무게: 7.5kg</div>
+        <div>키: 65cm</div>
+      </section>
+
+    </div>
+
+    <div class="dashboard">
+      <!-- 예약한 병원 -->
+      <section class="card appointment">
+        <h3>예약한 병원</h3>
+        <ul class="appointment-list">
+          <li>2025-06-10 - 강남어린이병원</li>
+          <li>2025-07-01 - 서울소아과</li>
+        </ul>
+      </section>
+
+      <!-- 즐겨찾기 순위 병원 -->
+      <section class="card favorite-hospitals">
+        <h3>즐겨찾기 순위 병원</h3>
+        <ul class="hospital-list">
+          <li>서울소아과</li>
+          <li>강남어린이병원</li>
+          <li>행복소아과</li>
+        </ul>
+      </section>
+
+      <!-- 영업중인 병원 -->
+      <section class="card open-hospitals">
+        <h3>영업중인 병원</h3>
+        <ul class="hospital-list">
+          <li>맘편한소아과</li>
+          <li>우리동네소아과</li>
+          <li>아이사랑병원</li>
+        </ul>
+      </section>
+    </div>
+
+    <h2>접종 스케줄 표</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>대상전염병명</th>
+          <th>백신종류 및 방법</th>
+          <th>0개월</th>
+          <th>1개월</th>
+          <th>2개월</th>
+          <th>4개월</th>
+          <th>6개월</th>
+          <th>12개월</th>
+          <th>15개월</th>
+          <th>18개월</th>
+          <th>24개월</th>
+          <th>36개월</th>
+          <th>만4세</th>
+          <th>만6세</th>
+          <th>만11세</th>
+          <th>만12세</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>결핵</td>
+          <td>BCG(피내용)</td>
+          <td class="vaccination-cell">1차</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td rowspan="3">B형간염</td>
+          <td>Hep B</td>
+          <td class="vaccination-cell">1차</td>
+          <td class="vaccination-cell">2차</td>
+          <td></td>
+          <td></td>
+          <td class="vaccination-cell">3차</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td>DtaP</td>
+          <td></td>
+          <td class="vaccination-cell">1차</td>
+          <td class="vaccination-cell">2차</td>
+          <td class="vaccination-cell">3차</td>
+          <td></td>
+          <td class="vaccination-cell">4차<br>추가 1차</td>
+          <td></td><td></td><td></td>
+          <td class="vaccination-cell">5차<br>추가 2차</td>
+          <td></td><td></td><td></td><td class="vaccination-cell">6차</td>
+        </tr>
+        <tr>
+          <td>IPV(사백신)</td>
+          <td></td><td class="vaccination-cell">1차</td><td class="vaccination-cell">2차</td><td class="vaccination-cell">3차</td><td class="vaccination-cell">4차</td><td></td><td></td><td></td>
+          <td class="vaccination-cell">4차<br>추가 1차</td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <!-- 추가 접종 항목은 여기에 계속 넣으면 됩니다 -->
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
