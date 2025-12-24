@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>베베 접종 수첩</title>
 <link rel="stylesheet" href="/css/main/main.css" />
-<div th:replace="~{fragments/header::header}"></div>
 <link rel="stylesheet" href="/css/fragments/header.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
   integrity="sha512-..."
@@ -14,6 +13,10 @@
 
 </head>
 <body>
+	<!-- header -->
+	<div th:replace="~{fragments/header::header}"></div>
+
+	
     <div class="container">
         <div class="top-row">
             <div class="baby-info-card">
@@ -69,5 +72,9 @@
             <div class="main-subtitle">(마이페이지 접종수첩 약간 요약해서 삽입)</div>
         </div>
     </div>
+	
+	<!-- footer -->
+	<div th:replace="~{fragments/footer::footer}"></div>
+
 </body>
 </html>

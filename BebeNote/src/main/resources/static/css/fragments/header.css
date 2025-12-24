@@ -34,9 +34,10 @@
 
           .nav-item {
               text-decoration: none;
-              color: #666;
+              color: #424242;
               font-size: 16px;
               transition: color 0.2s;
+			  font-weight: 300;
           }
 
           .nav-item:hover {
