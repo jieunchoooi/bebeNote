@@ -36,6 +36,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/","/login/**","/insert/**","/insertPro/**").permitAll()
 						.requestMatchers("/index2/**").permitAll()
+						.requestMatchers("/img/**","/css/**","/js/**","/uploadPath/**").permitAll()
 						.requestMatchers("/main/**").hasAnyRole("USER","ADMIN")
 						.requestMatchers("/list/**").hasRole("ADMIN")
 						.anyRequest()
