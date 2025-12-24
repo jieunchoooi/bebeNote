@@ -1,9 +1,6 @@
-<!-- signup-modal.html -->
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    <style>
-        /* 모달 스타일 */
+/*회원가입 모달*/
+
+/* 모달 오버레이 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -18,12 +15,12 @@
         }
 
         .modal-overlay.active {
-            display: flex;
+            display: flex !important;
         }
 
+        /* 모달 컨테이너 */
         .modal-container {
             background: white;
-            border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
             width: 100%;
             max-width: 450px;
@@ -43,6 +40,7 @@
             }
         }
 
+        /* 모달 헤더 */
         .modal-header {
             background: linear-gradient(135deg, #f3d5d5 0%, #deaaaa 100%);
             padding: 30px;
@@ -57,12 +55,43 @@
             letter-spacing: 2px;
         }
 
+        /* 모달 바디 */
         .modal-body {
             padding: 40px 35px;
         }
 
+        /* 폼 그룹 */
         .form-group {
             margin-bottom: 24px;
+        }
+
+        /* 아이디 입력란과 중복확인 버튼을 위한 flex 레이아웃 */
+        .input-with-button {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .input-with-button .form-input {
+            flex: 1;
+        }
+
+        .input-with-button .btn-check {
+            padding: 14px 20px;
+            background: #deaaaa;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .input-with-button .btn-check:hover {
+            background: #d39999;
+            transform: translateY(-1px);
         }
 
         .form-label {
@@ -77,7 +106,7 @@
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 15px;
             transition: all 0.3s;
             background: #fafafa;
@@ -94,6 +123,7 @@
             color: #bdbdbd;
         }
 
+        /* 체크박스 */
         .checkbox-group {
             display: flex;
             align-items: center;
@@ -114,6 +144,7 @@
             cursor: pointer;
         }
 
+        /* 버튼 */
         .button-group {
             display: flex;
             gap: 12px;
@@ -124,7 +155,7 @@
             flex: 1;
             padding: 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
@@ -152,6 +183,7 @@
             background: #e0e0e0;
         }
 
+        /* 헬퍼 링크 */
         .helper-links {
             text-align: center;
             margin-top: 20px;
@@ -171,86 +203,68 @@
             text-decoration: underline;
         }
 
+        /* 필수 표시 */
         .required {
             color: #ff6b6b;
             margin-left: 3px;
         }
 
-        .error-message {
-            color: #ff6b6b;
-            font-size: 13px;
-            margin-top: 5px;
-            display: none;
-        }
+/*회원가입 모달 끝*/
 
-        .error-message.active {
-            display: block;
-        }
-    </style>
-</head>
 
-<body>
-    <!-- 회원가입 모달 -->
-    <div id="insertModal" class="modal-overlay" th:fragment="insertModal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2 class="modal-title">회원가입</h2>
-            </div>
-            
-            <div class="modal-body">
-                <form id="signupForm" th:action="@{/signup}" method="post">
-                    <div class="form-group">
-                        <label class="form-label" for="name">이름<span class="required">*</span></label>
-                        <input type="text" class="form-input" id="name" name="name"
-                               placeholder="이름을 입력하세요" required>
-                    </div>
+/*로그인 모달*/
+.login-modal .modal-container {
+    max-width: 380px;
+}
 
-                    <div class="form-group">
-                        <label class="form-label" for="phone">전화번호<span class="required">*</span></label>
-                        <input type="tel" class="form-input" id="phone" name="phone"
-                               placeholder="010-0000-0000" required>
-                    </div>
+.login-modal .modal-body {
+    padding: 30px;
+}
 
-                    <div class="form-group">
-                        <label class="form-label" for="address">주소<span class="required">*</span></label>
-                        <input type="text" class="form-input" id="address" name="address"
-                               placeholder="주소를 입력하세요" required>
-                    </div>
+.login-modal .form-group {
+    margin-bottom: 20px;
+}
 
-                    <div class="form-group">
-                        <label class="form-label" for="detailAddress">상세주소</label>
-                        <input type="text" class="form-input" id="detailAddress" name="detailAddress"
-                               placeholder="상세주소를 입력하세요">
-                    </div>
+.login-modal .helper-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
 
-                    <div class="form-group">
-                        <label class="form-label" for="email">이메일<span class="required">*</span></label>
-                        <input type="email" class="form-input" id="email" name="email"
-                               placeholder="example@email.com" required>
-                    </div>
+.login-modal .helper-button {
+    padding: 8px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: white;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
 
-                    <div class="form-group">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="agree" name="agree" class="checkbox-input" required>
-                            <label for="agree" class="checkbox-label">동의합니까 (체크)</label>
-                        </div>
-                    </div>
+.login-modal .helper-button:hover {
+    background: #f5f5f5;
+    border-color: #deaaaa;
+    color: #deaaaa;
+}
 
-                    <div class="button-group">
-                        <button type="button" class="btn btn-secondary" onclick="closeInsertModal()">
-                            <i class="fa-solid fa-xmark"></i> 취소
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa-solid fa-check"></i> 회원가입
-                        </button>
-                    </div>
+.login-modal .signup-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #999;
+}
 
-                    <div class="helper-links">
-                        <a href="#" class="helper-link">이미 회원이신가요? 로그인</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+.login-modal .signup-link a {
+    color: #deaaaa;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-modal .signup-link a:hover {
+    text-decoration: underline;
+}
+
+
+
