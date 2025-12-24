@@ -32,7 +32,8 @@ body {
 .profile-section {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 50px;
+	height: 206px;
 }
 
 .profile-image {
