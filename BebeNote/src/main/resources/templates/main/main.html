@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>베베 접종 수첩</title>
-<link rel="stylesheet" href="/css/main/main.css" />
-<div th:replace="~{fragments/header::header}"></div>
-<link rel="stylesheet" href="/css/fragments/header.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  integrity="sha512-..."
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"/>
-
+    <link rel="stylesheet" href="/css/main/main.css" />
+    <link rel="stylesheet" href="/css/fragments/header.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 </head>
 <body>
+    <!-- 헤더 -->
+    <div th:replace="~{fragments/header::header}"></div>
+    
+    <!-- 회원가입 모달 -->
+    <div th:replace="~{login/insertModal::insertModal}"></div>
+    
     <div class="container">
         <div class="top-row">
             <div class="baby-info-card">
-<!--                <div class="sidebar-label">애기2명 이상이면</div>-->
                 <div class="profile-section">
                     <div class="profile-image"><i class="fa-solid fa-user"></i></div>
                     <div class="profile-info">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="ai-content">
                     <div class="ai-message">
-                        <span class="ai-highlight">B형간염 2차</span> 접종을 
+                        <span class="ai-highlight">B형간염 2차</span> 접종을
                         <span class="ai-date">1/30 정도</span>에 접종하는 것을 추천합니다
                     </div>
                     <div class="ai-action">
@@ -52,22 +52,74 @@
                 <div class="card-title">예약한 병원<br>(시간)</div>
                 <div class="card-content"></div>
             </div>
-            
+
             <div class="card">
                 <div class="card-title">근처 소아과</div>
                 <div class="card-content">지은소아과<br>현신소아과<br>동래이동병원</div>
             </div>
-            
+
             <div class="card">
                 <div class="card-title">진료중인<br>소아과</div>
                 <div class="card-content"></div>
             </div>
         </div>
-        
+
         <div class="main-section">
             <div class="main-title">접종 수첩</div>
             <div class="main-subtitle">(마이페이지 접종수첩 약간 요약해서 삽입)</div>
         </div>
     </div>
+
+    <script>
+        function openInsertModal() {
+            const modal = document.getElementById('insertModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeInsertModal() {
+            const modal = document.getElementById('insertModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // DOM 로드 후 이벤트 리스너 등록
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('insertModal');
+            
+            if (modal) {
+                // 모달 외부 클릭 시 닫기
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeInsertModal();
+                    }
+                });
+            }
+
+            // ESC 키로 모달 닫기
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeInsertModal();
+                }
+            });
+
+            // 폼 제출 전 유효성 검사
+            const form = document.getElementById('signupForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const checkbox = document.getElementById('agree');
+                    if (checkbox && !checkbox.checked) {
+                        e.preventDefault();
+                        alert('약관에 동의해주세요.');
+                        return false;
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
