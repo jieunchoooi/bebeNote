@@ -1,9 +1,29 @@
-<!--footer.html-->
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
-	  
-<div th:fragment="footer" class="footer">
-	<h1>2025 Spring Boot Site</h1>
+<!-- templates/fragments/footer.html -->
+<div th:fragment="footer">
+    <footer class="footer">
+
+        <!-- 상단 링크 영역 -->
+        <div class="footer-top">
+            <a href="#">개인정보처리방침</a>
+            <a href="#">이용약관</a>
+            <a href="#">고객센터</a>
+            <a href="#">We Are Hiring</a>
+        </div>
+
+        <!-- 하단 회사 정보 -->
+        <div class="footer-info">
+            <span>(주) bebeNote</span>
+            <span>대표자 : 홍길동</span>
+            <span>사업자등록번호 : 123-45-67890</span>
+            <span>사업자 정보 확인</span><br/>
+
+            <span>통신판매업 신고번호 : 2025-서울강남-0001</span>
+            <span>개인정보보호책임자 : 홍길동</span>
+            <span>이메일 : support@bebenote.com</span><br/>
+
+            <span>고객센터 : 02-1234-5678</span>
+            <span>주소 : 서울특별시 강남구 테헤란로 123</span>
+        </div>
+		
+    </footer>
 </div>
-	  	
-</html>
