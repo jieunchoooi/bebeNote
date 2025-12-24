@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Malgun Gothic', sans-serif;
-    padding: 20px;
+/*    padding: 20px;*/
 /*    background: #f7f9fa;*/
 }
 
@@ -46,6 +46,14 @@ body {
     justify-content: center;
     font-size: 48px;
     flex-shrink: 0;
+}
+
+.fa-user{
+	color: white;
+}
+
+.fa-robot{
+	color: #424242;
 }
 
 .profile-info {
@@ -98,7 +106,7 @@ body {
 .ai-title {
     font-size: 22px;
     font-weight: bold;
-    color: white;
+    color: #424242;
 }
 
 .ai-content {
@@ -146,6 +154,7 @@ body {
 .ai-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(168, 157, 199, 0.4);
+	background: #DEAAAA;
 }
 
 .middle-row {
