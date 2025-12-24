@@ -1,0 +1,291 @@
+/*회원가입 모달*/
+
+/* 모달 오버레이 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex !important;
+        }
+
+        /* 모달 컨테이너 */
+        .modal-container {
+            background: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 모달 헤더 */
+        .modal-header {
+            background: #deaaaa;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 2px;
+        }
+
+        /* 모달 바디 */
+        .modal-body {
+            padding: 40px 35px;
+        }
+
+        /* 폼 그룹 */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        /* 아이디 입력란과 중복확인 버튼을 위한 flex 레이아웃 */
+        .input-with-button {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .input-with-button .form-input {
+            flex: 1;
+        }
+
+        .input-with-button .btn-check {
+            padding: 14px 20px;
+            background: #deaaaa;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .input-with-button .btn-check:hover {
+            background: #d39999;
+            transform: translateY(-1px);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #424242;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #deaaaa;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(222, 170, 170, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #bdbdbd;
+        }
+
+        /* 체크박스 */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+        }
+
+        .checkbox-input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #deaaaa;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* 버튼 */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 35px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #deaaaa;
+            color: white;
+            box-shadow: 0 4px 12px rgba(222, 170, 170, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #d39999;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(222, 170, 170, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #757575;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* 헬퍼 링크 */
+        .helper-links {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+			color: #999;
+			font-size: 13px;
+        }
+
+        .helper-link {
+            font-size: 13px;
+            color: #deaaaa;
+            text-decoration: none;
+            margin: 0 8px;
+			font-weight: 600;
+        }
+
+        .helper-link:hover {
+            color: #deaaaa;
+            text-decoration: underline;
+        }
+
+        /* 필수 표시 */
+        .required {
+            color: #ff6b6b;
+            margin-left: 3px;
+        }
+
+/*		X 모양*/
+		.modal-close {
+		    position: absolute;
+		    top: 20px;
+		    right: 20px;
+		    background: #DEAAAA;
+		    border: none;
+		    width: 36px;
+		    height: 36px;
+		    border-radius: 50%;
+		    cursor: pointer;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    transition: all 0.3s;
+		    color: white;
+		    font-size: 18px;
+		}
+/*회원가입 모달 끝*/
+
+
+/*로그인 모달*/
+.login-modal .modal-container {
+    max-width: 380px;
+}
+
+.login-modal .modal-body {
+    padding: 30px;
+}
+
+.login-modal .form-group {
+    margin-bottom: 20px;
+}
+
+.login-modal .helper-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.login-modal .helper-button {
+    padding: 8px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: white;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.login-modal .helper-button:hover {
+    background: #f5f5f5;
+    border-color: #deaaaa;
+    color: #deaaaa;
+}
+
+.login-modal .signup-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #999;
+}
+
+.login-modal .signup-link a {
+    color: #deaaaa;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-modal .signup-link a:hover {
+    text-decoration: underline;
+}
+
+/*로그인 모달 끝*/
+

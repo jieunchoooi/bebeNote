@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>베베 접종 수첩</title>
 <link rel="stylesheet" href="/css/main/main.css" />
+<link rel="stylesheet" href="/css/login/insertModal.css" />
 <link rel="stylesheet" href="/css/fragments/layout.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
   integrity="sha512-..."
@@ -17,8 +18,11 @@
 	<div th:replace="~{fragments/header::header}"></div>
 	
     <!-- 회원가입 모달 -->
-    <div th:replace="~{login/insertModal::insertModal}"></div>
-    
+    <div th:replace="~{fragments/insertModal::insertModal}"></div>
+	
+<!--	로그인 모달-->
+	<div th:replace="~{fragments/loginModal::loginModal}"></div>    
+
     <div class="container">
         <div class="top-row">
             <div class="baby-info-card">
@@ -75,6 +79,7 @@
     </div>
 
     <script>
+	// 회원가입 모달 스크립트 
         function openInsertModal() {
             const modal = document.getElementById('insertModal');
             if (modal) {
@@ -124,6 +129,52 @@
                 });
             }
         });
+	// 회원가입 모달 스크립트 끝 
+		
+	// 로그인 모달
+	function openLoginModal(){
+	    const modal = document.getElementById("loginModal"); // . 제거
+	    if(modal){
+	        modal.classList.add('active');
+	        document.body.style.overflow = 'hidden';
+	    }
+	}
+
+	function closeLoginModal() {
+	    const modal = document.getElementById('loginModal');
+	    if (modal) {
+	        modal.classList.remove('active');
+	        document.body.style.overflow = 'auto';
+	    }
+	}
+
+	// DOM 로드 후 이벤트 리스너 등록
+	document.addEventListener('DOMContentLoaded', function() {
+	    const modal = document.getElementById('loginModal');
+
+	    if (modal) {
+	        // 모달 외부 클릭 시 닫기
+	        modal.addEventListener('click', function(e) {
+	            if (e.target === this) {
+	                closeLoginModal(); // 수정
+	            }
+	        });
+	    }
+
+	    // ESC 키로 모달 닫기
+	    document.addEventListener('keydown', function(e) {
+	        if (e.key === 'Escape') {
+	            closeLoginModal(); // 수정
+	        }
+	    });
+	});
+	
+	
+	
+	
+	
+	
+		
     </script>
 	
 	<!-- footer -->
