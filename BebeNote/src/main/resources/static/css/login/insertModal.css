@@ -42,7 +42,7 @@
 
         /* 모달 헤더 */
         .modal-header {
-            background: linear-gradient(135deg, #f3d5d5 0%, #deaaaa 100%);
+            background: #deaaaa;
             padding: 30px;
             text-align: center;
             position: relative;
@@ -189,13 +189,16 @@
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #f0f0f0;
+			color: #999;
+			font-size: 13px;
         }
 
         .helper-link {
             font-size: 13px;
-            color: #999;
+            color: #deaaaa;
             text-decoration: none;
             margin: 0 8px;
+			font-weight: 600;
         }
 
         .helper-link:hover {
@@ -209,6 +212,24 @@
             margin-left: 3px;
         }
 
+/*		X 모양*/
+		.modal-close {
+		    position: absolute;
+		    top: 20px;
+		    right: 20px;
+		    background: #DEAAAA;
+		    border: none;
+		    width: 36px;
+		    height: 36px;
+		    border-radius: 50%;
+		    cursor: pointer;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    transition: all 0.3s;
+		    color: white;
+		    font-size: 18px;
+		}
 /*회원가입 모달 끝*/
 
 
@@ -266,5 +287,5 @@
     text-decoration: underline;
 }
 
-
+/*로그인 모달 끝*/
 
