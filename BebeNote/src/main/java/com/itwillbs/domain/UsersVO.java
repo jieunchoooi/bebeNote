@@ -1,5 +1,7 @@
 package com.itwillbs.domain;
 
+import java.security.Timestamp;
+
 import groovy.transform.ToString;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +17,9 @@ public class UsersVO {
 	private String name;
 	private String phone;
 	private String provider;
-	private String created_at;
-	private String updated_at;
+	private String role;
+	private Timestamp created_at;
+	private Timestamp updated_at;
 		
 		
 
