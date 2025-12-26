@@ -16,18 +16,20 @@ public class headerMenuController {
 
 	@GetMapping("/bookmark")
 	public String bookmark() {
-		
+		System.out.println("headerMenuController bookmark()");
 		return "/headerMenu/bookmark";
 	}
 	
 	@GetMapping("/nearHospital")
 	public String nearHospital() {
+		System.out.println("headerMenuController nearHospital()");
 		
 		return "/headerMenu/nearHospital";
 	}
 	
 	@GetMapping("/openHospital")
 	public String openHospital() {
+		System.out.println("headerMenuController openHospital()");
 		
 		return "/headerMenu/openHospital";
 	}
