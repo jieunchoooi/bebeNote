@@ -183,11 +183,7 @@
     background: #e0e0e0;
 }
 
-<<<<<<< HEAD
 
-=======
-
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 /* 헬퍼 링크 */
 .signup-helper-links {
     text-align: center;
@@ -198,22 +194,14 @@
     font-size: 13px;
 }
 
-<<<<<<< HEAD
 
-=======
-
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 .signup-helper-link {
     font-size: 13px;
     color: #deaaaa;
     text-decoration: none;
     margin: 0 8px;
     font-weight: 600;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 
 .signup-helper-link:hover {
     color: #deaaaa;
@@ -225,11 +213,7 @@
     color: #ff6b6b;
     margin-left: 3px;
 }
-<<<<<<< HEAD
 
-=======
-
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 /* X 버튼 */
 .signup-modal-close {
     position: absolute;
@@ -248,11 +232,6 @@
     color: white;
     font-size: 18px;
 }
-<<<<<<< HEAD
-
-=======
-
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 /*회원가입 모달 끝*/
 
 
