@@ -20,5 +20,108 @@
 				  </div>
 	          </div>
 	      </header>
+		  
+		  <th:block th:fragment="modalScript">
+		  <script>
+		  // 회원가입 모달 스크립트 
+		         function openInsertModal() {
+		             const modal = document.getElementById('insertModal');
+		             if (modal) {
+		                 modal.classList.add('active');
+		                 document.body.style.overflow = 'hidden';
+		             }
+		         }
+
+		         function closeInsertModal() {
+		             const modal = document.getElementById('insertModal');
+		             if (modal) {
+		                 modal.classList.remove('active');
+		                 document.body.style.overflow = 'auto';
+		             }
+		         }
+
+		         // DOM 로드 후 이벤트 리스너 등록
+		         document.addEventListener('DOMContentLoaded', function() {
+		             const modal = document.getElementById('insertModal');
+		             
+		             if (modal) {
+		                 // 모달 외부 클릭 시 닫기
+		                 modal.addEventListener('click', function(e) {
+		                     if (e.target === this) {
+		                         closeInsertModal();
+		                     }
+		                 });
+		             }
+
+		             // ESC 키로 모달 닫기
+		             document.addEventListener('keydown', function(e) {
+		                 if (e.key === 'Escape') {
+		                     closeInsertModal();
+		                 }
+		             });
+
+		             // 폼 제출 전 유효성 검사
+		             const form = document.getElementById('signupForm');
+		             if (form) {
+		                 form.addEventListener('submit', function(e) {
+		                     const checkbox = document.getElementById('agree');
+		                     if (checkbox && !checkbox.checked) {
+		                         e.preventDefault();
+		                         alert('약관에 동의해주세요.');
+		                         return false;
+		                     }
+		                 });
+		             }
+		         });
+		 		 // 회원가입 모달 스크립트 끝 
+		  	
+				  // 로그인 모달
+				  function openLoginModal(){
+				      const modal = document.getElementById("loginModal"); // . 제거
+				      if(modal){
+				          modal.classList.add('active');
+				          document.body.style.overflow = 'hidden';
+				      }
+				  }
+		
+				  function closeLoginModal() {
+				      const modal = document.getElementById('loginModal');
+				      if (modal) {
+				          modal.classList.remove('active');
+				          document.body.style.overflow = 'auto';
+				      }
+				  }
+		
+				  // DOM 로드 후 이벤트 리스너 등록
+				  document.addEventListener('DOMContentLoaded', function() {
+				      const modal = document.getElementById('loginModal');
+		
+				      if (modal) {
+				          // 모달 외부 클릭 시 닫기
+				          modal.addEventListener('click', function(e) {
+				              if (e.target === this) {
+				                  closeLoginModal(); // 수정
+				              }
+				          });
+				      }
+		
+				      // ESC 키로 모달 닫기
+				      document.addEventListener('keydown', function(e) {
+				          if (e.key === 'Escape') {
+				              closeLoginModal(); // 수정
+				          }
+				      });
+				  });
+
+
+
+
+
+
+		  	
+		   </script>
+			 
+		</th:block>
 	  </body>
-	  </html>
+	  
+</html>
