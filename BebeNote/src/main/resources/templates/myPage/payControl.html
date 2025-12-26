@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>마이페이지 | 베베 접종 수첩</title>
+<title>마이페이지 | 결제 관리</title>
 
 <link rel="stylesheet" href="/css/fragments/layout.css" />
 <link rel="stylesheet" href="/css/login/insertModal.css" />
@@ -16,6 +16,7 @@ body {
 	padding:0;
 	background: #f7f9fa;
 }
+
 /* ===== 공통 레이아웃 ===== */
 .mypage-wrapper {
     max-width: 1200px;
@@ -66,37 +67,105 @@ body {
     font-weight: 600;
 }
 
-/* ===== 콘텐츠 영역 ===== */
+/* ===== 콘텐츠 ===== */
 .mypage-content {
     flex: 1;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
 }
 
-/* 카드 스타일 (메인페이지 느낌) */
-.mypage-card {
-    background-color: #ffffff;
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+/* ===== 카드 공통 ===== */
+.card-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    border: 1px solid #f1d3d3;
+    margin-bottom: 30px;
 }
 
-.mypage-card h4 {
-    font-size: 17px;
+.card-box:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== 베베페이 ===== */
+.bebepay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.bebepay-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #444;
+}
+
+.bebepay-badge {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #fbeaea;
+    color: #c85d5d;
+    font-weight: 600;
+}
+
+.bebepay-balance {
+    font-size: 30px;
+    font-weight: 700;
+    color: #d46a6a;
+    margin-bottom: 8px;
+}
+
+.bebepay-desc {
+    font-size: 13px;
+    color: #777;
+}
+
+/* ===== 충전 ===== */
+.charge-title {
+    font-size: 16px;
+    font-weight: 600;
     margin-bottom: 14px;
     color: #444;
 }
 
-.mypage-card p {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.6;
+.charge-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-/* 큰 카드 */
-.mypage-card.full {
-    grid-column: span 2;
+.charge-buttons button {
+    padding: 12px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #fbeaea;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.charge-buttons button:hover {
+    background: #e9b5b5;
+    font-weight: 600;
+}
+
+/* ===== 안내 ===== */
+.pay-info h4 {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: #444;
+}
+
+.pay-info ul {
+    padding-left: 18px;
+    margin: 0;
+}
+
+.pay-info li {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 6px;
 }
 </style>
 </head>
@@ -105,11 +174,13 @@ body {
 
 <!-- header -->
 <div th:replace="~{fragments/header::header}"></div>
-   <!-- 회원가입 모달 -->
+
+<!-- 회원가입 모달 -->
 <div th:replace="~{fragments/insertModal::insertModal}"></div>
-	
-<!--	로그인 모달-->
-<div th:replace="~{fragments/loginModal::loginModal}"></div> 
+
+<!-- 로그인 모달 -->
+<div th:replace="~{fragments/loginModal::loginModal}"></div>
+
 <!-- content -->
 <div class="mypage-wrapper">
 
@@ -117,55 +188,49 @@ body {
     <aside class="mypage-sidebar">
         <h3>결제 관리</h3>
         <ul class="sidebar-menu">
-			<li><a href="/myPage/info">자녀 정보</a></li>
-			<li><a href="/myPage/myHospital">나의 병원</a></li>
-			<li><a href="/myPage/payHistory">결제 내역</a></li>
-			<li><a href="/myPage/payControl" class="active">결제 관리</a></li>
+            <li><a href="/myPage/info">자녀 정보</a></li>
+            <li><a href="/myPage/myHospital">나의 병원</a></li>
+            <li><a href="/myPage/payHistory">결제 내역</a></li>
+            <li><a href="/myPage/payControl" class="active">결제 관리</a></li>
         </ul>
     </aside>
 
     <!-- 콘텐츠 -->
     <section class="mypage-content">
 
-        <div class="mypage-card">
-            <h4>자녀 기본 정보</h4>
-            <p>
-                이름 : 토끼<br>
-                생년월일 : 2024.01.01<br>
-                성별 : 여
-            </p>
+        <!-- 베베페이 -->
+        <div class="card-box">
+            <div class="bebepay-header">
+                <div class="bebepay-title">베베페이</div>
+                <div class="bebepay-badge">자사페이</div>
+            </div>
+
+            <div class="bebepay-balance">₩ 120,000</div>
+            <div class="bebepay-desc">
+                예방접종 · 병원 결제 시 베베페이로 간편하게 사용하세요
+            </div>
         </div>
 
-        <div class="mypage-card">
-            <h4>다음 예방접종</h4>
-            <p>
-                B형간염 2차<br>
-                예정일 : 2025.01.30
-            </p>
+        <!-- 충전 -->
+        <div class="card-box">
+            <div class="charge-title">베베페이 충전</div>
+            <div class="charge-buttons">
+                <button>10,000원</button>
+                <button>30,000원</button>
+                <button>50,000원</button>
+                <button>100,000원</button>
+                <button>기타 금액</button>
+            </div>
         </div>
 
-        <div class="mypage-card">
-            <h4>등록된 병원</h4>
-            <p>
-                지은소아과<br>
-                동래이동병원
-            </p>
-        </div>
-
-        <div class="mypage-card">
-            <h4>최근 결제 내역</h4>
-            <p>
-                2024.12.10<br>
-                예방접종 진료비 결제 완료
-            </p>
-        </div>
-
-        <div class="mypage-card full">
-            <h4>알림</h4>
-            <p>
-                예방접종 예정일이 다가오고 있어요.<br>
-                병원 예약을 진행해 주세요 😊
-            </p>
+        <!-- 안내 -->
+        <div class="card-box pay-info">
+            <h4>베베페이 이용 안내</h4>
+            <ul>
+                <li>베베페이는 선불 충전 방식의 자사 결제 수단입니다.</li>
+                <li>예방접종 및 병원 결제 시 자동으로 차감됩니다.</li>
+                <li>충전 금액은 환불 정책에 따라 처리됩니다.</li>
+            </ul>
         </div>
 
     </section>
@@ -173,7 +238,9 @@ body {
 
 <!-- footer -->
 <div th:replace="~{fragments/footer::footer}"></div>
+
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
+
 </body>
 </html>
