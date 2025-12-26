@@ -3,19 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>마이페이지 | 베베 접종 수첩</title>
+<title>마이페이지 | 결제 내역</title>
 
 <link rel="stylesheet" href="/css/fragments/layout.css" />
 <link rel="stylesheet" href="/css/login/insertModal.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
+/* ===== 기본 ===== */
 body {
-	font-family: 'Malgun Gothic', sans-serif;
-	margin:0;
-	padding:0;
-	background: #f7f9fa;
+    font-family: 'Malgun Gothic', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f7f9fa;
 }
+
 /* ===== 공통 레이아웃 ===== */
 .mypage-wrapper {
     max-width: 1200px;
@@ -69,34 +71,90 @@ body {
 /* ===== 콘텐츠 영역 ===== */
 .mypage-content {
     flex: 1;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
 }
 
-/* 카드 스타일 (메인페이지 느낌) */
-.mypage-card {
-    background-color: #ffffff;
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+/* ===== 결제 내역 ===== */
+.payment-container {
+    width: 100%;
 }
 
-.mypage-card h4 {
-    font-size: 17px;
-    margin-bottom: 14px;
-    color: #444;
+.payment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.mypage-card p {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.6;
+/* 결제 카드 */
+.payment-card {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1px solid #f0d6d6;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
 }
 
-/* 큰 카드 */
-.mypage-card.full {
-    grid-column: span 2;
+.payment-card:hover {
+    background: #fffafa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* 왼쪽 */
+.payment-left {
+    margin-right: 16px;
+}
+
+.payment-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    background: #deaaaa;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-img {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f3d5d5;
+}
+
+/* 중앙 */
+.payment-center {
+    flex: 1;
+}
+
+.payment-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 4px;
+}
+
+.payment-desc {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 6px;
+}
+
+.payment-date {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* 우측 */
+.payment-right {
+    font-size: 20px;
+    color: #c9a8ad;
+    cursor: pointer;
 }
 </style>
 </head>
@@ -105,11 +163,13 @@ body {
 
 <!-- header -->
 <div th:replace="~{fragments/header::header}"></div>
-   <!-- 회원가입 모달 -->
+
+<!-- 회원가입 모달 -->
 <div th:replace="~{fragments/insertModal::insertModal}"></div>
-	
-<!--	로그인 모달-->
-<div th:replace="~{fragments/loginModal::loginModal}"></div> 
+
+<!-- 로그인 모달 -->
+<div th:replace="~{fragments/loginModal::loginModal}"></div>
+
 <!-- content -->
 <div class="mypage-wrapper">
 
@@ -117,63 +177,64 @@ body {
     <aside class="mypage-sidebar">
         <h3>결제 관리</h3>
         <ul class="sidebar-menu">
-			<li><a href="/myPage/info" >자녀 정보</a></li>
-			<li><a href="/myPage/myHospital">나의 병원</a></li>
-			<li><a href="/myPage/payHistory" class="active">결제 내역</a></li>
-			<li><a href="/myPage/payControl">결제 관리</a></li>
+            <li><a href="/myPage/info">자녀 정보</a></li>
+            <li><a href="/myPage/myHospital">나의 병원</a></li>
+            <li><a href="/myPage/payHistory" class="active">결제 내역</a></li>
+            <li><a href="/myPage/payControl">결제 관리</a></li>
         </ul>
     </aside>
 
     <!-- 콘텐츠 -->
     <section class="mypage-content">
+        <div class="payment-container">
+            <div class="payment-list">
 
-        <div class="mypage-card">
-            <h4>자녀 기본 정보</h4>
-            <p>
-                이름 : 토끼<br>
-                생년월일 : 2024.01.01<br>
-                성별 : 여
-            </p>
+                <div class="payment-card">
+                    <div class="payment-left">
+                        <div class="payment-logo">GO</div>
+                    </div>
+                    <div class="payment-center">
+                        <div class="payment-title">결제취소</div>
+                        <div class="payment-desc">(티머니GO) 시외버스 승차권</div>
+                        <div class="payment-date">17,000원 · 12.23 11:08 결제</div>
+                    </div>
+                    <div class="payment-right">⋮</div>
+                </div>
+
+                <div class="payment-card">
+                    <div class="payment-left">
+                        <div class="payment-logo">GO</div>
+                    </div>
+                    <div class="payment-center">
+                        <div class="payment-title">결제취소</div>
+                        <div class="payment-desc">(티머니GO) 시외버스 승차권</div>
+                        <div class="payment-date">17,000원 · 12.23 10:51 결제</div>
+                    </div>
+                    <div class="payment-right">⋮</div>
+                </div>
+
+                <div class="payment-card">
+                    <div class="payment-left">
+                        <img src="/img/sample-product.png" class="payment-img">
+                    </div>
+                    <div class="payment-center">
+                        <div class="payment-title">결제완료</div>
+                        <div class="payment-desc">자연건조 유기농 양배추환스틱 100개입</div>
+                        <div class="payment-date">13,650원 · 12.20 10:47 결제</div>
+                    </div>
+                    <div class="payment-right">⋮</div>
+                </div>
+
+            </div>
         </div>
-
-        <div class="mypage-card">
-            <h4>다음 예방접종</h4>
-            <p>
-                B형간염 2차<br>
-                예정일 : 2025.01.30
-            </p>
-        </div>
-
-        <div class="mypage-card">
-            <h4>등록된 병원</h4>
-            <p>
-                지은소아과<br>
-                동래이동병원
-            </p>
-        </div>
-
-        <div class="mypage-card">
-            <h4>최근 결제 내역</h4>
-            <p>
-                2024.12.10<br>
-                예방접종 진료비 결제 완료
-            </p>
-        </div>
-
-        <div class="mypage-card full">
-            <h4>알림</h4>
-            <p>
-                예방접종 예정일이 다가오고 있어요.<br>
-                병원 예약을 진행해 주세요 😊
-            </p>
-        </div>
-
     </section>
 </div>
 
 <!-- footer -->
 <div th:replace="~{fragments/footer::footer}"></div>
+
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
+
 </body>
 </html>

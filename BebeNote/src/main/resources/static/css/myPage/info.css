@@ -1,0 +1,180 @@
+body {
+    font-family: 'Malgun Gothic', sans-serif;
+	background: #f7f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== 공통 레이아웃 ===== */
+.mypage-wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    display: flex;
+    gap: 30px;
+}
+
+/* ===== 사이드바 ===== */
+.mypage-sidebar {
+    width: 240px;
+    background-color: #f6d6d6;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.mypage-sidebar h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 12px;
+}
+
+.sidebar-menu a {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 5px;
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+    background-color: #fbeaea;
+}
+
+.sidebar-menu a.active,
+.sidebar-menu a:hover {
+    background-color: #e9b5b5;
+    font-weight: 600;
+}
+
+/* ===== 콘텐츠 ===== */
+.mypage-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+/* ===== 카드 공통 ===== */
+.mypage-card {
+    background: #fff;
+    border-radius: 5px;
+    padding: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* ===== 자녀 카드 ===== */
+.child-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.child-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f3d5d5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.child-avatar i {
+    font-size: 36px;
+    color: #fff;
+}
+
+.child-info h4 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.child-info p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.child-edit-btn {
+    margin-left: auto;
+    padding: 6px 16px;
+    border-radius: 5px;
+    border: none;
+    background: #e9b5b5;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* ===== 접종 수첩 ===== */
+.vaccine-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: center;
+}
+
+.vaccine-table th,
+.vaccine-table td {
+    border: 1px solid #e4c1c1;
+    padding: 10px;
+}
+
+.vaccine-table thead {
+    background: #f6d6d6;
+}
+
+.vaccine-table td:first-child {
+    font-weight: 600;
+    background: #fbeaea;
+}
+
+/* 클릭 전 상태 */
+.vaccine-empty {
+    cursor: pointer;
+}
+
+.vaccine-placeholder {
+    color: #999;
+    font-size: 13px;
+}
+
+/* 입력 박스 */
+.vaccine-input-box {
+    display: none;
+    border: 2px solid #d4b5c0;
+    border-radius: 5px;
+    padding: 10px;
+    background: #fff;
+    text-align: left;
+	width: 180px;
+}
+
+.vaccine-input-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+/* 활성화 */
+.vaccine-empty.active {
+    background: #fdeeee;
+	width: 200px;
+}
+
+.vaccine-empty.active .vaccine-placeholder {
+    display: none;
+}
+
+.vaccine-empty.active .vaccine-input-box {
+    display: block;
+}
