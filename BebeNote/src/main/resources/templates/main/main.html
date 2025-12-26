@@ -6,6 +6,7 @@
 <title>베베 접종 수첩</title>
 <link rel="stylesheet" href="/css/main/main.css" />
 <link rel="stylesheet" href="/css/login/insertModal.css" />
+<link rel="stylesheet" href="/css/login/loginModal.css" />
 <link rel="stylesheet" href="/css/fragments/layout.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
   integrity="sha512-..."
@@ -13,62 +14,131 @@
   referrerpolicy="no-referrer"/>
 </head>
 <body>
-    
+
 	<!-- header -->
 	<div th:replace="~{fragments/header::header}"></div>
-	
+
     <!-- 회원가입 모달 -->
     <div th:replace="~{fragments/insertModal::insertModal}"></div>
-	
-<!--	로그인 모달-->
-	<div th:replace="~{fragments/loginModal::loginModal}"></div>    
 
-    <div class="container">
-        <div class="top-row">
-            <div class="baby-info-card">
-                <div class="profile-section">
-                    <div class="profile-image"><i class="fa-solid fa-user"></i></div>
-                    <div class="profile-info">
-                        <div class="baby-name">
-                            <span class="name-text">토끼</span>
+	<!-- 로그인 모달 -->
+	<div th:replace="~{fragments/loginModal::loginModal}"></div>
+
+    <div class="main-container">
+        <div class="main-top-row">
+            <div class="main-baby-info-card">
+                <div class="main-profile-section">
+                    <div class="main-profile-image"><i class="fa-solid fa-child-reaching"></i></div>
+                    <div class="main-profile-info">
+                        <div class="main-baby-name">
+                            <span class="main-name-text">토끼</span>
                         </div>
-                        <div class="birth-info">2024년 01월 01일 (여)</div>
-                        <div class="birth-info">태어난지 몇개월 됐어요.</div>
+                        <div class="main-birth-info">2024년 01월 01일 (여)</div>
+                        <div class="main-birth-info">태어난지 몇개월 됐어요.</div>
                     </div>
                 </div>
             </div>
 
-            <div class="ai-card">
-                <div class="ai-header">
-                    <div class="ai-icon"><i class="fa-solid fa-robot"></i></div>
-                    <div class="ai-title">AI 맞춤 추천</div>
+            <div class="main-ai-card">
+                <div class="main-ai-header">
+                    <div class="main-ai-icon"><i class="fa-solid fa-robot"></i></div>
+                    <div class="main-ai-title">AI 맞춤 추천</div>
                 </div>
-                <div class="ai-content">
-                    <div class="ai-message">
-                        <span class="ai-highlight">B형간염 2차</span> 접종을
-                        <span class="ai-date">1/30 정도</span>에 접종하는 것을 추천합니다
+                <div class="main-ai-content">
+                    <div class="main-ai-message">
+                        <span class="main-ai-highlight">B형간염 2차</span> 접종을
+                        <span class="main-ai-date">1/30 정도</span>에 접종하는 것을 추천합니다
                     </div>
-                    <div class="ai-action">
-                        <button class="ai-button">병원 예약하기</button>
+                    <div class="main-ai-action">
+                        <button class="main-ai-button">병원 예약하기</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="middle-row">
-            <div class="card">
-                <div class="card-title">예약한 병원<br></div>
-                <div class="card-content"></div>
+        <div class="main-middle-row">
+            <div class="main-card">
+                <div class="main-card-title">예약한 병원</div>
+                <div class="main-card-content"></div>
+					<div class="main-hospital-item" onclick="selectMainHospital(this, 0)">
+				         <div class="main-hospital-header">
+				              <div class="main-hospital-name">지은소아과</div>
+				              <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 0)">
+				                 <i class="fa-solid fa-star"></i>
+				              </button>
+				         </div>
+				    <div class="main-hospital-info">
+				    <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
+				 </div>
+				 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">근처 소아과</div>
-                <div class="card-content">지은소아과<br>현신소아과<br>동래이동병원</div>
+            <div class="main-card">
+                <div class="main-card-title">근처 소아과</div>
+                <div class="main-card-content">
+                    <div class="main-hospital-item" onclick="selectMainHospital(this, 0)">
+                        <div class="main-hospital-header">
+                            <div class="main-hospital-name">지은소아과</div>
+                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 0)">
+                                <i class="fa-solid fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="main-hospital-info">
+                            <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
+                        </div>
+                    </div>
+
+                    <div class="main-hospital-item" onclick="selectMainHospital(this, 1)">
+                        <div class="main-hospital-header">
+                            <div class="main-hospital-name">현신소아과</div>
+                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 1)">
+                                <i class="fa-regular fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="main-hospital-info">
+                            <div><i class="fa-solid fa-phone"></i> 051-2345-6789</div>
+                        </div>
+                    </div>
+
+                    <div class="main-hospital-item" onclick="selectMainHospital(this, 2)">
+                        <div class="main-hospital-header">
+                            <div class="main-hospital-name">동래이동병원</div>
+                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 2)">
+                                <i class="fa-regular fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="main-hospital-info">
+                            <div><i class="fa-solid fa-phone"></i> 051-3456-7890</div>
+                        </div>
+                    </div>
+                    <div class="main-hospital-item" onclick="selectMainHospital(this, 3)">
+                        <div class="main-hospital-header">
+                            <div class="main-hospital-name">서면 병원</div>
+                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 3)">
+                                <i class="fa-regular fa-star"></i>
+                            </button>
+                        </div>
+                        <div class="main-hospital-info">
+                            <div><i class="fa-solid fa-phone"></i> 051-3456-7891</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">진료중인 소아과</div>
-                <div class="card-content"></div>
+            <div class="main-card">
+                <div class="main-card-title">진료중인 소아과</div>
+                <div class="main-card-content"></div>
+				<div class="main-hospital-item" onclick="selectMainHospital(this, 0)">
+				    <div class="main-hospital-header">
+				      <div class="main-hospital-name">지은소아과</div>
+				            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 0)">
+				             <i class="fa-solid fa-star"></i>
+				       </button>
+				 </div>
+				   <div class="main-hospital-info">
+				       <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
+				     </div>
+				       </div>
             </div>
         </div>
 
@@ -78,11 +148,35 @@
         </div>
     </div>
 
-	
 	<!-- footer -->
 	<div th:replace="~{fragments/footer::footer}"></div>
 
 	<!-- 모달 스크립트 -->
 	<div th:replace="~{fragments/header::modalScript}"></div>
+
+    <script>
+        // 메인 페이지 병원 선택
+        function selectMainHospital(element, index) {
+            console.log('선택된 병원 인덱스:', index);
+            // 필요한 동작 추가
+        }
+
+        // 메인 페이지 즐겨찾기 토글
+        function toggleMainBookmark(event, index) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            const icon = button.querySelector('i');
+            
+            if (icon.classList.contains('fa-solid')) {
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+                console.log('즐겨찾기 해제:', index);
+            } else {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+                console.log('즐겨찾기 추가:', index);
+            }
+        }
+    </script>
 </body>
 </html>
