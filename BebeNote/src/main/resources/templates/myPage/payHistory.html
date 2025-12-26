@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이페이지 | 베베 접종 수첩</title>
+
+<link rel="stylesheet" href="/css/fragments/layout.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+body {
+	font-family: 'Malgun Gothic', sans-serif;
+	margin:0;
+	padding:0;
+}
+/* ===== 공통 레이아웃 ===== */
+.mypage-wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    display: flex;
+    gap: 30px;
+}
+
+/* ===== 사이드바 ===== */
+.mypage-sidebar {
+    width: 240px;
+    background-color: #f6d6d6;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.mypage-sidebar h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 12px;
+}
+
+.sidebar-menu a {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 12px;
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+    background-color: #fbeaea;
+    transition: all 0.2s ease;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background-color: #e9b5b5;
+    font-weight: 600;
+}
+
+/* ===== 콘텐츠 영역 ===== */
+.mypage-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* 카드 스타일 (메인페이지 느낌) */
+.mypage-card {
+    background-color: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.mypage-card h4 {
+    font-size: 17px;
+    margin-bottom: 14px;
+    color: #444;
+}
+
+.mypage-card p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 큰 카드 */
+.mypage-card.full {
+    grid-column: span 2;
+}
+</style>
+</head>
+
+<body>
+
+<!-- header -->
+<div th:replace="~{fragments/header::header}"></div>
+
+<!-- content -->
+<div class="mypage-wrapper">
+
+    <!-- 사이드바 -->
+    <aside class="mypage-sidebar">
+        <h3>마이페이지</h3>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active">자녀 정보</a></li>
+            <li><a href="#">나의 병원</a></li>
+            <li><a href="#">결제 내역</a></li>
+            <li><a href="#">결제 관리</a></li>
+        </ul>
+    </aside>
+
+    <!-- 콘텐츠 -->
+    <section class="mypage-content">
+
+        <div class="mypage-card">
+            <h4>자녀 기본 정보</h4>
+            <p>
+                이름 : 토끼<br>
+                생년월일 : 2024.01.01<br>
+                성별 : 여
+            </p>
+        </div>
+
+        <div class="mypage-card">
+            <h4>다음 예방접종</h4>
+            <p>
+                B형간염 2차<br>
+                예정일 : 2025.01.30
+            </p>
+        </div>
+
+        <div class="mypage-card">
+            <h4>등록된 병원</h4>
+            <p>
+                지은소아과<br>
+                동래이동병원
+            </p>
+        </div>
+
+        <div class="mypage-card">
+            <h4>최근 결제 내역</h4>
+            <p>
+                2024.12.10<br>
+                예방접종 진료비 결제 완료
+            </p>
+        </div>
+
+        <div class="mypage-card full">
+            <h4>알림</h4>
+            <p>
+                예방접종 예정일이 다가오고 있어요.<br>
+                병원 예약을 진행해 주세요 😊
+            </p>
+        </div>
+
+    </section>
+</div>
+
+<!-- footer -->
+<div th:replace="~{fragments/footer::footer}"></div>
+
+</body>
+</html>
