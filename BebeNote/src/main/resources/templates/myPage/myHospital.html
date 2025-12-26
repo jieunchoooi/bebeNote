@@ -6,6 +6,7 @@
 <title>마이페이지 | 베베 접종 수첩</title>
 
 <link rel="stylesheet" href="/css/fragments/layout.css" />
+<link rel="stylesheet" href="/css/login/insertModal.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -13,6 +14,7 @@ body {
 	font-family: 'Malgun Gothic', sans-serif;
 	margin:0;
 	padding:0;
+	background: #f7f9fa;
 }
 /* ===== 공통 레이아웃 ===== */
 .mypage-wrapper {
@@ -26,7 +28,7 @@ body {
 .mypage-sidebar {
     width: 240px;
     background-color: #f6d6d6;
-    border-radius: 16px;
+    border-radius: 5px;
     padding: 20px;
 }
 
@@ -103,6 +105,11 @@ body {
 
 <!-- header -->
 <div th:replace="~{fragments/header::header}"></div>
+   <!-- 회원가입 모달 -->
+<div th:replace="~{fragments/insertModal::insertModal}"></div>
+	
+<!--	로그인 모달-->
+<div th:replace="~{fragments/loginModal::loginModal}"></div>    
 
 <!-- content -->
 <div class="mypage-wrapper">
@@ -167,6 +174,7 @@ body {
 
 <!-- footer -->
 <div th:replace="~{fragments/footer::footer}"></div>
-
+<!-- 모달 스크립트 -->
+<div th:replace="~{fragments/header::modalScript}"></div>
 </body>
 </html>
