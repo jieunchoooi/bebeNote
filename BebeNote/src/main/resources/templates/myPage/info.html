@@ -10,10 +10,12 @@
 
 <style>
 body {
-	font-family: 'Malgun Gothic', sans-serif;
-	margin:0;
-	padding:0;
+    font-family: 'Malgun Gothic', sans-serif;
+	background: #f7f9fa;
+    margin: 0;
+    padding: 0;
 }
+
 /* ===== 공통 레이아웃 ===== */
 .mypage-wrapper {
     max-width: 1200px;
@@ -26,7 +28,7 @@ body {
 .mypage-sidebar {
     width: 240px;
     background-color: #f6d6d6;
-    border-radius: 16px;
+    border-radius: 5px;
     padding: 20px;
 }
 
@@ -50,23 +52,36 @@ body {
 .sidebar-menu a {
     display: block;
     padding: 12px 14px;
-    border-radius: 12px;
+    border-radius: 5px;
     color: #333;
     text-decoration: none;
     font-size: 15px;
     background-color: #fbeaea;
-    transition: all 0.2s ease;
 }
 
-.sidebar-menu a:hover,
-.sidebar-menu a.active {
+.sidebar-menu a.active,
+.sidebar-menu a:hover {
     background-color: #e9b5b5;
     font-weight: 600;
 }
 
-/* ===== 콘텐츠 영역 ===== */
+/* ===== 콘텐츠 ===== */
+.mypage-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
 
-/* 자녀 카드 영역*/
+/* ===== 카드 공통 ===== */
+.mypage-card {
+    background: #fff;
+    border-radius: 5px;
+    padding: 24px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* ===== 자녀 카드 ===== */
 .child-card {
     display: flex;
     align-items: center;
@@ -77,7 +92,7 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #f3d5d5;
+    background: #f3d5d5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,11 +100,11 @@ body {
 
 .child-avatar i {
     font-size: 36px;
-    color: #ffffff;
+    color: #fff;
 }
 
 .child-info h4 {
-    margin: 0 0 6px 0;
+    margin: 0 0 6px;
     font-size: 18px;
 }
 
@@ -101,29 +116,20 @@ body {
 
 .child-edit-btn {
     margin-left: auto;
-    padding: 6px 14px;
-    border-radius: 10px;
+    padding: 6px 16px;
+    border-radius: 5px;
     border: none;
-    background-color: #e9b5b5;
-    color: #ffffff;
-    font-size: 13px;
+    background: #e9b5b5;
+    color: #fff;
     cursor: pointer;
 }
 
-.child-edit-btn:hover {
-    background-color: #d9a0a0;
-}
-
-/* 접종 수첩 테이블 */
+/* ===== 접종 수첩 ===== */
 .vaccine-table {
     width: 100%;
     border-collapse: collapse;
-    text-align: center;
     font-size: 14px;
-}
-
-.vaccine-table thead {
-    background-color: #f6d6d6;
+    text-align: center;
 }
 
 .vaccine-table th,
@@ -132,24 +138,34 @@ body {
     padding: 10px;
 }
 
-.vaccine-table th {
-    font-weight: 600;
-    color: #444;
+.vaccine-table thead {
+    background: #f6d6d6;
 }
 
 .vaccine-table td:first-child {
     font-weight: 600;
-    background-color: #fbeaea;
+    background: #fbeaea;
 }
 
-/* 접종 입력 카드 */
+/* 클릭 전 상태 */
+.vaccine-empty {
+    cursor: pointer;
+}
+
+.vaccine-placeholder {
+    color: #999;
+    font-size: 13px;
+}
+
+/* 입력 박스 */
 .vaccine-input-box {
+    display: none;
+    margin-top: 8px;
     border: 2px solid #d4b5c0;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
-    font-size: 12px;
+    background: #fff;
     text-align: left;
-    background-color: #ffffff;
 }
 
 .vaccine-input-box input {
@@ -160,25 +176,18 @@ body {
     margin-bottom: 6px;
 }
 
-.vaccine-input-box input:last-child {
-    margin-bottom: 0;
+/* 활성화 */
+.vaccine-empty.active {
+    background: #fdeeee;
 }
 
-/* 접종 상태 (확장용) */
-.vaccine-done {
-    background-color: #fdeeee;
-    color: #b26c6c;
-    font-weight: 600;
+.vaccine-empty.active .vaccine-placeholder {
+    display: none;
 }
 
-.vaccine-empty {
-    cursor: pointer;
+.vaccine-empty.active .vaccine-input-box {
+    display: block;
 }
-
-.vaccine-empty:hover {
-    background-color: #f9ecec;
-}
-
 </style>
 </head>
 
@@ -202,83 +211,84 @@ body {
     </aside>
 
     <!-- 콘텐츠 -->
-	<section class="mypage-content" style="grid-template-columns: 1fr;">
+    <section class="mypage-content">
 
-	    <!-- 자녀 카드 -->
-	    <div class="mypage-card child-card">
-	        <div class="child-avatar">
-	            <i class="fa-solid fa-child-reaching"></i>
-	        </div>
+        <!-- 자녀 정보 카드 -->
+        <div class="mypage-card child-card">
+            <div class="child-avatar">
+                <i class="fa-solid fa-child-reaching"></i>
+            </div>
 
-	        <div class="child-info">
-	            <h4>토끼</h4>
-	            <p>
-	                2024.01.01 (여)<br>
-	                태어난지 722일째예요
-	            </p>
-	        </div>
+            <div class="child-info">
+                <h4>토끼</h4>
+                <p>
+                    2024.01.01 (여)<br>
+                    태어난지 722일째예요
+                </p>
+            </div>
 
-	        <button class="child-edit-btn">수정</button>
-	    </div>
+            <button class="child-edit-btn">수정</button>
+        </div>
 
-	    <!-- 접종 수첩 -->
-	    <div class="mypage-card full">
-	        <h4>접종 수첩</h4>
+        <!-- 접종 수첩 -->
+        <div class="mypage-card">
+            <h4>접종 수첩</h4>
 
-	        <table class="vaccine-table">
-	            <thead>
-	                <tr>
-	                    <th>대상전염병</th>
-	                    <th>1차</th>
-	                    <th>2차</th>
-	                    <th>3차</th>
-	                    <th>추가1차</th>
-	                    <th>추가2차</th>
-	                    <th>추가3차</th>
-	                </tr>
-	            </thead>
+            <table class="vaccine-table">
+                <thead>
+                    <tr>
+                        <th>대상전염병</th>
+                        <th>1차</th>
+                        <th>2차</th>
+                        <th>3차</th>
+                        <th>추가1차</th>
+                        <th>추가2차</th>
+                        <th>추가3차</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BCG</td>
+                        <td></td>
+                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
+                            <span class="vaccine-placeholder">클릭해서 입력</span>
+                            <div class="vaccine-input-box">
+                                <input type="text" placeholder="접종한 병원">
+                                <input type="date">
+                                <input type="text" placeholder="백신 이름">
+                            </div>
+                        </td>
+                        <td></td><td></td><td></td><td></td>
+                    </tr>
 
-	            <tbody>
-	                <tr>
-	                    <td>BCG</td>
-	                    <td></td>
-	                    <td>
-	                        <div class="vaccine-input-box">
-	                            <input type="text" placeholder="접종한 병원을 입력하세요">
-	                            <input type="date">
-	                            <input type="text" placeholder="접종한 백신 이름을 입력해 주세요">
-	                        </div>
-	                    </td>
-	                    <td></td>
-	                    <td></td>
-	                    <td></td>
-	                    <td></td>
-	                </tr>
+                    <tr>
+                        <td>B형간염</td>
+                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
+                            <span class="vaccine-placeholder">클릭해서 입력</span>
+                            <div class="vaccine-input-box">
+                                <input type="text" placeholder="접종한 병원">
+                                <input type="date">
+                                <input type="text" placeholder="백신 이름">
+                            </div>
+                        </td>
+                        <td></td><td></td><td></td><td></td><td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-	                <tr>
-	                    <td>B형간염</td>
-	                    <td></td>
-	                    <td></td>
-	                    <td></td>
-	                    <td></td>
-	                    <td></td>
-	                    <td></td>
-	                </tr>
-
-	                <tr>
-	                    <td>...</td>
-	                    <td colspan="6"></td>
-	                </tr>
-	            </tbody>
-	        </table>
-	    </div>
-	</section>
-
-   
+    </section>
 </div>
 
 <!-- footer -->
 <div th:replace="~{fragments/footer::footer}"></div>
+
+<script>
+function openVaccineInput(td) {
+    if (td.classList.contains('active')) return;
+    td.classList.add('active');
+}
+</script>
 
 </body>
 </html>
