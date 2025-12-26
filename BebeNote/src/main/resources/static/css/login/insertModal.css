@@ -183,7 +183,7 @@
     background: #e0e0e0;
 }
 
-<<<<<<< HEAD
+
 /* 헬퍼 링크 */
 .signup-helper-links {
     text-align: center;
@@ -193,19 +193,8 @@
     color: #999;
     font-size: 13px;
 }
-=======
-        /* 헬퍼 링크 */
-        .helper-links {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #f0f0f0;
-         color: #999;
-         font-size: 13px;
-        }
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 
-<<<<<<< HEAD
+
 .signup-helper-link {
     font-size: 13px;
     color: #deaaaa;
@@ -213,15 +202,6 @@
     margin: 0 8px;
     font-weight: 600;
 }
-=======
-        .helper-link {
-            font-size: 13px;
-            color: #deaaaa;
-            text-decoration: none;
-            margin: 0 8px;
-         font-weight: 600;
-        }
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 
 .signup-helper-link:hover {
     color: #deaaaa;
@@ -234,7 +214,6 @@
     margin-left: 3px;
 }
 
-<<<<<<< HEAD
 /* X 버튼 */
 .signup-modal-close {
     position: absolute;
@@ -254,26 +233,6 @@
     font-size: 18px;
 }
 
-=======
-/*      X 모양*/
-      .modal-close {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: #DEAAAA;
-          border: none;
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s;
-          color: white;
-          font-size: 18px;
-      }
->>>>>>> branch 'main' of https://github.com/jieunchoooi/bebeNote.git
 /*회원가입 모달 끝*/
 
 
