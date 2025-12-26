@@ -10,14 +10,17 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 @Log
-@RequestMapping("/main/*")
 public class MainController {
 
 
+	@GetMapping("/")
+	public String index() {
+		return "/main/main";
+	}
 	
-	@GetMapping("/main")
+	@GetMapping("/main/main")
 	public String main() {
-		return "main";
+		return "/main/main";
 	}
 
 	
