@@ -1,180 +1,140 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>마이페이지 | 베베 접종 수첩</title>
+<title>나의 병원 | 베베 접종 수첩</title>
 
 <link rel="stylesheet" href="/css/fragments/layout.css" />
+<link rel="stylesheet" href="/css/myPage/myHospital.css" />
 <link rel="stylesheet" href="/css/login/insertModal.css" />
+<link rel="stylesheet" href="/css/login/loginModal.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<style>
-body {
-	font-family: 'Malgun Gothic', sans-serif;
-	margin:0;
-	padding:0;
-	background: #f7f9fa;
-}
-/* ===== 공통 레이아웃 ===== */
-.mypage-wrapper {
-    max-width: 1200px;
-    margin: 40px auto;
-    display: flex;
-    gap: 30px;
-}
-
-/* ===== 사이드바 ===== */
-.mypage-sidebar {
-    width: 240px;
-    background-color: #f6d6d6;
-    border-radius: 5px;
-    padding: 20px;
-}
-
-.mypage-sidebar h3 {
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar-menu li {
-    margin-bottom: 12px;
-}
-
-.sidebar-menu a {
-    display: block;
-    padding: 12px 14px;
-    border-radius: 5px;
-    color: #333;
-    text-decoration: none;
-    font-size: 15px;
-    background-color: #fbeaea;
-    transition: all 0.2s ease;
-}
-
-.sidebar-menu a:hover,
-.sidebar-menu a.active {
-    background-color: #e9b5b5;
-    font-weight: 600;
-}
-
-/* ===== 콘텐츠 영역 ===== */
-.mypage-content {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-/* 카드 스타일 (메인페이지 느낌) */
-.mypage-card {
-    background-color: #ffffff;
-    border-radius: 18px;
-    padding: 24px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-.mypage-card h4 {
-    font-size: 17px;
-    margin-bottom: 14px;
-    color: #444;
-}
-
-.mypage-card p {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.6;
-}
-
-/* 큰 카드 */
-.mypage-card.full {
-    grid-column: span 2;
-}
-</style>
 </head>
 
 <body>
+    <!-- header -->
+    <div th:replace="~{fragments/header::header}"></div>
 
-<!-- header -->
-<div th:replace="~{fragments/header::header}"></div>
-   <!-- 회원가입 모달 -->
-<div th:replace="~{fragments/insertModal::insertModal}"></div>
-	
-<!--	로그인 모달-->
-<div th:replace="~{fragments/loginModal::loginModal}"></div>    
+    <!-- content -->
+    <div class="myhospital-wrapper">
+        <!-- 사이드바 -->
+		<aside class="mypage-sidebar">
+		       <h3>결제 내역</h3>
+		       <ul class="sidebar-menu">
+				<li><a href="/myPage/info">자녀 정보</a></li>
+				<li><a href="/myPage/myHospital">나의 병원</a></li>
+				<li><a href="/myPage/payHistory">결제 내역</a></li>
+				<li><a href="/myPage/payControl" class="active">결제 관리</a></li>
+		       </ul>
+		   </aside>
 
-<!-- content -->
-<div class="mypage-wrapper">
+        <!-- 메인 컨텐츠 -->
+        <section class="myhospital-main-content">
+            <!-- 나의병원 섹션 -->
+            <div class="myhospital-section">
+                <div class="myhospital-section-header">
+                    <h2 class="myhospital-section-title">다녀온 병원</h2>
+                </div>
 
-    <!-- 사이드바 -->
-    <aside class="mypage-sidebar">
-        <h3>나의 병원</h3>
-        <ul class="sidebar-menu">
-			<li><a href="/myPage/info">자녀 정보</a></li>
-			<li><a href="/myPage/myHospital" class="active">나의 병원</a></li>
-			<li><a href="/myPage/payHistory">결제 내역</a></li>
-			<li><a href="/myPage/payControl">결제 관리</a></li>
-        </ul>
-    </aside>
+                <div class="myhospital-list-section">
+                    <div class="myhospital-list-header">
+                        <select class="myhospital-filter-select">
+                            <option>한달,6개월,전체 선택하게</option>
+                            <option>1개월</option>
+                            <option>6개월</option>
+                            <option>전체</option>
+                        </select>
+                    </div>
 
-    <!-- 콘텐츠 -->
-    <section class="mypage-content">
+                    <div class="myhospital-list">
+                        <!-- 병원 아이템 1 -->
+                        <div class="myhospital-item">
+                            <div class="myhospital-item-header">
+                                <div class="myhospital-item-period">2025-12-12</div>
+                                <button class="myhospital-bookmark active">
+                                    <i class="fa-solid fa-star"></i>
+                                </button>
+                            </div>
+                            <div class="myhospital-item-name">지은 병원</div>
+                            <div class="myhospital-item-actions">
+                            </div>
+                        </div>
 
-        <div class="mypage-card">
-            <h4>자녀 기본 정보</h4>
-            <p>
-                이름 : 토끼<br>
-                생년월일 : 2024.01.01<br>
-                성별 : 여
-            </p>
-        </div>
+                        <!-- 병원 아이템 2 -->
+                        <div class="myhospital-item">
+                            <div class="myhospital-item-header">
+                                <div class="myhospital-item-period">2025-12-25</div>
+                                <button class="myhospital-bookmark active">
+                                    <i class="fa-solid fa-star"></i>
+                                </button>
+                            </div>
+                            <div class="myhospital-item-name">현진 병원</div>
+                            <div class="myhospital-item-actions">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="mypage-card">
-            <h4>다음 예방접종</h4>
-            <p>
-                B형간염 2차<br>
-                예정일 : 2025.01.30
-            </p>
-        </div>
+            <!-- 진료내역 섹션 -->
+            <div class="myhospital-history-section">
+                <div class="myhospital-section-header">
+                    <h2 class="myhospital-section-title">진료내역</h2>
+                </div>
 
-        <div class="mypage-card">
-            <h4>등록된 병원</h4>
-            <p>
-                지은소아과<br>
-                동래이동병원
-            </p>
-        </div>
+                <div class="myhospital-history-list-section">
+                    <div class="myhospital-list-header">
+                        <select class="myhospital-filter-select">
+                            <option>전체</option>
+                            <option>1개월</option>
+                            <option>6개월</option>
+                        </select>
+                    </div>
 
-        <div class="mypage-card">
-            <h4>최근 결제 내역</h4>
-            <p>
-                2024.12.10<br>
-                예방접종 진료비 결제 완료
-            </p>
-        </div>
+                    <div class="myhospital-history-list">
+                        <!-- 진료내역 카드 -->
+                        <div class="myhospital-history-card">
+                            <div class="myhospital-history-header">
+                                <div class="myhospital-history-period">다녀온 날짜</div>
+                            </div>
+                            <div class="myhospital-history-name">병원이름</div>
+                            <div class="myhospital-history-detail">
+                                진료내역(접종내역)
+                            </div>
+                            <button class="myhospital-btn-view">예약하기 버튼</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-        <div class="mypage-card full">
-            <h4>알림</h4>
-            <p>
-                예방접종 예정일이 다가오고 있어요.<br>
-                병원 예약을 진행해 주세요 😊
-            </p>
-        </div>
+    <!-- 모달들 -->
+    <div th:replace="~{fragments/insertModal::insertModal}"></div>
+    <div th:replace="~{fragments/loginModal::loginModal}"></div>
 
-    </section>
-</div>
+    <!-- footer -->
+    <div th:replace="~{fragments/footer::footer}"></div>
 
-<!-- footer -->
-<div th:replace="~{fragments/footer::footer}"></div>
-<!-- 모달 스크립트 -->
-<div th:replace="~{fragments/header::modalScript}"></div>
+    <!-- 모달 스크립트 -->
+    <div th:replace="~{fragments/header::modalScript}"></div>
+
+    <script>
+        // 즐겨찾기 토글
+        document.querySelectorAll('.myhospital-bookmark').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (this.classList.contains('active')) {
+                    icon.classList.remove('fa-regular');
+                    icon.classList.add('fa-solid');
+                } else {
+                    icon.classList.remove('fa-solid');
+                    icon.classList.add('fa-regular');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
