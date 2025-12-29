@@ -1,4 +1,9 @@
 /* 회원가입 모달 */
+.signup-modal-overlay *,
+.signup-modal-overlay *::before,
+.signup-modal-overlay *::after {
+  box-sizing: border-box;
+}
 
 /* 모달 오버레이 */
 .signup-modal-overlay {
@@ -234,9 +239,12 @@
 }
 /*회원가입 모달 끝*/
 
-
 /* 로그인 모달 */
-
+.login-modal-overlay *,
+.login-modal-overlay *::before,
+.login-modal-overlay *::after {
+  box-sizing: border-box;
+}
 /* 모달 오버레이 */
 .login-modal-overlay {
     display: none;
