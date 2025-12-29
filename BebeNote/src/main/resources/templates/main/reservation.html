@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>진료예약 - 베베 접종 수첩</title>
-    <link rel="stylesheet" href="/css/headerMenu/bookmark.css" />
+    <link rel="stylesheet" href="/css/main/reservation.css" />
 	<link rel="stylesheet" href="/css/login/insertModal.css" />
 	<link rel="stylesheet" href="/css/fragments/layout.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -42,27 +42,44 @@
                         <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
                     </div>
                 </div>
+				
+				<!-- 예약 영역 -->
+				<div class="reservation-box">
+				    <div class="reservation-title">
+				        <i class="fa-solid fa-calendar-days"></i>
+				        예약하기
+				    </div>
 
-                <!-- 진료중인 소아과가 없을 때 표시 -->
-                <!-- <div class="empty-message" style="display: none;">
-                    <i class="fa-regular fa-star"></i>
-                    <div>진료중인 소아과가 없습니다</div>
-                </div> -->
+				    <!-- 날짜 선택 -->
+				    <div class="reservation-section">
+				        <div class="section-label">날짜 선택</div>
+				        <input type="date" class="date-input">
+				    </div>
+
+				    <!-- 시간 선택 -->
+				    <div class="reservation-section">
+				        <div class="section-label">시간 선택</div>
+				        <div class="time-grid">
+				            <button class="time-btn">09:00</button>
+				            <button class="time-btn">09:30</button>
+				            <button class="time-btn">10:00</button>
+				            <button class="time-btn disabled">10:30</button>
+				            <button class="time-btn">11:00</button>
+				            <button class="time-btn">11:30</button>
+				        </div>
+				    </div>
+
+				    <!-- 예약 버튼 -->
+				    <button class="reserve-btn">
+				        예약하기
+				    </button>
+				</div>
+
             </div>
         </div>
 
         <!-- 오른쪽: 검색 및 상세 정보 -->
         <div class="info-section">
-            <!-- 검색 -->
-            <div class="search-card">
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="병원 이름 또는 주소를 검색하세요">
-                    <button class="search-btn">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        검색
-                    </button>
-                </div>
-            </div>
 
             <!-- 병원 상세 정보 -->
             <div class="hospital-detail-card">

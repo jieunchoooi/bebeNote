@@ -1,0 +1,395 @@
+/* bookmark.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Malgun Gothic', sans-serif;
+    background: #f7f9fa;
+    min-height: 100vh;
+}
+
+.bookmark-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 20px;
+    min-height: calc(100vh - 200px);
+}
+
+/* 왼쪽 영역 - 즐겨찾기 병원 목록 */
+.bookmark-section {
+    background: white;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #424242;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: #deaaaa;
+}
+
+.hospital-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.hospital-item {
+    background: #fef5f5;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.hospital-item:hover {
+    background: #fce8e8;
+    border-color: #deaaaa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(222, 170, 170, 0.2);
+}
+
+.hospital-item.active {
+    background: #deaaaa;
+    color: white;
+    border-color: #deaaaa;
+}
+
+.hospital-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.hospital-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #424242;
+}
+
+.hospital-item.active .hospital-name {
+    color: white;
+}
+
+.bookmark-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #deaaaa;
+    transition: transform 0.3s;
+}
+
+.bookmark-btn:hover {
+    transform: scale(1.2);
+}
+
+.hospital-item.active .bookmark-btn {
+    color: white;
+}
+
+.hospital-info {
+    font-size: 14px;
+    color: #999;
+    line-height: 1.6;
+}
+
+.hospital-info i {
+    margin-right: 5px;
+    color: #deaaaa;
+}
+
+.hospital-item.active .hospital-info {
+    color: #f5f5f5;
+}
+
+.hospital-item.active .hospital-info i {
+    color: white;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.empty-message i {
+    font-size: 60px;
+    margin-bottom: 20px;
+    opacity: 0.3;
+    color: #deaaaa;
+}
+/*왼쪽 영역 - 즐겨찾기 병원 목록 끝*/
+
+/* 왼쪽 예약 영역*/
+.reservation-box {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    background: #fff;
+}
+
+.reservation-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.reservation-section {
+    margin-bottom: 16px;
+}
+
+.section-label {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+/* 날짜 */
+.date-input {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* 시간 버튼 */
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.time-btn {
+    padding: 8px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.time-btn:hover {
+    border-color: #ff7a7a;
+    color: #ff7a7a;
+}
+
+.time-btn.active {
+    background: #ff7a7a;
+    color: #fff;
+    border-color: #ff7a7a;
+}
+
+.time-btn.disabled {
+    background: #f5f5f5;
+    color: #aaa;
+    border-color: #eee;
+    cursor: not-allowed;
+}
+
+/* 예약 버튼 */
+.reserve-btn {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 5px;
+    border: none;
+    background: #deabab;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+
+/* 오른쪽 영역 */
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 병원 정보 카드 */
+.hospital-detail-card {
+    background: white;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.hospital-detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #deaaaa;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.detail-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #424242;
+}
+
+.bookmark-star {
+    font-size: 30px;
+    color: #deaaaa;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.bookmark-star:hover {
+    transform: scale(1.2);
+}
+
+.detail-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fef5f5;
+    border-radius: 5px;
+}
+
+.info-label {
+    min-width: 120px;
+    font-weight: bold;
+    color: #424242;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-label i {
+    color: #deaaaa;
+}
+
+.info-value {
+    color: #666;
+    line-height: 1.6;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: #f3d5d5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(243, 213, 213, 0.3);
+}
+
+.btn-primary:hover {
+    background: #deaaaa;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(222, 170, 170, 0.4);
+}
+
+.btn-secondary {
+    background: #fef5f5;
+    color: #424242;
+    border: 2px solid #deaaaa;
+}
+
+.btn-secondary:hover {
+    background: #fce8e8;
+    transform: translateY(-2px);
+}
+
+/* 지도 영역 */
+.map-placeholder {
+    height: 300px;
+    background: #fef5f5;
+    border-radius: 5px;
+    border: 2px dashed #deaaaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    margin-top: 20px;
+}
+
+.map-placeholder i {
+    color: #deaaaa;
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+/*    width: 8px;*/
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #deaaaa;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d19898;
+}
