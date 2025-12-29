@@ -1,284 +1,325 @@
-/* myHospital.css - 나의 병원 페이지 전용 스타일 */
-
-body {
-    font-family: 'Malgun Gothic', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f7f9fa;
-}
-
-/* ===== 공통 레이아웃 ===== */
-.myhospital-wrapper {
-    max-width: 1200px;
-    margin: 40px auto;
-    display: flex;
-    gap: 30px;
-}
-
-/* ===== 사이드바 ===== */
-.mypage-sidebar {
-    width: 240px;
-	min-height: 650px;
-    background-color: #f6d6d6;
-    border-radius: 5px;
-    padding: 20px;
-}
-
-.mypage-sidebar h3 {
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar-menu li {
-    margin-bottom: 12px;
-}
-
-.sidebar-menu a {
-    display: block;
-    padding: 12px 14px;
-    border-radius: 5px;
-    color: #333;
-    text-decoration: none;
-    font-size: 15px;
-    background-color: #fbeaea;
-    transition: all 0.2s ease;
-}
-
-.sidebar-menu a:hover,
-.sidebar-menu a.active {
-    background-color: #e9b5b5;
-    font-weight: 600;
-}
-
-/* ===== 메인 컨텐츠 ===== */
-.myhospital-main-content {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-/* ===== 섹션 공통 ===== */
-.myhospital-section,
-.myhospital-history-section {
-    background: white;
-    border-radius: 5px;
-    padding: 30px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border: 3px solid #e9b5b5;
-}
-
-.myhospital-section-header {
-    margin-bottom: 20px;
-}
-
-.myhospital-section-title {
-    font-size: 22px;
-    color: #e9b5b5;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
-
-.myhospital-btn-myinfo {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.myhospital-btn-add {
-    background: #deaaaa;
-    color: white;
-}
-
-.myhospital-btn-add:hover {
-    background: #d19898;
-}
-
-.myhospital-btn-myinfo {
-    background: #f0f0f0;
-    color: #666;
-}
-
-.myhospital-btn-myinfo:hover {
-    background: #e0e0e0;
-}
-
-/* ===== 리스트 헤더 ===== */
-.myhospital-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.myhospital-filter-select {
-    padding: 8px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 5px;
-    font-size: 13px;
-    color: #666;
-    cursor: pointer;
-    transition: border-color 0.2s;
-}
-
-.myhospital-filter-select:focus {
-    outline: none;
-    border-color: #deaaaa;
-}
-
-/* ===== 병원 리스트 ===== */
-.myhospital-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.myhospital-item {
-    background: #fef5f5;
-    border-radius: 8px;
-    padding: 20px;
-    border: 2px solid #f5e0e0;
-    transition: all 0.2s;
-}
-
-.myhospital-item:hover {
-    border-color: #deaaaa;
-    box-shadow: 0 2px 8px rgba(222, 170, 170, 0.2);
-}
-
-.myhospital-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.myhospital-item-period {
-    font-size: 13px;
-    color: #999;
-}
-
-.myhospital-bookmark {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: #ddd;
-    transition: all 0.2s;
-}
-
-.myhospital-bookmark.active {
-    color: #ffd700;
-}
-
-.myhospital-bookmark:hover {
-    transform: scale(1.2);
-}
-
-.myhospital-item-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.myhospital-item-actions {
-    display: flex;
-    gap: 8px;
-}
-
-
-
-/* ===== 진료내역 ===== */
-.myhospital-history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.myhospital-history-card {
-    background: #fef5f5;
-    border-radius: 8px;
-    padding: 20px;
-    border: 2px solid #f5e0e0;
-    transition: all 0.2s;
-}
-
-.myhospital-history-card:hover {
-    border-color: #deaaaa;
-    box-shadow: 0 2px 8px rgba(222, 170, 170, 0.2);
-}
-
-.myhospital-history-header {
-    margin-bottom: 10px;
-}
-
-.myhospital-history-period {
-    font-size: 13px;
-    color: #999;
-}
-
-.myhospital-history-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.myhospital-history-detail {
-    font-size: 15px;
-    color: #666;
-    margin-bottom: 15px;
-    line-height: 1.6;
-}
-
-.myhospital-btn-view {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    background: #deaaaa;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.myhospital-btn-view:hover {
-    background: #d19898;
-    transform: translateY(-2px);
-}
-
-/* ===== 반응형 ===== */
-@media (max-width: 1024px) {
-    .myhospital-main-content {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .myhospital-wrapper {
-        flex-direction: column;
-    }
-    
-    .myhospital-sidebar {
-        width: 100%;
-    }
-}
+	/* myHospital.css - 나의 병원 페이지 전용 스타일 */
+	
+	body {
+	    font-family: 'Malgun Gothic', sans-serif;
+	    margin: 0;
+	    padding: 0;
+	    background: #f7f9fa;
+	}
+	
+	/* ===== 공통 레이아웃 ===== */
+	.myhospital-wrapper {
+	    max-width: 1200px;
+	    margin: 40px auto;
+	    display: flex;
+	    gap: 30px;
+	}
+	
+	/* ===== 사이드바 ===== */
+	.mypage-sidebar {
+	    width: 240px;
+		min-height: 650px;
+	    background-color: #f6d6d6;
+	    border-radius: 5px;
+	    padding: 20px;
+	}
+	
+	.mypage-sidebar h3 {
+	    font-size: 18px;
+	    margin-bottom: 20px;
+	    text-align: center;
+	    color: #333;
+	}
+	
+	.sidebar-menu {
+	    list-style: none;
+	    padding: 0;
+	    margin: 0;
+	}
+	
+	.sidebar-menu li {
+	    margin-bottom: 12px;
+	}
+	
+	.sidebar-menu a {
+	    display: block;
+	    padding: 12px 14px;
+	    border-radius: 5px;
+	    color: #333;
+	    text-decoration: none;
+	    font-size: 15px;
+	    background-color: #fbeaea;
+	    transition: all 0.2s ease;
+	}
+	
+	.sidebar-menu a:hover,
+	.sidebar-menu a.active {
+	    background-color: #e9b5b5;
+	    font-weight: 600;
+	}
+	
+	/* ===== 메인 컨텐츠 ===== */
+	.myhospital-main-content {
+	    flex: 1;
+	    display: grid;
+	    grid-template-columns: 1fr 1fr;
+	    gap: 20px;
+	}
+	
+	/* ===== 섹션 공통 ===== */
+	.myhospital-section,
+	.myhospital-history-section {
+	    background: white;
+	    border-radius: 5px;
+	    padding: 30px;
+	    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+	    border: 3px solid #e9b5b5;
+	}
+	
+	.myhospital-section-header {
+	    margin-bottom: 20px;
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	}
+	
+	.myhospital-section-title {
+	    font-size: 22px;
+	    color: #e9b5b5;
+	    margin-bottom: 15px;
+	    font-weight: bold;
+	}
+	
+	.myhospital-btn-myinfo {
+	    padding: 8px 16px;
+	    border: none;
+	    border-radius: 5px;
+	    font-size: 13px;
+	    cursor: pointer;
+	    transition: all 0.2s;
+	    display: flex;
+	    align-items: center;
+	    gap: 5px;
+	}
+	
+	.myhospital-btn-add {
+	    background: #deaaaa;
+	    color: white;
+	}
+	
+	.myhospital-btn-add:hover {
+	    background: #d19898;
+	}
+	
+	.myhospital-btn-myinfo {
+	    background: #f0f0f0;
+	    color: #666;
+	}
+	
+	.myhospital-btn-myinfo:hover {
+	    background: #e0e0e0;
+	}
+	
+	/* ===== 리스트 헤더 ===== */
+	.myhospital-list-header {
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	    margin-bottom: 20px;
+	    padding-bottom: 15px;
+	    border-bottom: 2px solid #f0f0f0;
+	}
+	
+	.myhospital-filter-select {
+	    padding: 8px 15px;
+	    border: 2px solid #e0e0e0;
+	    border-radius: 5px;
+	    font-size: 13px;
+	    color: #666;
+	    cursor: pointer;
+	    transition: border-color 0.2s;
+	}
+	
+	.myhospital-filter-select:focus {
+	    outline: none;
+	    border-color: #deaaaa;
+	}
+	
+	/* ===== 병원 카드 스타일 (진료내역과 동일) ===== */
+	.myhospital-list {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 15px;
+	}
+	
+	.myhospital-item {
+	    background: #fef5f5;
+	    border-radius: 8px;
+	    padding: 20px;
+	    border: 2px solid #f5e0e0;
+	    transition: all 0.2s;
+	}
+	
+	.myhospital-item:hover {
+	    border-color: #deaaaa;
+	    box-shadow: 0 2px 8px rgba(222, 170, 170, 0.2);
+	}
+	
+	.myhospital-item-header {
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	}
+	
+	.myhospital-item-date {
+	    font-size: 13px;
+	    color: #999;
+	}
+	
+	.myhospital-item-name {
+	    font-size: 18px;
+	    font-weight: bold;
+	    color: #333;
+	    margin: 0 0 15px 0;
+	}
+	
+	.myhospital-bookmark {
+	    background: none;
+	    border: none;
+	    cursor: pointer;
+	    font-size: 20px;
+	    color: #DFACAC;
+	    transition: all 0.2s;
+	    padding: 5px;
+	}
+	
+	.myhospital-bookmark.active {
+	    color: #DEAAAA;
+	}
+	
+	.myhospital-bookmark:hover {
+	    transform: scale(1.2);
+	}
+	
+	.myhospital-item-info {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 8px;
+	    margin-bottom: 15px;
+	}
+	
+	.myhospital-info-row {
+	    display: flex;
+	    align-items: center;
+	    gap: 10px;
+	    color: #666;
+	    font-size: 14px;
+	}
+	
+	.myhospital-info-row i {
+	    font-size: 16px;
+	    width: 20px;
+	    text-align: center;
+	}
+	
+	.myhospital-info-row span {
+	    flex: 1;
+	}
+	
+	.myhospital-btn-reservation {
+	    width: 100%;
+	    padding: 12px;
+	    border: none;
+	    border-radius: 5px;
+	    background: #deaaaa;
+	    color: white;
+	    font-size: 14px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    transition: all 0.2s;
+	}
+	
+	.myhospital-btn-reservation:hover {
+	    background: #d19898;
+	    transform: translateY(-2px);
+	}
+	
+	/* ===== 진료내역 ===== */
+	.myhospital-history-list {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 15px;
+	}
+	
+	.myhospital-history-card {
+	    background: #fef5f5;
+	    border-radius: 8px;
+	    padding: 20px;
+	    border: 2px solid #f5e0e0;
+	    transition: all 0.2s;
+	}
+	
+	.myhospital-history-card:hover {
+	    border-color: #deaaaa;
+	    box-shadow: 0 2px 8px rgba(222, 170, 170, 0.2);
+	}
+	
+	.myhospital-history-header {
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	}
+	
+	.myhospital-history-period {
+	    font-size: 13px;
+	    color: #999;
+	}
+	
+	.myhospital-history-name {
+	    font-size: 18px;
+	    font-weight: bold;
+	    color: #333;
+	    margin-bottom: 15px;
+	}
+	
+	.myhospital-history-detail {
+	    font-size: 15px;
+	    color: #666;
+	    margin-bottom: 15px;
+	    line-height: 1.6;
+	}
+	
+	.myhospital-btn-view {
+	    width: 100%;
+	    padding: 12px;
+	    border: none;
+	    border-radius: 5px;
+	    background: #deaaaa;
+	    color: white;
+	    font-size: 14px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    transition: all 0.2s;
+	}
+	
+	.myhospital-btn-view:hover {
+	    background: #d19898;
+	    transform: translateY(-2px);
+	}
+	
+	/* ===== 반응형 ===== */
+	@media (max-width: 1024px) {
+	    .myhospital-main-content {
+	        grid-template-columns: 1fr;
+	    }
+	}
+	
+	@media (max-width: 768px) {
+	    .myhospital-wrapper {
+	        flex-direction: column;
+	    }
+	    
+	    .mypage-sidebar {
+	        width: 100%;
+	    }
+	}
