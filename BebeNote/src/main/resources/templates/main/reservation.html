@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>즐겨찾기 병원 - 베베 접종 수첩</title>
+    <title>진료예약 - 베베 접종 수첩</title>
     <link rel="stylesheet" href="/css/headerMenu/bookmark.css" />
 	<link rel="stylesheet" href="/css/login/insertModal.css" />
 	<link rel="stylesheet" href="/css/fragments/layout.css" />
@@ -24,8 +24,8 @@
         <!-- 왼쪽: 즐겨찾기 병원 목록 -->
         <div class="bookmark-section">
             <div class="section-title">
-                <i class="fa-solid fa-star"></i>
-                즐겨찾기
+                <i class="fa-solid fa-clock"></i>
+                진료 예약
             </div>
             
             <div class="hospital-list" id="hospitalList">
@@ -43,36 +43,10 @@
                     </div>
                 </div>
 
-                <div class="hospital-item" onclick="selectHospital(this, 1)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">현신소아과</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 1)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 명륜로 456</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-2345-6789</div>
-                    </div>
-                </div>
-
-                <div class="hospital-item" onclick="selectHospital(this, 2)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">동래이동병원</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 2)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 충렬대로 789</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-3456-7890</div>
-                    </div>
-                </div>
-
-                <!-- 즐겨찾기가 없을 때 표시 -->
+                <!-- 진료중인 소아과가 없을 때 표시 -->
                 <!-- <div class="empty-message" style="display: none;">
                     <i class="fa-regular fa-star"></i>
-                    <div>즐겨찾기한 병원이 없습니다</div>
+                    <div>진료중인 소아과가 없습니다</div>
                 </div> -->
             </div>
         </div>
@@ -154,7 +128,7 @@
                     <div class="action-buttons">
                         <button class="action-btn btn-primary">
                             <i class="fa-solid fa-calendar-check"></i>
-							<a href="/main/reservation">예약하기</a>
+                            <a href="/main/reservation">예약하기</a>
                         </button>
                         <button class="action-btn btn-secondary">
                             <i class="fa-solid fa-route"></i>
@@ -197,11 +171,11 @@
             if (icon.classList.contains('fa-solid')) {
                 icon.classList.remove('fa-solid');
                 icon.classList.add('fa-regular');
-                // alert('즐겨찾기에서 제거되었습니다.');
+               // alert('즐겨찾기에서 제거되었습니다.');
             } else {
                 icon.classList.remove('fa-regular');
                 icon.classList.add('fa-solid');
-               //  alert('즐겨찾기에 추가되었습니다.');
+               // alert('즐겨찾기에 추가되었습니다.');
             }
         }
     </script>

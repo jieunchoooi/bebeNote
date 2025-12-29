@@ -22,6 +22,11 @@ public class MainController {
 	public String main() {
 		return "/main/main";
 	}
+	
+	@GetMapping("/main/reservation")
+	public String reservation() {
+		return "/main/reservation";
+	}
 
 	
 	
