@@ -67,12 +67,30 @@
                                placeholder="example@email.com" required>
                     </div>
 
-                    <div class="signup-form-group">
-                        <div class="signup-checkbox-group">
-                            <input type="checkbox" id="agree" name="agree" class="signup-checkbox-input" required>
-                            <label for="agree" class="signup-checkbox-label">동의합니까 (체크)</label>
-                        </div>
-                    </div>
+<!--                    <div class="signup-form-group">-->
+<!--                        <div class="signup-checkbox-group">-->
+<!--                            <input type="checkbox" id="agree" name="agree" class="signup-checkbox-input" required>-->
+<!--                            <label for="agree" class="signup-checkbox-label">동의합니까 (체크)</label>-->
+<!--                        </div>-->
+<!--                    </div>-->
+					<div class="signup-form-group">
+					    <div class="signup-checkbox-group">
+					        <input type="checkbox" id="terms" name="terms" class="signup-checkbox-input" required>
+					        <label for="terms" class="signup-checkbox-label">
+					            서비스 이용약관에 동의합니다. <a href="/terms" target="_blank">약관 보기</a>
+					        </label>
+					    </div>
+					</div>
+
+					<div class="signup-form-group">
+					    <div class="signup-checkbox-group">
+					        <input type="checkbox" id="privacy" name="privacy" class="signup-checkbox-input" required>
+					        <label for="privacy" class="signup-checkbox-label">
+					            개인정보 수집 및 이용에 동의합니다. <a href="/privacy" target="_blank">자세히 보기</a>
+					        </label>
+					    </div>
+					</div>
+
 
                     <div class="signup-button-group">
                         <button type="button" class="signup-btn signup-btn-secondary" onclick="closeInsertModal()">
