@@ -17,6 +17,8 @@ public class MemberVO {
 	private String name;
 	private String phone;
 	private String provider;
+	private String address;
+	private String detailAddress;
 	private String role;
 	private Timestamp created_at;
 	private Timestamp updated_at;

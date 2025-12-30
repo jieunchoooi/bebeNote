@@ -16,10 +16,10 @@
             </div>
 
             <div class="login-modal-body">
-                <form id="loginForm" th:action="@{/login}" method="post">
+                <form id="loginForm" th:action="@{/member/login}" method="post">
                     <div class="login-form-group">
                         <label class="login-form-label" for="loginId">아이디</label>
-                        <input type="text" class="login-form-input" id="loginId" name="username"
+                        <input type="text" class="login-form-input" id="loginId" name="user_id"
                                placeholder="아이디를 입력하세요" required>
                     </div>
 
@@ -43,6 +43,9 @@
                     <div class="login-signup-link">
                         회원이 아니신가요? <a href="#" onclick="closeLoginModal(); openInsertModal(); return false;">회원가입</a>
                     </div>
+					
+					<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
+
                 </form>
             </div>
         </div>

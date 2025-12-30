@@ -14,9 +14,16 @@
 	                  </nav>
 	              </div>
 	              <div class="header-right">
-	                  <a href="#" class="auth-link" onclick="openLoginModal(); return false;">로그인</a>
-					  <a href="#" class="auth-link" onclick="openInsertModal(); return false;">회원가입</a>	              
-	                  <a href="/myPage/info" class="auth-link">마이페이지</a>
+					  
+					  <div sec:authorize="isAnonymous()">
+					  		<a href="#" class="auth-link" onclick="openLoginModal(); return false;">로그인</a>
+					  		<a href="#" class="auth-link" onclick="openInsertModal(); return false;">회원가입</a>	              
+					  </div>
+					  <div sec:authorize="isAuthenticated()">
+		                  <span sec:authentication="name" class="auth-link1"></span> <span class="auth-link2">님</span>
+						  <a href="/myPage/info" class="auth-link">마이페이지</a>
+						  <a href="/logout" class="auth-link">로그아웃</a>
+					  </div>  
 				  </div>
 	          </div>
 	      </header>

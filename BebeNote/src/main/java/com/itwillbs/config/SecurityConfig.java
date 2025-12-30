@@ -35,7 +35,7 @@ public class SecurityConfig {
 		return http
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/","/login/**","/insert/**","/insertPro/**","/myPage/**","/main/**","/headerMenu/**").permitAll()
-						.requestMatchers("/index2/**").permitAll()
+						.requestMatchers("/index2/**","/member/*").permitAll()
 						.requestMatchers("/img/**","/css/**","/js/**","/uploadPath/**").permitAll()
 //						.requestMatchers("/main/**").hasAnyRole("USER","ADMIN")
 						.requestMatchers("/list/**").hasRole("ADMIN")
@@ -43,16 +43,15 @@ public class SecurityConfig {
 						.authenticated()
 				)
 				.formLogin(form -> form
-						.loginPage("/login")
-						.loginProcessingUrl("/loginPro")
-						.usernameParameter("id")
-						.passwordParameter("passwd")
-						.defaultSuccessUrl("/main")
-						.failureUrl("/login")
+						.loginProcessingUrl("/member/login")
+						.usernameParameter("user_id")
+						.passwordParameter("password")
+						.defaultSuccessUrl("/main/main", true)
+						.failureUrl("/?loginError=true")
 				)
 				.logout(logout -> logout
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-						.logoutSuccessUrl("/")
+		                .logoutSuccessUrl("/")
 				)
 				.userDetailsService(myUserDetailsService)
 				.build();

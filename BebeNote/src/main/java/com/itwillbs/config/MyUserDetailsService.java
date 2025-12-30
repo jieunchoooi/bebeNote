@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.itwillbs.entity.MemberEntity;
+import com.itwillbs.entity.Member;
 import com.itwillbs.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 //		import com.itwillbs.entity.Member;
 //		Optional<Member> => orElseThrow(); => null 예외처리
-		MemberEntity userEntity = memberRepository.findById(id).orElseThrow(() 
+		Member userEntity = memberRepository.findById(id).orElseThrow(() 
 				-> new UsernameNotFoundException("없는 회원"));
 		
 //		Hibernate: 
