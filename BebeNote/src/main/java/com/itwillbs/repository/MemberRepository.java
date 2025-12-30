@@ -2,12 +2,12 @@ package com.itwillbs.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.itwillbs.domain.UsersVO;
-import com.itwillbs.entity.UserEntity;
+import com.itwillbs.domain.MemberVO;
+import com.itwillbs.entity.MemberEntity;
 
-public interface MemberRepository extends JpaRepository<UserEntity, String>{
+public interface MemberRepository extends JpaRepository<MemberEntity, String>{
 
-	UsersVO findByUserIdAndPassword(String user_id, String password);
+	MemberVO findByUserIdAndPassword(String user_id, String password);
 	
 	
 	
