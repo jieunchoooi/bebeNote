@@ -40,20 +40,51 @@
     <section class="mypage-content">
 
         <!-- 자녀 정보 카드 -->
-        <div class="mypage-card child-card">
+        <div class="mypage-card child-card" id="childCard">
             <div class="child-avatar">
                 <i class="fa-solid fa-child-reaching"></i>
             </div>
 
-            <div class="child-info">
-                <h4>토끼</h4>
+            <!-- 보기 모드 -->
+            <div class="child-info" id="viewMode">
+                <h4 id="childName">토끼</h4>
                 <p>
-                    2024.01.01 (여)<br>
-                    태어난지 722일째예요
+                    <span id="childBirthday">2024.01.01</span> (<span id="childGender">여</span>)<br>
+                    태어난지 <span id="childDays">722</span>일째예요
                 </p>
             </div>
 
-            <button class="child-edit-btn">수정</button>
+            <!-- 편집 모드 -->
+            <div class="child-info-edit" id="editMode" style="display: none;">
+                <div class="edit-field">
+                    <label>이름</label>
+                    <input type="text" id="editName" value="토끼">
+                </div>
+                <div class="edit-field">
+                    <label>생년월일</label>
+                    <input type="date" id="editBirthday" value="2024-01-01">
+                </div>
+                <div class="edit-field">
+                    <label>성별</label>
+                    <div class="gender-select">
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="남" id="genderMale">
+                            <span>남</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="여" id="genderFemale" checked>
+                            <span>여</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 버튼 -->
+            <button class="child-edit-btn" id="editBtn" onclick="toggleEditMode()">수정</button>
+            <div class="edit-buttons" id="editButtons" style="display: none;">
+                <button class="btn-cancel" onclick="cancelEdit()">취소</button>
+                <button class="btn-save" onclick="saveEdit()">저장</button>
+            </div>
         </div>
 
         <!-- 접종 수첩 -->
@@ -206,10 +237,185 @@
 <div th:replace="~{fragments/footer::footer}"></div>
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
+
 <script>
-function openVaccineInput(td) {
-    if (td.classList.contains('active')) return;
-    td.classList.add('active');
+
+	let activeVaccineTd = null; // 🔥 현재 열려있는 접종 칸
+
+	// 백신 입력
+	function openVaccineInput(td) {
+	    // 이미 다른 칸이 열려 있으면 무시
+	    if (activeVaccineTd && activeVaccineTd !== td) {
+	        return;
+	    }
+
+	    // 이미 활성화된 경우도 무시
+	    if (td.classList.contains('active')) return;
+
+	    activeVaccineTd = td;
+	    td.classList.add('active');
+
+	    const inputBox = td.querySelector('.vaccine-input-box');
+
+	    if (!inputBox.querySelector('.vaccine-save-btn')) {
+	        const saveBtn = document.createElement('button');
+	        saveBtn.className = 'vaccine-save-btn';
+	        saveBtn.textContent = '저장';
+	        saveBtn.onclick = function(e) {
+	            e.stopPropagation();
+	            saveVaccineData(td);
+	        };
+	        inputBox.appendChild(saveBtn);
+	    }
+	}
+
+	// 백신 데이터 저장
+	function saveVaccineData(td) {
+	    const inputBox = td.querySelector('.vaccine-input-box');
+	    const hospital = inputBox.querySelector('input[type="text"]:nth-child(1)').value.trim();
+	    const date = inputBox.querySelector('input[type="date"]').value;
+	    const vaccine = inputBox.querySelector('input[type="text"]:nth-child(3)').value.trim();
+
+	    if (!hospital || !date || !vaccine) return;
+
+	    td.classList.remove('active');
+	    td.classList.add('saved');
+	    td.innerHTML = `
+	        <div class="vaccine-saved-data">
+	            <div class="saved-hospital">${hospital}</div>
+	            <div class="saved-date">${date}</div>
+	            <div class="saved-vaccine">${vaccine}</div>
+	        </div>
+	        <button class="vaccine-edit-btn" onclick="editVaccineData(this)">
+	            <i class="fa-solid fa-pen"></i>
+	        </button>
+	    `;
+
+	    activeVaccineTd = null; // 🔥 입력 종료
+	}
+
+	// 백신 데이터 수정
+	function editVaccineData(button) {
+	    const td = button.closest('td');
+
+	    // 다른 칸 수정 중이면 무시
+	    if (activeVaccineTd && activeVaccineTd !== td) {
+	        return;
+	    }
+
+	    activeVaccineTd = td;
+
+	    const savedData = td.querySelector('.vaccine-saved-data');
+	    const hospital = savedData.querySelector('.saved-hospital').textContent;
+	    const date = savedData.querySelector('.saved-date').textContent;
+	    const vaccine = savedData.querySelector('.saved-vaccine').textContent;
+
+	    td.classList.remove('saved');
+	    td.classList.add('active');
+	    td.innerHTML = `
+	        <span class="vaccine-placeholder">클릭해서 입력</span>
+	        <div class="vaccine-input-box" style="display: block;">
+	            <input type="text" value="${hospital}">
+	            <input type="date" value="${date}">
+	            <input type="text" value="${vaccine}">
+	            <button class="vaccine-save-btn" onclick="saveVaccineData(this.closest('td'))">저장</button>
+	        </div>
+	    `;
+	}
+
+// 원본 데이터 저장
+let originalData = {
+    name: '토끼',
+    birthday: '2024-01-01',
+    gender: '여'
+};
+
+// 편집 모드 토글
+function toggleEditMode() {
+    const viewMode = document.getElementById('viewMode');
+    const editMode = document.getElementById('editMode');
+    const editBtn = document.getElementById('editBtn');
+    const editButtons = document.getElementById('editButtons');
+    const childCard = document.getElementById('childCard');
+
+    viewMode.style.display = 'none';
+    editMode.style.display = 'block';
+    editBtn.style.display = 'none';
+    editButtons.style.display = 'flex';
+    childCard.classList.add('editing');
+}
+
+// 취소
+function cancelEdit() {
+    const viewMode = document.getElementById('viewMode');
+    const editMode = document.getElementById('editMode');
+    const editBtn = document.getElementById('editBtn');
+    const editButtons = document.getElementById('editButtons');
+    const childCard = document.getElementById('childCard');
+
+    // 원본 데이터로 복원
+    document.getElementById('editName').value = originalData.name;
+    document.getElementById('editBirthday').value = originalData.birthday;
+    if (originalData.gender === '남') {
+        document.getElementById('genderMale').checked = true;
+    } else {
+        document.getElementById('genderFemale').checked = true;
+    }
+
+    viewMode.style.display = 'block';
+    editMode.style.display = 'none';
+    editBtn.style.display = 'block';
+    editButtons.style.display = 'none';
+    childCard.classList.remove('editing');
+}
+
+// 저장
+function saveEdit() {
+    const name = document.getElementById('editName').value.trim();
+    const birthday = document.getElementById('editBirthday').value;
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+
+    // 유효성 검사
+    if (!name) {
+        alert('이름을 입력해주세요.');
+        return;
+    }
+    if (!birthday) {
+        alert('생년월일을 선택해주세요.');
+        return;
+    }
+
+    // 데이터 업데이트
+    originalData = { name, birthday, gender };
+    
+    // 화면 업데이트
+    document.getElementById('childName').textContent = name;
+    document.getElementById('childBirthday').textContent = birthday.replace(/-/g, '.');
+    document.getElementById('childGender').textContent = gender;
+
+    // 일수 계산
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    const diffTime = Math.abs(today - birthDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    document.getElementById('childDays').textContent = diffDays;
+
+    // 편집 모드 종료
+    const viewMode = document.getElementById('viewMode');
+    const editMode = document.getElementById('editMode');
+    const editBtn = document.getElementById('editBtn');
+    const editButtons = document.getElementById('editButtons');
+    const childCard = document.getElementById('childCard');
+
+    viewMode.style.display = 'block';
+    editMode.style.display = 'none';
+    editBtn.style.display = 'block';
+    editButtons.style.display = 'none';
+    childCard.classList.remove('editing');
+
+    // TODO: 서버에 데이터 전송
+    console.log('저장된 데이터:', originalData);
+    alert('자녀 정보가 수정되었습니다.');
 }
 </script>
 
