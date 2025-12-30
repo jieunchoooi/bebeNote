@@ -4,7 +4,7 @@ import java.security.Timestamp;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.itwillbs.domain.UsersVO;
+import com.itwillbs.domain.MemberVO;
 
 //@Column(name = "컬럼명",length = 크기, nullable = false, unique, 
 //        columnDefinition=varchar(5) 직접지정, insertable, updatable)
@@ -22,11 +22,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "user")
+@Table(name = "member")
 @Getter
 @Setter
 @ToString
-public class UserEntity {
+public class MemberEntity {
 
 	@Id
 	@Column(name = "user_id",length = 50)
@@ -57,9 +57,9 @@ public class UserEntity {
 	@Column(name = "role")
 	private String role;
 
-	public static UserEntity setMemberEntity(UsersVO usersVO) {
+	public static MemberEntity setMemberEntity(MemberVO usersVO) {
 		
-		UserEntity user = new UserEntity();
+		MemberEntity user = new MemberEntity();
 		user.setUserId(usersVO.getUser_id());
 		user.setPassword(usersVO.getPassword());
 		user.setName(usersVO.getName());

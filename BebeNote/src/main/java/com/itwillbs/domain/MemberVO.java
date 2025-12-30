@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ToString
-public class UsersVO {
+public class MemberVO {
 
 	private String user_id;
 	private String email;
