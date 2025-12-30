@@ -2,9 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
 </head>
-
 
 <body>
     <!-- 회원가입 모달 -->
@@ -67,30 +65,85 @@
                                placeholder="example@email.com" required>
                     </div>
 
-<!--                    <div class="signup-form-group">-->
-<!--                        <div class="signup-checkbox-group">-->
-<!--                            <input type="checkbox" id="agree" name="agree" class="signup-checkbox-input" required>-->
-<!--                            <label for="agree" class="signup-checkbox-label">동의합니까 (체크)</label>-->
-<!--                        </div>-->
-<!--                    </div>-->
-					<div class="signup-form-group">
-					    <div class="signup-checkbox-group">
-					        <input type="checkbox" id="terms" name="terms" class="signup-checkbox-input" required>
-					        <label for="terms" class="signup-checkbox-label">
-					            서비스 이용약관에 동의합니다. <a href="/terms" target="_blank">약관 보기</a>
-					        </label>
-					    </div>
-					</div>
+                    <!-- 약관 동의 섹션 -->
+                    <div class="terms-section">
+                        <div class="terms-title">약관 동의</div>
 
-					<div class="signup-form-group">
-					    <div class="signup-checkbox-group">
-					        <input type="checkbox" id="privacy" name="privacy" class="signup-checkbox-input" required>
-					        <label for="privacy" class="signup-checkbox-label">
-					            개인정보 수집 및 이용에 동의합니다. <a href="/privacy" target="_blank">자세히 보기</a>
-					        </label>
-					    </div>
-					</div>
+                            <div class="signup-checkbox-group">
+                                <input type="checkbox" id="agreeAll" class="signup-checkbox-input">
+                                <label for="agreeAll" class="signup-checkbox-label">
+                                    전체 동의하기
+                                </label>
+                            </div>
 
+                        <div class="terms-item">
+                            <div class="signup-checkbox-group">
+                                <input type="checkbox" id="terms" name="terms" class="signup-checkbox-input" required>
+                                <label for="terms" class="signup-checkbox-label">
+                                    서비스 이용약관 동의<span class="required-tag">필수</span>
+                                    <a class="terms-link" href="#" data-toggle="termsContent">
+                                        <i class="fas fa-chevron-down"></i> 보기
+                                    </a>
+                                </label>
+                            </div>
+                            <div class="terms-content-box" id="termsContent">
+                                <h4>제1조 (목적)</h4>
+                                <p>본 약관은 회사가 제공하는 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+                                
+                                <h4>제2조 (정의)</h4>
+                                <p>1. "서비스"란 회사가 제공하는 모든 온라인 서비스를 의미합니다.</p>
+                                <p>2. "회원"이란 회사와 서비스 이용계약을 체결하고 서비스를 이용하는 자를 말합니다.</p>
+                                
+                                <h4>제3조 (약관의 효력 및 변경)</h4>
+                                <p>본 약관은 회원가입 시 동의함으로써 효력이 발생합니다. 회사는 필요한 경우 약관을 변경할 수 있으며, 변경된 약관은 공지 후 7일이 경과한 시점부터 효력이 발생합니다.</p>
+                                
+                                <h4>제4조 (회원가입)</h4>
+                                <p>서비스를 이용하고자 하는 자는 회사가 정한 절차에 따라 회원가입을 신청하고, 회사의 승낙을 받아야 합니다.</p>
+                                
+                                <h4>제5조 (개인정보의 보호)</h4>
+                                <p>회사는 관련 법령이 정하는 바에 따라 회원의 개인정보를 보호하기 위해 노력합니다. 자세한 사항은 개인정보처리방침을 참조하시기 바랍니다.</p>
+                                
+                                <h4>제6조 (회원의 의무)</h4>
+                                <p>회원은 서비스 이용 시 다음 각 호의 행위를 하여서는 안 됩니다.</p>
+                                <p>1. 타인의 정보 도용</p>
+                                <p>2. 회사가 게시한 정보의 변경</p>
+                                <p>3. 회사가 정한 정보 이외의 정보 등의 송신 또는 게시</p>
+                                <p>4. 회사 및 기타 제3자의 저작권 등 지적재산권에 대한 침해</p>
+                            </div>
+                        </div>
+
+                        <div class="terms-item">
+                            <div class="signup-checkbox-group">
+                                <input type="checkbox" id="privacy" name="privacy" class="signup-checkbox-input" required>
+                                <label for="privacy" class="signup-checkbox-label">
+                                    개인정보 수집 및 이용 동의<span class="required-tag">필수</span>
+                                    <a class="terms-link" href="#" data-toggle="privacyContent">
+                                        <i class="fas fa-chevron-down"></i> 보기
+                                    </a>
+                                </label>
+                            </div>
+                            <div class="terms-content-box" id="privacyContent">
+                                <h4>1. 개인정보의 수집 항목</h4>
+                                <p>회사는 회원가입, 서비스 제공을 위해 다음과 같은 개인정보를 수집합니다.</p>
+                                <p><strong>필수항목:</strong> 아이디, 비밀번호, 이름, 전화번호, 주소, 이메일</p>
+                                <p><strong>선택항목:</strong> 상세주소</p>
+                                
+                                <h4>2. 개인정보의 수집 및 이용 목적</h4>
+                                <p><strong>회원 관리:</strong> 회원제 서비스 이용에 따른 본인확인, 개인식별, 불량회원의 부정 이용 방지와 비인가 사용 방지, 가입 의사 확인</p>
+                                <p><strong>서비스 제공:</strong> 계약 이행, 서비스 제공에 따른 요금정산, 콘텐츠 제공, 맞춤 서비스 제공</p>
+                                <p><strong>고객 지원:</strong> 고객 문의 처리, 공지사항 전달</p>
+                                
+                                <h4>3. 개인정보의 보유 및 이용기간</h4>
+                                <p>회원탈퇴 시까지 보유하며, 다만 관계 법령에 따라 일정 기간 보관이 필요한 경우 해당 기간 동안 보관합니다.</p>
+                                <p>- 계약 또는 청약철회 등에 관한 기록: 5년 (전자상거래법)</p>
+                                <p>- 대금결제 및 재화 등의 공급에 관한 기록: 5년 (전자상거래법)</p>
+                                <p>- 소비자 불만 또는 분쟁처리에 관한 기록: 3년 (전자상거래법)</p>
+                                
+                                <h4>4. 개인정보 제공 거부 권리</h4>
+                                <p>귀하는 개인정보 제공 동의를 거부할 권리가 있습니다. 다만, 필수 항목 동의를 거부하실 경우 회원가입 및 서비스 이용이 제한될 수 있습니다.</p>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="signup-button-group">
                         <button type="button" class="signup-btn signup-btn-secondary" onclick="closeInsertModal()">
@@ -101,12 +154,103 @@
                         </button>
                     </div>
 
+					<div class="signup-helper-buttons">
+					    <button type="button" class="signup-helper-button">카카오</button>
+					    <button type="button" class="signup-helper-button">네이버</button>
+					</div>
                     <div class="signup-helper-links">
                         이미 회원이신가요? <a href="#" onclick="closeInsertModal(); openLoginModal(); return false;" class="signup-helper-link">로그인</a>
                     </div>
                 </form>
             </div>
         </div>
+        
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+        (function() {
+            // 약관 내용 토글
+            document.addEventListener('click', function(e) {
+                var target = e.target;
+                if (target.closest && target.closest('.terms-link')) {
+                    e.preventDefault();
+                    var link = target.closest('.terms-link');
+                    var targetId = link.getAttribute('data-toggle');
+                    var content = document.getElementById(targetId);
+                    
+                    if (content) {
+                        content.classList.toggle('show');
+                    }
+                }
+            });
+
+            // 전체 동의 체크박스
+            var agreeAll = document.getElementById('agreeAll');
+            var terms = document.getElementById('terms');
+            var privacy = document.getElementById('privacy');
+
+            if (agreeAll) {
+                agreeAll.addEventListener('change', function() {
+                    var checked = this.checked;
+                    if (terms) terms.checked = checked;
+                    if (privacy) privacy.checked = checked;
+                });
+            }
+
+            // 개별 체크박스
+            if (terms) {
+                terms.addEventListener('change', updateAgreeAll);
+            }
+            if (privacy) {
+                privacy.addEventListener('change', updateAgreeAll);
+            }
+
+            function updateAgreeAll() {
+                if (agreeAll && terms && privacy) {
+                    agreeAll.checked = terms.checked && privacy.checked;
+                }
+            }
+        })();
+        /*]]>*/
+        </script>
     </div>
+
+    <script>
+        // 약관 내용 토글 (전역 함수)
+        function toggleTermsContent(id) {
+            const content = document.getElementById(id);
+            if (content) {
+                content.classList.toggle('show');
+            }
+        }
+    </script>
+    
+    <script>
+        // DOM 로드 후 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            const agreeAll = document.getElementById('agreeAll');
+            const terms = document.getElementById('terms');
+            const privacy = document.getElementById('privacy');
+
+            // 전체 동의 체크박스
+            if (agreeAll) {
+                agreeAll.addEventListener('change', function() {
+                    const checked = this.checked;
+                    if (terms) terms.checked = checked;
+                    if (privacy) privacy.checked = checked;
+                });
+            }
+
+            // 개별 체크박스 변경 시 전체 동의 상태 업데이트
+            if (terms && privacy) {
+                [terms, privacy].forEach(el => {
+                    el.addEventListener('change', function() {
+                        if (agreeAll) {
+                            agreeAll.checked = terms.checked && privacy.checked;
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
