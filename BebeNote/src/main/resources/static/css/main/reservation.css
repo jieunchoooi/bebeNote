@@ -1,4 +1,4 @@
-/* bookmark.css */
+/* reservation.css */
 
 * {
     margin: 0;
@@ -141,10 +141,10 @@ body {
 }
 /*왼쪽 영역 - 즐겨찾기 병원 목록 끝*/
 
-/* 왼쪽 예약 영역*/
+/* 왼쪽 예약 영역 - 캘린더 */
 .reservation-box {
     margin-top: 20px;
-    padding: 16px;
+    padding: 20px;
     border-radius: 5px;
     border: 1px solid #eee;
     background: #fff;
@@ -153,14 +153,144 @@ body {
 .reservation-title {
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
+    color: #424242;
 }
 
+.reservation-title i {
+    color: #424242;
+}
+
+/* 캘린더 헤더 */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 8px 0;
+}
+
+.calendar-header button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: color 0.2s;
+}
+
+.calendar-header button:hover {
+    color: #deaaaa;
+}
+
+.current-month {
+    font-size: 16px;
+    font-weight: bold;
+    color: #424242;
+}
+
+/* 캘린더 요일 */
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 8px;
+}
+
+.weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+    padding: 6px 0;
+}
+
+.weekday.sunday {
+    color: #ff6b6b;
+}
+
+.weekday.saturday {
+    color: #4dabf7;
+}
+
+/* 캘린더 날짜 */
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 15px;
+}
+
+.day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.day:hover:not(.disabled):not(.other-month) {
+    background: #fef5f5;
+}
+
+.day.other-month {
+    color: #ddd;
+    cursor: default;
+}
+
+.day.today {
+    background: #deaaaa;
+    color: white;
+    font-weight: bold;
+}
+
+.day.selected {
+    background: #f3d5d5;
+    color: white;
+    font-weight: bold;
+}
+
+.day.sunday:not(.today):not(.selected):not(.other-month) {
+    color: #ff6b6b;
+}
+
+.day.saturday:not(.today):not(.selected):not(.other-month) {
+    color: #4dabf7;
+}
+
+.day.disabled {
+    color: #ddd;
+    cursor: not-allowed;
+}
+
+.day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 4px;
+    height: 4px;
+    background: #deaaaa;
+    border-radius: 50%;
+}
+
+.day.today.has-event::after,
+.day.selected.has-event::after {
+    background: white;
+}
+
+/* 시간 선택 */
 .reservation-section {
     margin-bottom: 16px;
+	padding-top: 16px;         
+	border-top: 1px solid #e0e0e0;  
 }
 
 .section-label {
@@ -170,19 +300,11 @@ body {
     color: #444;
 }
 
-/* 날짜 */
-.date-input {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-/* 시간 버튼 */
 .time-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+	margin-bottom: 20px;
 }
 
 .time-btn {
@@ -192,17 +314,18 @@ body {
     background: #fff;
     cursor: pointer;
     font-size: 13px;
+    transition: all 0.2s;
 }
 
-.time-btn:hover {
-    border-color: #ff7a7a;
-    color: #ff7a7a;
+.time-btn:hover:not(.disabled) {
+    border-color: #deaaaa;
+    color: #deaaaa;
 }
 
 .time-btn.active {
-    background: #ff7a7a;
+    background: #deaaaa;
     color: #fff;
-    border-color: #ff7a7a;
+    border-color: #deaaaa;
 }
 
 .time-btn.disabled {
@@ -218,14 +341,17 @@ body {
     padding: 12px 0;
     border-radius: 5px;
     border: none;
-    background: #deabab;
+    background: #deaaaa;
     color: #fff;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
-
+.reserve-btn:hover {
+    background: #d19898;
+}
 
 /* 오른쪽 영역 */
 .info-section {
@@ -333,29 +459,6 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-}
-
-.btn-primary {
-    background: #f3d5d5;
-    color: white;
-    box-shadow: 0 4px 12px rgba(243, 213, 213, 0.3);
-}
-
-.btn-primary:hover {
-    background: #deaaaa;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(222, 170, 170, 0.4);
-}
-
-.btn-secondary {
-    background: #fef5f5;
-    color: #424242;
-    border: 2px solid #deaaaa;
-}
-
-.btn-secondary:hover {
-    background: #fce8e8;
-    transform: translateY(-2px);
 }
 
 /* 지도 영역 */

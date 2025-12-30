@@ -46,31 +46,57 @@
 				<!-- 예약 영역 -->
 				<div class="reservation-box">
 				    <div class="reservation-title">
-				        <i class="fa-solid fa-calendar-days"></i>
-				        예약하기
+				        날짜와 시간을 선택해주세요
 				    </div>
 
-				    <!-- 날짜 선택 -->
-				    <div class="reservation-section">
-				        <div class="section-label">날짜 선택</div>
-				        <input type="date" class="date-input">
+				    <!-- 캘린더 헤더 -->
+				    <div class="calendar-header">
+				        <button onclick="changeMonth(-1)">◀</button>
+				        <span class="current-month" id="currentMonth"></span>
+				        <button onclick="changeMonth(1)">▶</button>
 				    </div>
+
+				    <!-- 요일 -->
+				    <div class="calendar-weekdays">
+				        <div class="weekday sunday">일</div>
+				        <div class="weekday">월</div>
+				        <div class="weekday">화</div>
+				        <div class="weekday">수</div>
+				        <div class="weekday">목</div>
+				        <div class="weekday">금</div>
+				        <div class="weekday saturday">토</div>
+				    </div>
+
+				    <!-- 날짜 -->
+				    <div class="calendar-days" id="calendarDays"></div>
 
 				    <!-- 시간 선택 -->
 				    <div class="reservation-section">
-				        <div class="section-label">시간 선택</div>
+				        <div class="section-label">오전</div>
 				        <div class="time-grid">
-				            <button class="time-btn">09:00</button>
-				            <button class="time-btn">09:30</button>
-				            <button class="time-btn">10:00</button>
+				            <button class="time-btn" onclick="selectTime(this)">09:00</button>
+				            <button class="time-btn" onclick="selectTime(this)">09:30</button>
+				            <button class="time-btn" onclick="selectTime(this)">10:00</button>
 				            <button class="time-btn disabled">10:30</button>
-				            <button class="time-btn">11:00</button>
-				            <button class="time-btn">11:30</button>
+				            <button class="time-btn" onclick="selectTime(this)">11:00</button>
+				            <button class="time-btn" onclick="selectTime(this)">11:30</button>
 				        </div>
+						<div class="section-label">오후</div>
+						<div class="time-grid">
+						<button class="time-btn" onclick="selectTime(this)">13:00</button>
+						<button class="time-btn" onclick="selectTime(this)">13:30</button>
+						<button class="time-btn" onclick="selectTime(this)">14:00</button>
+						<button class="time-btn disabled">14:30</button>
+						<button class="time-btn" onclick="selectTime(this)">15:00</button>
+						<button class="time-btn" onclick="selectTime(this)">15:30</button>
+						<button class="time-btn" onclick="selectTime(this)">16:00</button>
+						<button class="time-btn" onclick="selectTime(this)">16:30</button>
+						<button class="time-btn" onclick="selectTime(this)">17:00</button>
+						</div>
 				    </div>
 
 				    <!-- 예약 버튼 -->
-				    <button class="reserve-btn">
+				    <button class="reserve-btn" onclick="makeReservation()">
 				        예약하기
 				    </button>
 				</div>
@@ -143,12 +169,7 @@
 
                     <!-- 액션 버튼 -->
                     <div class="action-buttons">
-                        <button class="action-btn btn-primary">
-                            <i class="fa-solid fa-calendar-check"></i>
-                            <a href="#">예약하기</a>
-                        </button>
-                        <button class="action-btn btn-secondary">
-                            <i class="fa-solid fa-route"></i>
+                        <button class="action-btn reserve-btn">
                             길찾기
                         </button>
                     </div>
@@ -195,6 +216,117 @@
                // alert('즐겨찾기에 추가되었습니다.');
             }
         }
+
+        // ============ 캘린더 관련 코드 ============
+        let currentDate = new Date();
+        let selectedDate = null;
+        let selectedTime = null;
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            document.getElementById('currentMonth').textContent = `${year}.${month + 1}`;
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const prevLastDay = new Date(year, month, 0);
+            
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+            
+            // 이전 달 날짜들
+            const firstDayOfWeek = firstDay.getDay();
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const day = prevLastDay.getDate() - i;
+                const dayElement = createDayElement(day, 'other-month');
+                calendarDays.appendChild(dayElement);
+            }
+            
+            // 이번 달 날짜들
+            const today = new Date();
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const currentDateCheck = new Date(year, month, day);
+                const isToday = currentDateCheck.toDateString() === today.toDateString();
+                const dayOfWeek = currentDateCheck.getDay();
+                
+                let className = '';
+                if (isToday) className += 'today ';
+                if (dayOfWeek === 0) className += 'sunday ';
+                if (dayOfWeek === 6) className += 'saturday ';
+                
+                // 예약 있는 날짜 예시
+                if (day === 5 || day === 12 || day === 20) {
+                    className += 'has-event ';
+                }
+                
+                const dayElement = createDayElement(day, className);
+                dayElement.onclick = () => selectDate(currentDateCheck, dayElement);
+                calendarDays.appendChild(dayElement);
+            }
+            
+            // 다음 달 날짜들
+            const remainingDays = 42 - calendarDays.children.length;
+            for (let day = 1; day <= remainingDays; day++) {
+                const dayElement = createDayElement(day, 'other-month');
+                calendarDays.appendChild(dayElement);
+            }
+        }
+
+        function createDayElement(day, className = '') {
+            const div = document.createElement('div');
+            div.className = `day ${className}`;
+            div.textContent = day;
+            return div;
+        }
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function selectDate(date, element) {
+            document.querySelectorAll('.day.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            if (!element.classList.contains('today')) {
+                element.classList.add('selected');
+            }
+            
+            selectedDate = date;
+            console.log('선택된 날짜:', date.toLocaleDateString());
+        }
+
+        function selectTime(button) {
+            if (button.classList.contains('disabled')) return;
+            
+            document.querySelectorAll('.time-btn.active').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            button.classList.add('active');
+            selectedTime = button.textContent;
+            console.log('선택된 시간:', selectedTime);
+        }
+
+        function makeReservation() {
+            if (!selectedDate) {
+                alert('날짜를 선택해주세요.');
+                return;
+            }
+            if (!selectedTime) {
+                alert('시간을 선택해주세요.');
+                return;
+            }
+            
+            alert(`예약이 완료되었습니다!\n날짜: ${selectedDate.toLocaleDateString()}\n시간: ${selectedTime}`);
+        }
+
+        // 페이지 로드 시 캘린더 렌더링
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCalendar();
+        });
     </script>
 </body>
 </html>
