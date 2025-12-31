@@ -32,8 +32,10 @@
                 <div class="main-profile-section">
                     <div class="main-profile-image"><i class="fa-solid fa-child-reaching"></i></div>
                     <div class="main-profile-info">
+						<div sec:authorize="isAuthenticated()">
 							<a href="#" onclick="openAddChildModal(); return false;" class="main-birth-info">자녀 추가</a>
-                        <div class="main-baby-name">
+						</div>
+						<div class="main-baby-name">
                             <span class="main-name-text">토끼</span>
                         </div>
                         <div class="main-birth-info">2024년 01월 01일 (여)</div>

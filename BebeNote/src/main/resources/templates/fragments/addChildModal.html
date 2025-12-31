@@ -16,7 +16,7 @@
             </div>
             
             <div class="signup-modal-body">
-                <form id="signupForm" th:action="@{/member/addChild}" method="post">
+                <form id="addChildForm" th:action="@{/member/addChild}" method="post">
                     <input type="hidden" class="signup-form-input" id="userId" name="user_id" th:value="${#authentication.name}">
                     
                     <div class="signup-form-group">
@@ -26,9 +26,8 @@
                     </div>
 					
                     <div class="signup-form-group">
-                        <label class="signup-form-label" for="birth_date">나이<span class="signup-required">*</span></label>
-                        <input type="text" class="signup-form-input" id="birth_date" name="birth_date"
-                               placeholder="나이를 입력하세요" required>
+                        <label class="signup-form-label" for="birth_date">생년월일<span class="signup-required">*</span></label>
+                        <input type="date" class="signup-form-input" id="birth_date" name="birth_date" value="2024-01-01" required>
                     </div>
 					
                     <div class="signup-form-group">

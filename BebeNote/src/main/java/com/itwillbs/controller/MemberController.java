@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.itwillbs.domain.ChildrenVO;
 import com.itwillbs.domain.MemberVO;
 import com.itwillbs.service.MemberService;
 
@@ -30,9 +31,19 @@ public class MemberController {
 	}
 	
 	@PostMapping("/login")
-	public String login(MemberVO memberVO) {
-		System.out.println("MemberController signup()");
-		System.out.println(memberVO);
+	public String login() {
+		System.out.println("MemberController login()");
+		
+		return "redirect:/main/main";
+	}
+	
+	
+	@PostMapping("/addChild")
+	public String addChild(ChildrenVO childrenVO) {
+		System.out.println("MemberController addChild()");
+		System.out.println(childrenVO);
+		
+		memberService.childrenSave(childrenVO);
 		
 		return "redirect:/main/main";
 	}
