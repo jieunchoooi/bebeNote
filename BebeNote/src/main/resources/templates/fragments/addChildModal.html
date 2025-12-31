@@ -17,7 +17,6 @@
             
             <div class="signup-modal-body">
                 <form id="addChildForm" th:action="@{/member/addChild}" method="post">
-                    <input type="hidden" class="signup-form-input" id="userId" name="user_id" th:value="${#authentication.name}">
                     
                     <div class="signup-form-group">
                         <label class="signup-form-label" for="name">이름<span class="signup-required">*</span></label>
