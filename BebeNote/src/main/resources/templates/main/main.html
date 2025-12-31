@@ -23,12 +23,16 @@
 	<!-- 로그인 모달 -->
 	<div th:replace="~{fragments/loginModal::loginModal}"></div>
 
+	<!-- 자녀추가 모달 -->
+	<div th:replace="~{fragments/addChildModal::addChildModal}"></div>
+
     <div class="main-container">
         <div class="main-top-row">
             <div class="main-baby-info-card">
                 <div class="main-profile-section">
                     <div class="main-profile-image"><i class="fa-solid fa-child-reaching"></i></div>
                     <div class="main-profile-info">
+							<a href="#" onclick="openAddChildModal(); return false;" class="main-birth-info">자녀 추가</a>
                         <div class="main-baby-name">
                             <span class="main-name-text">토끼</span>
                         </div>

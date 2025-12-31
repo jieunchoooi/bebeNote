@@ -107,7 +107,7 @@
 				          // 모달 외부 클릭 시 닫기
 				          modal.addEventListener('click', function(e) {
 				              if (e.target === this) {
-				                  closeLoginModal(); // 수정
+				                  closeLoginModal();
 				              }
 				          });
 				      }
@@ -115,12 +115,53 @@
 				      // ESC 키로 모달 닫기
 				      document.addEventListener('keydown', function(e) {
 				          if (e.key === 'Escape') {
-				              closeLoginModal(); // 수정
+				              closeLoginModal(); 
 				          }
 				      });
 				  });
+				  
+				// 로그인 모달 끝
 
 
+				  // 자녀추가 모달
+				  function openAddChildModal(){
+				      const modal = document.getElementById("addChildModal"); // . 제거
+				      if(modal){
+				          modal.classList.add('active');
+				         // document.body.style.overflow = 'hidden';
+				      }
+				  }
+
+				  function closeAddChildModal() {
+				      const modal = document.getElementById('addChildModal');
+				      if (modal) {
+				          modal.classList.remove('active');
+				          document.body.style.overflow = 'auto';
+				      }
+				  }
+
+				  // DOM 로드 후 이벤트 리스너 등록
+				  document.addEventListener('DOMContentLoaded', function() {
+				      const modal = document.getElementById('addChildModal');
+
+				      if (modal) {
+				          // 모달 외부 클릭 시 닫기
+				          modal.addEventListener('click', function(e) {
+				              if (e.target === this) {
+				                  closeAddChildModal(); 
+				              }
+				          });
+				      }
+
+				      // ESC 키로 모달 닫기
+				      document.addEventListener('keydown', function(e) {
+				          if (e.key === 'Escape') {
+				              closeAddChildModal(); 
+				          }
+				      });
+				  });
+				  
+				// 자녀추가 모달 끝
 
 
 
