@@ -70,6 +70,42 @@
     margin-bottom: 24px;
 }
 
+/* 주소 우편번호 입력 그룹 */
+.address-postcode-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.address-postcode-group #sample6_postcode {
+    flex: 1;
+}
+
+.signup-btn-postcode {
+    padding: 14px 20px;
+    background: #deaaaa;
+    color: white;
+    border: 2px solid #deaaaa;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.signup-btn-postcode:hover {
+    background: #d39999;
+    border-color: #d39999;
+    transform: translateY(-1px);
+}
+
+/*유효성 검사 알림창*/
+.check{
+	font-size: 13px;
+}
+
+
 /* 아이디 입력란과 중복확인 버튼 */
 .signup-input-with-button {
     display: flex;
