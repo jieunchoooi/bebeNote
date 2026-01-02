@@ -34,12 +34,18 @@
                     <div class="main-profile-info">
 						<div sec:authorize="isAuthenticated()">
 							<a href="#" onclick="openAddChildModal(); return false;" class="main-birth-info">자녀 추가</a>
+							<div class="main-baby-name">
+	                            <span class="main-name-text">토끼</span>
+	                        </div>
+	                        <div class="main-birth-info">2024년 01월 01일 (여)</div>
+	                        <div class="main-birth-info">태어난지 몇개월 됐어요.</div>
 						</div>
-						<div class="main-baby-name">
-                            <span class="main-name-text">토끼</span>
-                        </div>
-                        <div class="main-birth-info">2024년 01월 01일 (여)</div>
-                        <div class="main-birth-info">태어난지 몇개월 됐어요.</div>
+						
+						<div sec:authorize="isAnonymous()">
+							<div class="main-baby-name">
+	                            <span class="main-name-text">로그인 해주세요.</span>
+	                        </div>
+						</div>
                     </div>
                 </div>
             </div>
