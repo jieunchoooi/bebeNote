@@ -6,6 +6,7 @@
 
 <body>
     <!-- 회원가입 모달 -->
+	
     <div id="insertModal" class="signup-modal-overlay" th:fragment="insertModal">
         <div class="signup-modal-container">
             <div class="signup-modal-header">
@@ -14,25 +15,28 @@
             </div>
             
             <div class="signup-modal-body">
-                <form id="signupForm" th:action="@{/member/signup}" method="post">
+                <form id="signupForm" th:action="@{/member/insertPro}" method="post">
                     <div class="signup-form-group">
                         <label class="signup-form-label" for="userId">아이디</label>
                         <div class="signup-input-with-button">
-                            <input type="text" class="signup-form-input" id="userId" name="user_id" placeholder="아이디를 입력하세요">
+                            <input type="text" class="signup-form-input" id="userId" name="user_id" placeholder="아이디를 입력하세요" required>
                             <button type="button" class="signup-btn-check">중복확인</button>
                         </div>
+						<span class="user_id_check check"></span>
                     </div>
                     
                     <div class="signup-form-group">
                         <label class="signup-form-label" for="password">비밀번호<span class="signup-required">*</span></label>
                         <input type="password" class="signup-form-input" id="password" name="password"
-                               placeholder="비밀번호를 입력하세요" required>
+                               placeholder="비밀번호를 입력하세요" >
+						<span class="user_password_check check"></span>
                     </div>
                     
                     <div class="signup-form-group">
                         <label class="signup-form-label" for="password1">비밀번호 확인<span class="signup-required">*</span></label>
                         <input type="password" class="signup-form-input" id="password1" name="password1"
                                placeholder="비밀번호를 한번 더 입력하세요" required>
+						<span class="user_password1_check check"></span>
                     </div>
                     
                     <div class="signup-form-group">
@@ -44,25 +48,25 @@
                     <div class="signup-form-group">
                         <label class="signup-form-label" for="phone">전화번호<span class="signup-required">*</span></label>
                         <input type="tel" class="signup-form-input" id="phone" name="phone"
-                               placeholder="010-0000-0000" required>
+                               placeholder="숫자만 입력해 주세요" required>
+						<span class="user_phone_check check"></span>
                     </div>
 
-                    <div class="signup-form-group">
-                        <label class="signup-form-label" for="address">주소<span class="signup-required">*</span></label>
-                        <input type="text" class="signup-form-input" id="address" name="address"
-                               placeholder="주소를 입력하세요" required>
-                    </div>
-
-                    <div class="signup-form-group">
-                        <label class="signup-form-label" for="detailAddress">상세주소</label>
-                        <input type="text" class="signup-form-input" id="detailAddress" name="detailAddress"
-                               placeholder="상세주소를 입력하세요">
-                    </div>
+					<div class="signup-form-group">
+					    <label class="signup-form-label" for="address">주소<span class="signup-required">*</span></label>
+					    <div class="address-postcode-group">
+					        <input type="text" id="sample6_postcode" class="signup-form-input" placeholder="우편번호" readonly>
+					        <input type="button" class="signup-btn-postcode" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+					    </div>
+						<input type="text" class="signup-form-input" id="sample6_address" name="address" placeholder="주소" style="margin-bottom: 5px;" styrequired readonly>
+						<input type="text" class="signup-form-input" id="sample6_detailAddress" name="detailAddress" placeholder="상세주소">
+					</div>
 
                     <div class="signup-form-group">
                         <label class="signup-form-label" for="email">이메일<span class="signup-required">*</span></label>
                         <input type="email" class="signup-form-input" id="email" name="email"
                                placeholder="example@email.com" required>
+						<span class="user_email_check check"></span>
                     </div>
 
                     <!-- 약관 동의 섹션 -->
@@ -166,74 +170,270 @@
             </div>
         </div>
         
-        <script th:inline="javascript">
-        /*<![CDATA[*/
-        (function() {
-            // 약관 내용 토글
-            document.addEventListener('click', function(e) {
-                var target = e.target;
-                if (target.closest && target.closest('.terms-link')) {
-                    e.preventDefault();
-                    var link = target.closest('.terms-link');
-                    var targetId = link.getAttribute('data-toggle');
-                    var content = document.getElementById(targetId);
-                    
-                    if (content) {
-                        content.classList.toggle('show');
-                    }
-                }
-            });
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		(function() {
+		    // 약관 내용 토글
+		    document.addEventListener('click', function(e) {
+		        var target = e.target;
+		        if (target.closest && target.closest('.terms-link')) {
+		            e.preventDefault();
+		            var link = target.closest('.terms-link');
+		            var targetId = link.getAttribute('data-toggle');
+		            var content = document.getElementById(targetId);
+		            
+		            if (content) {
+		                content.classList.toggle('show');
+		            }
+		        }
+		    });
 
-            // 전체 동의 체크박스
-            var agreeAll = document.getElementById('agreeAll');
-            var terms = document.getElementById('terms');
-            var privacy = document.getElementById('privacy');
+		    // 전체 동의 체크박스
+		    var agreeAll = document.getElementById('agreeAll');
+		    var terms = document.getElementById('terms');
+		    var privacy = document.getElementById('privacy');
 
-            if (agreeAll) {
-                agreeAll.addEventListener('change', function() {
-                    var checked = this.checked;
-                    if (terms) terms.checked = checked;
-                    if (privacy) privacy.checked = checked;
-                });
-            }
+		    if (agreeAll) {
+		        agreeAll.addEventListener('change', function() {
+		            var checked = this.checked;
+		            if (terms) terms.checked = checked;
+		            if (privacy) privacy.checked = checked;
+		        });
+		    }
 
-            // 개별 체크박스
-            if (terms) {
-                terms.addEventListener('change', updateAgreeAll);
-            }
-            if (privacy) {
-                privacy.addEventListener('change', updateAgreeAll);
-            }
+		    // 개별 체크박스
+		    if (terms) {
+		        terms.addEventListener('change', updateAgreeAll);
+		    }
+		    if (privacy) {
+		        privacy.addEventListener('change', updateAgreeAll);
+		    }
 
-            function updateAgreeAll() {
-                if (agreeAll && terms && privacy) {
-                    agreeAll.checked = terms.checked && privacy.checked;
-                }
-            }
-        })();
-        /*]]>*/
-		
-		
+		    function updateAgreeAll() {
+		        if (agreeAll && terms && privacy) {
+		            agreeAll.checked = terms.checked && privacy.checked;
+		        }
+		    }
+		})();
+		/*]]>*/
+
 		// 유효성 검사
-		
+		let id = document.querySelector("#userId");
+		let password = document.querySelector("#password");
+		let password1 = document.querySelector("#password1");
+		let name = document.querySelector("#name");
+		let phone = document.querySelector("#phone");
+		let address = document.querySelector("#sample6_address");
+		let email = document.querySelector("#email");
+		let user_id_check = document.querySelector(".user_id_check");
+		let user_password_check = document.querySelector(".user_password_check");
+		let user_password1_check = document.querySelector(".user_password1_check");
+		let user_phone_check = document.querySelector(".user_phone_check");
+		let user_email_check = document.querySelector(".user_email_check");
+
 		// 아이디 유효성 검사
-		
+		function testid(){
+		    let idRegEX = /^(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{6,20}$/;
+		    return idRegEX.test(id.value);
+		}
+
+		// 비밀번호 유효성 검사
+		function testpassword(){
+		    let passwordRegEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,16}$/;
+		    return passwordRegEX.test(password.value);
+		}
+
+		// 이메일 유효성 검사
+		function testemail(){
+		    let emailRegEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.com$/;
+		    return emailRegEX.test(email.value);
+		}
+
+		// 전화번호 유효성 검사
+		function testphone(){
+		    let phoneRegEX = /^\d{11}$/;
+		    return phoneRegEX.test(phone.value);
+		}
+
+		password.onkeyup = function(){
+		    if(!testpassword()){
+		        user_password_check.innerHTML = "글자수 : 8 ~ 16, 대소문자, 숫자, 특수문자(!@#$%^&*)를 포함해야 합니다.";
+		        user_password_check.style.color = "red";
+		    }else{
+		        user_password_check.innerHTML = "";
+		    }
+		}
+
+		password1.onkeyup = function(){
+		    if(password.value == password1.value){
+		        user_password1_check.innerHTML = "비밀번호가 일치합니다.";
+		        user_password1_check.style.color = "green";
+		    }else{
+		        user_password1_check.innerHTML = "비밀번호가 일치하지 않습니다.";
+		        user_password1_check.style.color = "red";
+		    }
+		}
+
+		phone.onkeyup = function(){
+		    if(!testphone()){
+		        user_phone_check.innerHTML = "'-' 빼고 11자리 입력해 주세요.";
+		        user_phone_check.style.color = "red";
+		    }else{
+		        user_phone_check.innerHTML = "";
+		    }
+		}
+
+		email.onkeyup = function(){
+		    if(!testemail()){
+		        user_email_check.innerHTML = "이메일 형식을 지켜주세요. (example@email.com) ";
+		        user_email_check.style.color = "red";
+		    }else{
+		        user_email_check.innerHTML = "";
+		    }
+		}
+
+		// 아이디 중복확인
+		let isIdChecked = false;   
+		let isIdAvailable = false;
+
+		let btn = document.querySelector(".signup-btn-check");
+
+		btn.addEventListener("click", function () {
+		    let userId = id.value.trim();
+
+		    if (!userId) {
+		        alert("아이디를 입력해 주세요.");
+		        id.focus();
+		        return;
+		    }
+
+		    // 유효성 검사 먼저 확인
+		    if(!testid()){
+		        alert("아이디 형식을 확인해 주세요.\n글자수: 6~20자, 숫자를 포함해야 합니다.");
+		        id.focus();
+		        return;
+		    }
+
+		    fetch(`/member/checkId?userId=${userId}`)
+		        .then(res => res.json())
+		        .then(isDuplicate => {
+		            isIdChecked = true;
+
+		            if (isDuplicate) {
+		                isIdAvailable = false;
+		                user_id_check.innerHTML = "이미 사용중인 아이디입니다.";
+		                user_id_check.style.color = "red";
+		                id.focus();
+		            } else {
+		                isIdAvailable = true;
+		                user_id_check.innerHTML = "사용 가능한 아이디입니다.";
+		                user_id_check.style.color = "green";
+		            }
+		        })
+		        .catch(() => {
+		            isIdChecked = false;
+		            isIdAvailable = false;
+		            alert("서버 오류가 발생했습니다.");
+		        });
+		});
+
+		// 아이디 입력 시 중복 확인을 다시 요청해야 함
+		id.addEventListener("input", function () {
+		    isIdChecked = false;
+		    isIdAvailable = false;
+		    
+		    if(!testid()){
+		        user_id_check.innerHTML = "글자수 : 6 ~ 20, 숫자를 포함해야 합니다.";
+		        user_id_check.style.color = "red";
+		    } else {
+		        user_id_check.innerHTML = "아이디 중복확인을 해주세요.";
+		        user_id_check.style.color = "orange";
+		    }
+		});
+
+		// 폼 제출전 확인
+		let form = document.querySelector("#signupForm");
+
+		form.addEventListener("submit", function(e){
+		    e.preventDefault();
+
+			// 약관 동의 확인 
+			let terms = document.getElementById('terms');
+			let privacy = document.getElementById('privacy');
+
+			if(!terms.checked || !privacy.checked){
+			    alert("필수 약관에 모두 동의해주세요.");
+			    return;
+			}
 			
+		    // 중복확인
+		    if (!isIdChecked) {
+		        alert("아이디 중복확인을 해주세요.");
+		        id.focus();
+		        return;
+		    }
+
+		    // 아이디
+		    if(!testid()){
+		        alert("아이디 형식을 확인해 주세요.");
+		        id.focus();
+		        return;
+		    }
+
+		    // 비밀번호
+		    if(!testpassword()){
+		        alert("비밀번호는 8~16자, 대소문자/숫자/특수문자를 포함해야 합니다.");
+		        password.focus();
+		        return;
+		    }
+
+		    // 비밀번호 확인
+		    if(password.value !== password1.value){
+		        alert("비밀번호가 일치하지 않습니다.");
+		        password1.focus();
+		        return;
+		    }
+
+		    // 전화번호
+		    if(!testphone()){
+		        alert("전화번호는 숫자 11자리여야 합니다.");
+		        phone.focus();
+		        return;
+		    }
+
+		    // 이메일
+		    if(!testemail()){
+		        alert("이메일 형식이 올바르지 않습니다.");
+		        email.focus();
+		        return;
+		    }
+
+		    form.submit();
+		});
+		</script>
+
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script>
+		    function sample6_execDaumPostcode() {
+		        new daum.Postcode({
+		            oncomplete: function(data) {
+		                var addr = '';
+
+		                if (data.userSelectedType === 'R') {
+		                    addr = data.roadAddress;
+		                } else {
+		                    addr = data.jibunAddress;
+		                }
+
+		                document.getElementById('sample6_postcode').value = data.zonecode;
+		                document.getElementById("sample6_address").value = addr;
+		                document.getElementById("sample6_detailAddress").focus();
+		            }
+		        }).open();
+		    }
+		</script>
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-        </script>
     </div>
 
 

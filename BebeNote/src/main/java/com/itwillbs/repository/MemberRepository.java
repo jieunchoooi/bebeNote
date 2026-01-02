@@ -10,5 +10,7 @@ public interface MemberRepository extends JpaRepository<Member, String>{
 
 	MemberVO findByUserIdAndPassword(String user_id, String password);
 
+	boolean existsByUserId(String userId);
+
 }
 

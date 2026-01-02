@@ -1,8 +1,11 @@
 package com.itwillbs.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.domain.ChildrenVO;
 import com.itwillbs.domain.MemberVO;
@@ -20,9 +23,9 @@ public class MemberController {
 	private final MemberService memberService;
 	
 	
-	@PostMapping("/signup")
-	public String signup(MemberVO memberVO) {
-		System.out.println("MemberController signup()");
+	@PostMapping("/insertPro")
+	public String insertPro(MemberVO memberVO) {
+		System.out.println("MemberController insertPro()");
 		System.out.println(memberVO);
 
 		memberService.insertSave(memberVO);
@@ -30,13 +33,12 @@ public class MemberController {
 		return "redirect:/main/main";
 	}
 	
-	@PostMapping("/login")
-	public String login() {
-		System.out.println("MemberController login()");
-		
-		return "redirect:/main/main";
-	}
-	
+//	@PostMapping("/login")
+//	public String login() {
+//		System.out.println("MemberController login()");
+//		
+//		return "redirect:/main/main";
+//	}
 	
 	@PostMapping("/addChild")
 	public String addChild(ChildrenVO childrenVO) {
@@ -48,7 +50,12 @@ public class MemberController {
 		return "redirect:/main/main";
 	}
 	
-	
+	@ResponseBody
+	@GetMapping("/checkId")
+	public boolean checkId(@RequestParam("userId") String userId) {
+		System.out.println("MemberController checkId()");
+		return memberService.isUserIdDuplicate(userId);
+	}
 	
 	
 	

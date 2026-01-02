@@ -58,6 +58,12 @@ public class MemberService {
 		
 		childrenRepository.save(children);
 	}
+
+
+	public boolean isUserIdDuplicate(String userId) {
+		
+		return memberRepository.existsByUserId(userId);
+	}
 	
 	
 
