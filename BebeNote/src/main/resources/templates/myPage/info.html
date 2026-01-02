@@ -244,6 +244,7 @@
 
 	// 백신 입력
 	function openVaccineInput(td) {
+		
 	    // 이미 다른 칸이 열려 있으면 무시
 	    if (activeVaccineTd && activeVaccineTd !== td) {
 	        return;
@@ -333,7 +334,7 @@
 	            <input type="date" value="${date}">
 	            <input type="text" value="${vaccine}">
 				<div class="vaccine-buttons">
-				<button class="vaccine-cancel-btn" onclick="cancelVaccineData(this.closest('td'))">취소</button>
+				<button class="vaccine-cancel-btn" onclick="saveVaccineData(this.closest('td'))">취소</button>
 	            <button class="vaccine-save-btn" onclick="saveVaccineData(this.closest('td'))">저장</button>
 				</div>
 	        </div>
