@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -34,7 +35,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		return http
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("/","/login/**","/insert/**","/insertPro/**","/myPage/**","/main/**","/headerMenu/**").permitAll()
+						.requestMatchers("/","/insert/**","/insertPro/**","/myPage/**","/main/**","/headerMenu/**").permitAll()
 						.requestMatchers("/index2/**","/member/**").permitAll()
 						.requestMatchers("/img/**","/css/**","/js/**","/uploadPath/**").permitAll()
 						.requestMatchers("//t1.daumcdn.net/**").permitAll()
@@ -42,11 +43,18 @@ public class SecurityConfig {
 						.authenticated()
 				)
 				.formLogin(form -> form
+						.loginPage("/")
 						.loginProcessingUrl("/member/login")
 						.usernameParameter("user_id")
 						.passwordParameter("password")
-						.defaultSuccessUrl("/main/main", true)
-						.failureUrl("/?loginError=true")
+						.successHandler((request, response, authentication) -> {
+					        response.setStatus(HttpServletResponse.SC_OK); // 200
+					    })
+					    .failureHandler((request, response, exception) -> {
+					        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+					        response.setContentType("text/plain; charset=UTF-8");
+					        response.getWriter().write("아이디 또는 비밀번호가 올바르지 않습니다.");
+					    })
 				)
 				.logout(logout -> logout
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
