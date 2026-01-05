@@ -150,6 +150,40 @@ body {
     background: #deaaaa;
 }
 
+.child-selector {
+    margin-bottom: 15px;
+}
+
+.child-select-dropdown {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.child-select-dropdown:hover {
+    border-color: #4CAF50;
+}
+
+.child-select-dropdown:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.child-info {
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 /* 중간 영역 */
 .main-middle-row {
     display: grid;

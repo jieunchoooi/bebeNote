@@ -34,11 +34,28 @@
                     <div class="main-profile-info">
 						<div sec:authorize="isAuthenticated()">
 							<a href="#" onclick="openAddChildModal(); return false;" class="main-birth-info">자녀 추가</a>
-							<div class="main-baby-name">
-	                            <span class="main-name-text">토끼</span>
-	                        </div>
-	                        <div class="main-birth-info">2024년 01월 01일 (여)</div>
-	                        <div class="main-birth-info">태어난지 몇개월 됐어요.</div>
+							
+						<!-- 자녀가 여러 명일 때 선택 UI -->
+						    <div th:if="${children != null and children.size() > 1}" class="child-selector">
+						        <select id="childSelect" onchange="selectChild()" class="child-select-dropdown">
+						            <option th:each="child, iterStat : ${children}" 
+						                    th:value="${iterStat.index}" 
+						                    th:text="${child.name}"
+						                    th:selected="${iterStat.index == 0}">
+						            </option>
+						        </select>
+						    </div>
+						<!-- 자녀정보 표시영역 -->
+							<div th:each="child, iterStat : ${children}" 
+						         th:id="'child-info-' + ${iterStat.index}"
+						         class="child-info"
+						         th:style="${iterStat.index == 0 ? 'display:block' : 'display:none'}">
+								<div class="main-baby-name">
+		                            <span class="main-name-text" th:text="${child.name}"></span>
+		                        </div>
+		                        <div class="main-birth-info"><span th:text="${child.birth_date}"></span>(<span th:text="${child.gender}"></span>)</div>
+		                        <div class="main-birth-info">태어난지 <span th:text="${child.ageInMonths}"></span>개월 됐어요.</div>
+							</div>
 						</div>
 						
 						<div sec:authorize="isAnonymous()">
@@ -312,6 +329,25 @@
                 console.log('즐겨찾기 추가:', index);
             }
         }
+		
+		
+		// 자녀 선택 함수
+	   function selectChild() {
+	       const select = document.getElementById('childSelect');
+	       const selectedIndex = select.value;
+	       
+	       // 모든 자녀 정보 숨기기
+	       const allChildren = document.querySelectorAll('.child-info');
+	       allChildren.forEach(child => {
+	           child.style.display = 'none';
+	       });
+	       
+	       // 선택된 자녀만 표시
+	       const selectedChild = document.getElementById('child-info-' + selectedIndex);
+	       if (selectedChild) {
+	           selectedChild.style.display = 'block';
+	       }
+	   }
     </script>
 </body>
 </html>

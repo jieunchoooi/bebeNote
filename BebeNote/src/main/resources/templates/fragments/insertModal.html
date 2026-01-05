@@ -17,7 +17,7 @@
             <div class="signup-modal-body">
                 <form id="signupForm" th:action="@{/member/insertPro}" method="post">
                     <div class="signup-form-group">
-                        <label class="signup-form-label" for="userId">아이디</label>
+                        <label class="signup-form-label" for="userId">아이디<span class="signup-required">*</span></label>
                         <div class="signup-input-with-button">
                             <input type="text" class="signup-form-input" id="userId" name="user_id" placeholder="아이디를 입력하세요" required>
                             <button type="button" class="signup-btn-check">중복확인</button>

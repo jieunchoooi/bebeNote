@@ -1,6 +1,7 @@
 package com.itwillbs.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -34,7 +35,7 @@ public class Children {
 	private String name;
 	
 	@Column(name = "birth_date", nullable = false)
-	private String birth_date;
+	private LocalDate birth_date;
 	
 	@Column(name = "gender", nullable = false)
 	private String gender;
