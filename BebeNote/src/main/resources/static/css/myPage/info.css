@@ -284,14 +284,31 @@ body {
     display: block;
 }
 
+.vaccine-buttons {
+	display: flex;
+}
+
 .vaccine-save-btn {
-    width: 100%;
+	min-width: 85px;
     padding: 8px;
     margin-top: 8px;
     border: none;
     border-radius: 5px;
     background: #e9b5b5;
     color: white;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.vaccine-cancel-btn {
+	min-width: 85px;
+    padding: 8px;
+    margin-top: 8px;
+	margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #f5f5f5;
+    color: #666;
     font-size: 13px;
     cursor: pointer;
 }

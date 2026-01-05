@@ -240,10 +240,11 @@
 
 <script>
 
-	let activeVaccineTd = null; // 🔥 현재 열려있는 접종 칸
+	let activeVaccineTd = null; //현재 열려있는 접종 칸
 
 	// 백신 입력
 	function openVaccineInput(td) {
+		
 	    // 이미 다른 칸이 열려 있으면 무시
 	    if (activeVaccineTd && activeVaccineTd !== td) {
 	        return;
@@ -257,6 +258,18 @@
 
 	    const inputBox = td.querySelector('.vaccine-input-box');
 
+		if (!inputBox.querySelector('.vaccine-cancel-btn')) {
+		    const cancelBtn = document.createElement('button');
+		    cancelBtn.className = 'vaccine-cancel-btn';
+		    cancelBtn.textContent = '취소';
+		    cancelBtn.onclick = function(e) {
+				e.stopPropagation();
+				td.classList.remove('active');
+				activeVaccineTd = null;
+		    };
+		    inputBox.appendChild(cancelBtn);
+		}
+		
 	    if (!inputBox.querySelector('.vaccine-save-btn')) {
 	        const saveBtn = document.createElement('button');
 	        saveBtn.className = 'vaccine-save-btn';
@@ -267,6 +280,8 @@
 	        };
 	        inputBox.appendChild(saveBtn);
 	    }
+		
+
 	}
 
 	// 백신 데이터 저장
@@ -291,7 +306,7 @@
 	        </button>
 	    `;
 
-	    activeVaccineTd = null; // 🔥 입력 종료
+	    activeVaccineTd = null; //입력 종료
 	}
 
 	// 백신 데이터 수정
@@ -318,7 +333,10 @@
 	            <input type="text" value="${hospital}">
 	            <input type="date" value="${date}">
 	            <input type="text" value="${vaccine}">
+				<div class="vaccine-buttons">
+				<button class="vaccine-cancel-btn" onclick="saveVaccineData(this.closest('td'))">취소</button>
 	            <button class="vaccine-save-btn" onclick="saveVaccineData(this.closest('td'))">저장</button>
+				</div>
 	        </div>
 	    `;
 	}
