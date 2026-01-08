@@ -559,10 +559,13 @@
     transition: all 0.3s;
 }
 
-.login-helper-button:hover {
-    background: #f5f5f5;
-    border-color: #deaaaa;
-    color: #deaaaa;
+.naver {
+	background: #03A94D;
+	color: #FFFFFF;
+}
+
+.naver1{
+	font-weight: 800;
 }
 
 /* 회원가입 링크 */

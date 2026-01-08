@@ -2,9 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
 </head>
-
 
 <body>
     <!-- 로그인 모달 -->
@@ -38,47 +36,92 @@
 
                     <div class="login-helper-buttons">
                         <button type="button" class="login-helper-button">카카오</button>
-                        <button type="button" class="login-helper-button">네이버</button>
+                        <button type="button" class="login-helper-button naver" onclick="naverLogin()">
+                            <SPAN class="naver1">N</SPAN> 네이버
+                        </button>
                     </div>
 
                     <div class="login-signup-link">
                         회원이 아니신가요? <a href="#" onclick="closeLoginModal(); openInsertModal(); return false;">회원가입</a>
                     </div>
-					
-					<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
+
+                    <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
 
                 </form>
             </div>
         </div>
-		<script th:inline="javascript">
-			/*<![CDATA[*/
-			const loginForm = document.getElementById("loginForm");
-	
-			loginForm.addEventListener("submit", function(e) {
-			    e.preventDefault();
-	
-			    const formData = new FormData(loginForm);
-	
-			    fetch("/member/login", {
-			        method: "POST",
-			        body: formData,
-			        headers: { "X-Requested-With": "XMLHttpRequest" }
-			    }).then(async res => {
-			        if (res.status === 200) {
-			            location.reload(); 
-			        } else if (res.status === 401) {
-			            const msg = await res.text();
-			            alert(msg); // 여기서 alert 뜸
-			        }
-			    });
-			});
-			/*]]>*/
-		</script>
 
+        <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script>
+        
+        <script>
+            // 전역 변수로 선언
+            var naverLoginInstance = null;
 
+            // SDK 로드 완료 후 초기화
+            window.addEventListener('load', function() {
+                try {
+                    console.log("네이버 SDK 객체:", naver);
+                    
+                    if (typeof naver !== 'undefined' && naver.LoginWithNaverId) {
+                        naverLoginInstance = new naver.LoginWithNaverId({
+                            clientId: "as3XBM7ed9mRvhONuOdJ",
+                            callbackUrl: "http://localhost:8080/oauth/naver/callback",
+                            isPopup: false
+                        });
 
+                        naverLoginInstance.init();
+                        console.log("네이버 로그인 SDK 초기화 성공", naverLoginInstance);
+                    } else {
+                        console.error("네이버 SDK가 로드되지 않았습니다.");
+                    }
+                } catch (error) {
+                    console.error("네이버 SDK 초기화 에러:", error);
+                }
+            });
 
-	</div>
+            function naverLogin() {
+                console.log("네이버 로그인 버튼 클릭!");
+                console.log("naverLoginInstance:", naverLoginInstance);
+                
+                if (naverLoginInstance) {
+                    try {
+                        naverLoginInstance.authorize();
+                    } catch (error) {
+                        console.error("네이버 로그인 실행 에러:", error);
+                        alert("네이버 로그인 실행 중 오류가 발생했습니다: " + error.message);
+                    }
+                } else {
+                    console.error("네이버 로그인 SDK가 초기화되지 않았습니다.");
+                    alert("네이버 로그인을 사용할 수 없습니다. 페이지를 새로고침해주세요.");
+                }
+            }
+        </script>
 
+        <!-- 일반 로그인 폼 처리 -->
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const loginForm = document.getElementById("loginForm");
+
+            loginForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(loginForm);
+
+                fetch("/member/login", {
+                    method: "POST",
+                    body: formData,
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                }).then(async res => {
+                    if (res.status === 200) {
+                        location.reload();
+                    } else if (res.status === 401) {
+                        const msg = await res.text();
+                        alert(msg);
+                    }
+                });
+            });
+            /*]]>*/
+        </script>
+    </div>
 </body>
 </html>

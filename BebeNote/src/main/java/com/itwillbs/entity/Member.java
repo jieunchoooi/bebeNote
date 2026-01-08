@@ -1,9 +1,14 @@
 package com.itwillbs.entity;
 
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.itwillbs.domain.MemberVO;
@@ -29,13 +34,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Member {
+public class Member implements UserDetails {
 
 	@Id
 	@Column(name = "user_id",length = 50)
 	private String userId;
 	
-	@Column(name = "password", nullable = false)
+	@Column(name = "password", nullable = true)
 	private String password;
 	
 	@Column(name = "name", nullable = false)
@@ -44,13 +49,13 @@ public class Member {
 	@Column(name = "email", nullable = false)
 	private String email;
 	
-	@Column(name = "phone", nullable = false)
+	@Column(name = "phone", nullable = true)
 	private String phone;
 	
-	@Column(name = "address", nullable = false)
+	@Column(name = "address", nullable = true)
 	private String address;
 	
-	@Column(name = "detailAddress", nullable = false)
+	@Column(name = "detailAddress", nullable = true)
 	private String detailAddress;
 	
 	@Column(name = "provider", nullable = false)
@@ -114,7 +119,35 @@ public class Member {
 			);
 
 	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		
+        return Collections.singletonList(new SimpleGrantedAuthority("USER"));
+	}
 	
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUsername() {
+        return userId;
+    }
+
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public boolean isEnabled() {
+        return true;
+    }
 	
 	
 }

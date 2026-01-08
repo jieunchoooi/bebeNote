@@ -36,7 +36,8 @@ public class SecurityConfig {
 		return http
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/","/insert/**","/insertPro/**","/myPage/**","/main/**","/headerMenu/**").permitAll()
-						.requestMatchers("/index2/**","/member/**").permitAll()
+						.requestMatchers("/index2/**","/member/**","/oauth/**").permitAll()
+						.requestMatchers("/oauth/naver/callback").permitAll() 
 						.requestMatchers("/img/**","/css/**","/js/**","/uploadPath/**").permitAll()
 						.requestMatchers("//t1.daumcdn.net/**").permitAll()
 						.anyRequest()
@@ -60,9 +61,9 @@ public class SecurityConfig {
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 		                .logoutSuccessUrl("/")
 				)	
-//				.csrf(csrf -> csrf
-//				.ignoringRequestMatchers("/member/signup", "/member/checkId")  // CSRF 제외
-//				)
+				.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/member/oauth/naver", "/member/checkId", "/member/signup")
+				)
 				.userDetailsService(myUserDetailsService)
 				.build();
 	}

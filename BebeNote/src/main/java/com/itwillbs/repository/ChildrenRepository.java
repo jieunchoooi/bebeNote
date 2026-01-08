@@ -9,7 +9,7 @@ import com.itwillbs.domain.MemberVO;
 import com.itwillbs.entity.Children;
 import com.itwillbs.entity.Member;
 
-public interface ChildrenRepository extends JpaRepository<Children, String>{
+public interface ChildrenRepository extends JpaRepository<Children, Long>{
 
 
 

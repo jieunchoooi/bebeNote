@@ -25,8 +25,8 @@ public class Children {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "child_id",length = 50)
-	private String child_id;
+	@Column(name = "child_id")
+	private Long child_id;
 	
 	@Column(name = "user_id",length = 50)
 	private String userId;

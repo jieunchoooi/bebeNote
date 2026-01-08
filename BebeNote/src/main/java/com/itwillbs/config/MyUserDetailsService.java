@@ -21,35 +21,13 @@ public class MyUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 //		import com.itwillbs.entity.Member;
 //		Optional<Member> => orElseThrow(); => null 예외처리
-		Member userEntity = memberRepository.findById(id).orElseThrow(() 
-				-> new UsernameNotFoundException("없는 회원"));
+		Member member = memberRepository.findByUserId(id)
+				.orElseThrow(() -> new UsernameNotFoundException("없는 회원: " + id));
 		
-//		Hibernate: 
-//		    select
-//		        m1_0.id,
-//		        m1_0.name,
-//		        m1_0.passwd,
-//		        m1_0.role 
-//		    from
-//		        members m1_0 
-//		    where
-//		        m1_0.id=?
-		
-		
-//		시큐리티    username,password, roles
-//		사용자정의   id,      passwd,   role
-		UserDetails userDetails = User.builder()
-				.username(userEntity.getUserId())
-				.password(userEntity.getPassword())
-				.roles(userEntity.getRole())
-				.build();
-		
-		return userDetails;
+		return member;
 	}
 
-	
-	
-	
+	  
 	
 	
 	

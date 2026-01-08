@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.ChildrenVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.dto.OAuthLoginRequestDTO;
 import com.itwillbs.entity.Children;
 import com.itwillbs.entity.Member;
 import com.itwillbs.mapper.MemberMapper;
@@ -63,6 +64,32 @@ public class MemberService {
 	public boolean isUserIdDuplicate(String userId) {
 		
 		return memberRepository.existsByUserId(userId);
+	}
+
+
+	public Member findByUserIdAndProvider(String socialId, String provider) {
+		
+		return memberRepository.findByUserIdAndProvider(socialId, provider);
+	}
+
+
+	public Member joinOAuthUser(OAuthLoginRequestDTO dto) {
+
+		Member member = new Member();
+		member.setUserId(dto.getSocialId());
+		member.setProvider(dto.getProvider());
+		member.setName(dto.getName());
+		member.setEmail(dto.getEmail());
+		member.setRole("USER");
+		
+	    member.setAddress("");         // NOT NULL 컬럼 기본값
+	    member.setDetailAddress("");   // NOT NULL 컬럼 기본값
+	    member.setPhone("");           // NOT NULL 컬럼 기본값
+	    member.setPassword(passwordEncoder.encode("oauth_dummy_password")); // 랜덤 또는 더미
+		
+		memberRepository.save(member);
+		
+		return member;
 	}
 	
 	

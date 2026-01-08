@@ -16,7 +16,7 @@ public class MemberVO {
 	private String password;
 	private String name;
 	private String phone;
-	private String provider;
+	private String provider; // 로그인 제공자
 	private String address;
 	private String detailAddress;
 	private String role;

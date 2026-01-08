@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script>
+</head>
+<body>
+    <script>
+        var naverLogin = new naver.LoginWithNaverId({
+            clientId: "as3XBM7ed9mRvhONuOdJ",
+            callbackUrl: "http://localhost:8080/oauth/naver/callback"
+        });
+
+        naverLogin.init();
+
+        naverLogin.getLoginStatus(function(status) {
+            if (status) {
+                // 사용자 정보 백엔드로 전송
+                fetch('/member/oauth/naver', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        provider: 'naver',
+                        socialId: naverLogin.user.getId(),
+                        email: naverLogin.user.getEmail(),
+                        name: naverLogin.user.getName()
+                    })
+                }).then(() => {
+                    window.location.href = '/';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

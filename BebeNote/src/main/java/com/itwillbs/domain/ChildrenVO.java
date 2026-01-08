@@ -12,7 +12,7 @@ import lombok.Setter;
 @ToString
 public class ChildrenVO {
 
-	private String child_id;
+	private Long child_id;
 	private String user_id; // 부모 ID
 	private String name;
 	private LocalDate birth_date;
