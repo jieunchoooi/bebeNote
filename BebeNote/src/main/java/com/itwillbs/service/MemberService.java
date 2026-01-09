@@ -76,18 +76,18 @@ public class MemberService {
 	public Member joinOAuthUser(OAuthLoginRequestDTO dto) {
 
 		Member member = new Member();
-		member.setUserId(dto.getSocialId());
-		member.setProvider(dto.getProvider());
-		member.setName(dto.getName());
-		member.setEmail(dto.getEmail());
-		member.setRole("USER");
+		member.setUserId(dto.getSocialId()); // 네이버고유ID
+		member.setProvider(dto.getProvider()); // naver
+		member.setName(dto.getName()); // 이름
+		member.setEmail(dto.getEmail()); // 이메일
+		member.setRole("USER"); // 일반 사용자 권한
 		
 	    member.setAddress("");         // NOT NULL 컬럼 기본값
 	    member.setDetailAddress("");   // NOT NULL 컬럼 기본값
 	    member.setPhone("");           // NOT NULL 컬럼 기본값
-	    member.setPassword(passwordEncoder.encode("oauth_dummy_password")); // 랜덤 또는 더미
+	    member.setPassword(passwordEncoder.encode("oauth_dummy_password")); // 더미 비밀번호
 		
-		memberRepository.save(member);
+		memberRepository.save(member); // DB에 저장
 		
 		return member;
 	}
