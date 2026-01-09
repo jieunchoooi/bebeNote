@@ -1,5 +1,7 @@
 package com.itwillbs.service;
 
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,31 +69,32 @@ public class MemberService {
 	}
 
 
-	public Member findByUserIdAndProvider(String socialId, String provider) {
+	public Member processOAuthUser(OAuthLoginRequestDTO userInfo) {
 		
-		return memberRepository.findByUserIdAndProvider(socialId, provider);
-	}
-
-
-	public Member joinOAuthUser(OAuthLoginRequestDTO dto) {
-
+		// 기존 회원 조회
+		Optional<Member> optionalMember = memberRepository.findByProviderAndUserId(userInfo.getProvider(), userInfo.getSocialId());
+		
+		// 기존 회원이면 그대로 반환
+		if(optionalMember.isPresent()) {
+			return optionalMember.get();
+		}
+		
+		// 신규면 가입
 		Member member = new Member();
-		member.setUserId(dto.getSocialId()); // 네이버고유ID
-		member.setProvider(dto.getProvider()); // naver
-		member.setName(dto.getName()); // 이름
-		member.setEmail(dto.getEmail()); // 이메일
-		member.setRole("USER"); // 일반 사용자 권한
-		
-	    member.setAddress("");         // NOT NULL 컬럼 기본값
+		member.setUserId(userInfo.getSocialId());   
+		member.setProvider(userInfo.getProvider());
+		member.setEmail(userInfo.getEmail());
+		member.setName(userInfo.getName());
+		member.setRole("USER");
+		member.setAddress("");         // NOT NULL 컬럼 기본값
 	    member.setDetailAddress("");   // NOT NULL 컬럼 기본값
 	    member.setPhone("");           // NOT NULL 컬럼 기본값
 	    member.setPassword(passwordEncoder.encode("oauth_dummy_password")); // 더미 비밀번호
-		
-		memberRepository.save(member); // DB에 저장
-		
-		return member;
+
+		return memberRepository.save(member);
 	}
-	
+
+
 	
 
 }

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.dto.OAuthLoginRequestDTO;
 import com.itwillbs.entity.Member;
+import com.itwillbs.service.KakaoService;
 import com.itwillbs.service.MemberService;
+import com.itwillbs.service.NaverService;
 
 import groovy.util.logging.Log;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,22 +27,24 @@ import lombok.RequiredArgsConstructor;
 public class OAuthController {
 
     private final MemberService memberService;
+    private final NaverService naverService;
+    private final KakaoService kakaoService;
 
-    // 콜백 페이지 반환
+    // 네이버 콜백 페이지 반환
     @GetMapping("/oauth/naver/callback")
     public String naverCallback() {
         return "oauth/naverCallback";
     }
 
-    // 로그인 처리
+    // 네이버 로그인 처리
     @PostMapping("/member/oauth/naver")
     public ResponseEntity<?> oauthLogin(@RequestBody OAuthLoginRequestDTO dto, HttpServletRequest request) {
     	// DB에서 가입된 회원 찾기
-        Member member = memberService.findByUserIdAndProvider(dto.getSocialId(), dto.getProvider());
+        Member member = naverService.findByUserIdAndProvider(dto.getSocialId(), dto.getProvider());
 
         // DB에 없으면 가입
         if (member == null) {
-            member = memberService.joinOAuthUser(dto);
+            member = naverService.joinOAuthUser(dto);
         }
 
         // 로그인 처리 (Spring Security 세션에 저장)
@@ -56,4 +60,31 @@ public class OAuthController {
 
         return ResponseEntity.ok().build();
     }
+    
+    // 카카오 콜백 페이지 반환
+    @GetMapping("/oauth/kakao/callback")
+    public String kakaoCallback(@RequestParam("code") String code, HttpServletRequest request) {
+    	
+    	String accessToken = kakaoService.getAccessToken(code);
+    	OAuthLoginRequestDTO userInfo = kakaoService.getUserInfo(accessToken);
+    	
+        // 회원 조회 / 가입
+        Member member = memberService.processOAuthUser(userInfo);
+
+    	// 로그인 처리 (Spring Security 세션에 저장)
+        UsernamePasswordAuthenticationToken auth =
+            new UsernamePasswordAuthenticationToken(member, null, member.getAuthorities());
+        
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        request.getSession().setAttribute(
+            HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+            SecurityContextHolder.getContext()
+        );
+    	
+        return "redirect:/main/main";
+    }
+    
+    
+    
+    
 }

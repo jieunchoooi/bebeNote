@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="login-helper-buttons">
-                        <button type="button" class="login-helper-button">카카오</button>
+                        <button type="button" class="login-helper-button kakao" onclick="kakaoLogin()">카카오</button>
                         <button type="button" class="login-helper-button naver" onclick="naverLogin()">
                             <SPAN class="naver1">N</SPAN> 네이버
                         </button>
@@ -51,9 +51,16 @@
             </div>
         </div>
 
+	<!-- 네이버-->
         <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script>
         
+	<!-- 카카오-->
+		<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"></script>
+
+		
         <script>
+			
+			// 네이버
             var naverLoginInstance = null;
 
             // SDK 로드 완료 후 초기화
@@ -69,6 +76,17 @@
             function naverLogin() {
                 naverLoginInstance.authorize(); // 네이버 인증페이지로 이동
             }
+			
+			// 카카오 SDK 초기화
+		    Kakao.init('678d4ee39238b156ada265c491ad2c8c');
+		    console.log("Kakao initialized:", Kakao.isInitialized());
+
+		    function kakaoLogin() {
+		        Kakao.Auth.authorize({
+		            redirectUri: 'http://localhost:8080/oauth/kakao/callback'
+		        });
+		    }
+			
         </script>
 
         <!-- 일반 로그인 폼 처리 -->
