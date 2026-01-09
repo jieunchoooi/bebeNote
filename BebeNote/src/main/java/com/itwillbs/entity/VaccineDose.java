@@ -29,6 +29,6 @@ public class VaccineDose {
 	private Integer dose_order; // 접종순서 1,2,3,4,5,6
 	
 	@Column(name = "dose_label", length = 50)
-	private String dose_label; // 1차/2차/3차/추가1차/추가2차/추가3차
+	private String dose_label; // 1차/2차/3차...
 
 }

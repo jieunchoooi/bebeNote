@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +17,9 @@
 
 <!-- header -->
 <div th:replace="~{fragments/header::header}"></div>
-   <!-- 회원가입 모달 -->
+<!-- 회원가입 모달 -->
 <div th:replace="~{fragments/insertModal::insertModal}"></div>
-	
-<!--	로그인 모달-->
+<!-- 로그인 모달 -->
 <div th:replace="~{fragments/loginModal::loginModal}"></div> 
 <!-- content -->
 <div class="mypage-wrapper">
@@ -98,135 +97,51 @@
                         <th>1차</th>
                         <th>2차</th>
                         <th>3차</th>
-                        <th>추가1차</th>
-                        <th>추가2차</th>
-                        <th>추가3차</th>
+                        <th>4차</th>
+                        <th>5차</th>
+                        <th>6차</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>BCG</td>
-                        <td></td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td>
-                    </tr>
+<!--                <tbody>-->
+<!--                    <tr>-->
+<!--                        <td>BCG</td>-->
+<!--                        <td></td>-->
+<!--                        <td class="vaccine-empty" onclick="openVaccineInput(this)">-->
+<!--                            <span class="vaccine-placeholder">클릭해서 입력</span>-->
+<!--                            <div class="vaccine-input-box">-->
+<!--                                <input type="text" placeholder="접종한 병원">-->
+<!--                                <input type="date">-->
+<!--                                <input type="text" placeholder="백신 이름">-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                        <td></td><td></td><td></td><td></td>-->
+<!--                    </tr>-->
+<!--                </tbody>-->
+				<tbody>
+					<tr th:each="vaccine : ${vaccines}">
 
-                    <tr>
-                        <td>B형간염</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>DPT</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>소아마비</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>뇌수막염</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>폐구균</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>MMR</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>수두</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>일본뇌염</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                    <tr>
-                        <td>A형 간염</td>
-                        <td class="vaccine-empty" onclick="openVaccineInput(this)">
-                            <span class="vaccine-placeholder">클릭해서 입력</span>
-                            <div class="vaccine-input-box">
-                                <input type="text" placeholder="접종한 병원">
-                                <input type="date">
-                                <input type="text" placeholder="백신 이름">
-                            </div>
-                        </td>
-                        <td></td><td></td><td></td><td></td><td></td>
-                    </tr>
-                </tbody>
+					    <!-- 대상전염병 -->
+					    <td th:text="${vaccine.vaccine_name}">백신명</td>
+
+					    <!-- 1차 ~ 6차 고정 -->
+					    <td th:each="dose, stat : ${doses}"
+					        th:if="${stat.index < 6}"
+					        class="vaccine-empty"
+					        th:data-vaccine-id="${vaccine.vaccine_id}"
+					        th:data-dose-id="${dose.dose_id}"
+					        onclick="openVaccineInput(this)">
+
+					        <span class="vaccine-placeholder">클릭해서 입력</span>
+
+					        <div class="vaccine-input-box">
+					            <input type="text" placeholder="접종한 병원">
+					            <input type="date">
+					            <input type="text" placeholder="백신 제품명">
+					        </div>
+					    </td>
+
+					</tr>
+				</tbody>
             </table>
         </div>
 
@@ -238,7 +153,9 @@
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
 
-<script>
+<script th:inline="javascript">
+	
+	//const childId = [[${child.child_id}]];
 
 	let activeVaccineTd = null; //현재 열려있는 접종 칸
 
@@ -283,31 +200,54 @@
 		
 
 	}
-
-	// 백신 데이터 저장
-	function saveVaccineData(td) {
+	
+	//백신 데이터 저장
+	/*function saveVaccineData(td) {
 	    const inputBox = td.querySelector('.vaccine-input-box');
 	    const hospital = inputBox.querySelector('input[type="text"]:nth-child(1)').value.trim();
 	    const date = inputBox.querySelector('input[type="date"]').value;
 	    const vaccine = inputBox.querySelector('input[type="text"]:nth-child(3)').value.trim();
 
-	    if (!hospital || !date || !vaccine) return;
+	    if (!hospital || !date || !vaccine) {
+	        alert("모든 항목을 입력해주세요.");
+	        return;
+	    }
 
-	    td.classList.remove('active');
-	    td.classList.add('saved');
-	    td.innerHTML = `
-	        <div class="vaccine-saved-data">
-	            <div class="saved-hospital">${hospital}</div>
-	            <div class="saved-date">${date}</div>
-	            <div class="saved-vaccine">${vaccine}</div>
-	        </div>
-	        <button class="vaccine-edit-btn" onclick="editVaccineData(this)">
-	            <i class="fa-solid fa-pen"></i>
-	        </button>
-	    `;
+	    $.ajax({
+	        url: '/myPage/saveVaccine',
+	        type: 'POST',
+	        contentType: 'application/json',
+	        data: JSON.stringify({
+				child_id: childId,
+		        vaccine_id: vaccineId,
+		        dose_id: doseId,
+		        vaccinated_date: date,
+		        hospital: hospital,
+		        vaccine_product: vaccine
+	        }),
+	        success: function (res) {
 
-	    activeVaccineTd = null; //입력 종료
-	}
+	            // ✅ DB 저장 성공 시 화면 반영
+	            td.classList.remove('active');
+	            td.classList.add('saved');
+	            td.innerHTML = `
+	                <div class="vaccine-saved-data">
+	                    <div class="saved-hospital">${hospital}</div>
+	                    <div class="saved-date">${date}</div>
+	                    <div class="saved-vaccine">${vaccine}</div>
+	                </div>
+	                <button class="vaccine-edit-btn" onclick="editVaccineData(this)">
+	                    <i class="fa-solid fa-pen"></i>
+	                </button>
+	            `;
+
+	            activeVaccineTd = null;
+	        },
+	        error: function () {
+	            alert("저장 중 오류가 발생했습니다.");
+	        }
+	    });
+	}*/
 
 	// 백신 데이터 수정
 	function editVaccineData(button) {
