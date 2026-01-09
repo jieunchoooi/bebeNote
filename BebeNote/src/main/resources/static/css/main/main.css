@@ -61,8 +61,7 @@ body {
 
 .main-baby-name {
     display: flex;
-    align-items: center;
-    gap: 10px;
+	margin-bottom: 5px;
 }
 
 .main-name-text {
