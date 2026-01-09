@@ -19,8 +19,6 @@ public class MyUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-//		import com.itwillbs.entity.Member;
-//		Optional<Member> => orElseThrow(); => null 예외처리
 		Member member = memberRepository.findByUserId(id)
 				.orElseThrow(() -> new UsernameNotFoundException("없는 회원: " + id));
 		

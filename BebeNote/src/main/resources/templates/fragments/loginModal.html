@@ -54,46 +54,20 @@
         <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script>
         
         <script>
-            // 전역 변수로 선언
             var naverLoginInstance = null;
 
             // SDK 로드 완료 후 초기화
             window.addEventListener('load', function() {
-                try {
-                    console.log("네이버 SDK 객체:", naver);
-                    
-                    if (typeof naver !== 'undefined' && naver.LoginWithNaverId) {
-                        naverLoginInstance = new naver.LoginWithNaverId({
-                            clientId: "as3XBM7ed9mRvhONuOdJ",
-                            callbackUrl: "http://localhost:8080/oauth/naver/callback",
-                            isPopup: false
-                        });
-
-                        naverLoginInstance.init();
-                        console.log("네이버 로그인 SDK 초기화 성공", naverLoginInstance);
-                    } else {
-                        console.error("네이버 SDK가 로드되지 않았습니다.");
-                    }
-                } catch (error) {
-                    console.error("네이버 SDK 초기화 에러:", error);
-                }
-            });
-
+                naverLoginInstance = new naver.LoginWithNaverId({
+                    clientId: "as3XBM7ed9mRvhONuOdJ", // 네이버 개발자 센터에서 받은 ID
+                    callbackUrl: "http://localhost:8080/oauth/naver/callback", // 인증후 돌아올 주소
+                    isPopup: false // 팝업이 아닌 페이지 이동 방식
+            	});
+            	naverLoginInstance.init();
+			});
+			
             function naverLogin() {
-                console.log("네이버 로그인 버튼 클릭!");
-                console.log("naverLoginInstance:", naverLoginInstance);
-                
-                if (naverLoginInstance) {
-                    try {
-                        naverLoginInstance.authorize();
-                    } catch (error) {
-                        console.error("네이버 로그인 실행 에러:", error);
-                        alert("네이버 로그인 실행 중 오류가 발생했습니다: " + error.message);
-                    }
-                } else {
-                    console.error("네이버 로그인 SDK가 초기화되지 않았습니다.");
-                    alert("네이버 로그인을 사용할 수 없습니다. 페이지를 새로고침해주세요.");
-                }
+                naverLoginInstance.authorize(); // 네이버 인증페이지로 이동
             }
         </script>
 

@@ -35,16 +35,19 @@ public class OAuthController {
     // 로그인 처리
     @PostMapping("/member/oauth/naver")
     public ResponseEntity<?> oauthLogin(@RequestBody OAuthLoginRequestDTO dto, HttpServletRequest request) {
+    	// DB에서 가입된 회원 찾기
         Member member = memberService.findByUserIdAndProvider(dto.getSocialId(), dto.getProvider());
 
+        // DB에 없으면 가입
         if (member == null) {
             member = memberService.joinOAuthUser(dto);
         }
 
-        // 로그인 처리
+        // 로그인 처리 (Spring Security 세션에 저장)
         UsernamePasswordAuthenticationToken auth =
             new UsernamePasswordAuthenticationToken(member, null, member.getAuthorities());
 
+        // 세션에 Security Context 저장
         SecurityContextHolder.getContext().setAuthentication(auth);
         request.getSession().setAttribute(
             HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
