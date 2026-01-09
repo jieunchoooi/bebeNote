@@ -133,19 +133,19 @@ public class Member implements UserDetails {
         return userId;
     }
 
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired() { // 계정 만료 확인
         return true;
     }
 
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked() { // 계정 잠긴지 확인
         return true;
     }
 
-    public boolean isCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() { // 비밀번호 만료 확인
         return true;
     }
 
-    public boolean isEnabled() {
+    public boolean isEnabled() { // 계정 활성화 확인
         return true;
     }
 	
