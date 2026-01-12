@@ -95,6 +95,12 @@ public class MemberService {
 	}
 
 
+	public Member findByUserId(String userId) {
+		
+		return memberRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+	}
+
+
 	
 
 }

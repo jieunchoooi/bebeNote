@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -142,13 +143,15 @@
                         <div class="info-value">점심시간 12:30 - 13:30<br>예약 접종 우선 진료</div>
                     </div>
 
-                    <!-- 지도 -->
-                    <div class="map-placeholder">
-                        <div>
-                            <i class="fa-solid fa-map-location-dot" style="font-size: 40px; margin-bottom: 10px;"></i>
-                            <div>여기에 카카오맵 또는 네이버 지도 API 연동</div>
-                        </div>
-                    </div>
+					<!-- 지도 -->
+					<div class="map-placeholder" id="map"
+					     th:if="${#authorization.expression('isAuthenticated()')}">
+					</div>
+
+					<div class="map-placeholder login-guide"
+					     th:unless="${#authorization.expression('isAuthenticated()')}">
+					    <p>로그인 후 병원 위치를 확인할 수 있어요</p>
+					</div>
 
                     <!-- 액션 버튼 -->
                     <div class="action-buttons">
@@ -170,6 +173,62 @@
 		<!-- 모달 스크립트 -->
 		<div th:replace="~{fragments/header::modalScript}"></div>
 	
+		<!-- 카카오 맵 api -->
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=678d4ee39238b156ada265c491ad2c8c&libraries=services,clusterer,drawing"></script>
+	
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		document.addEventListener("DOMContentLoaded", function () {
+		 // 지도 컨테이너 가져오기
+		  const container = document.getElementById('map');
+		  // 지도 옵션 설정 
+		  const options = {
+		    center: new kakao.maps.LatLng(37.5665, 126.9780), // 기본값(서울시청)
+		    level: 5 // 확대레벨 ( 1 ~ 14, 숫자가 클수록 넓은 범위 )
+		  };
+		  // 지도 객체 생성
+		  const map = new kakao.maps.Map(container, options);
+		
+		// Thymeleaf에서 주소 받기
+		// 컨트롤러에 model에 담음
+		// Thymeleaf가 [[${userAddress}]]를 실제 주소 문자열로 변환
+		const userAddress = /*[[${userAddress}]]*/ "";
+
+		// 주소 → 좌표 변환 객체
+		  const geocoder = new kakao.maps.services.Geocoder();
+
+		  // 주소가 있을시
+		  if (userAddress && userAddress.length > 0) {
+			// 주소로 좌표검색
+		    geocoder.addressSearch(userAddress, function(result, status) {
+			  // 검색 성공시
+		      if (status === kakao.maps.services.Status.OK) {
+				// 좌표 객체 생성 (y = 위도, x = 경도)
+		        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+		        // 지도 중심을 해당 좌표로 이동
+		        map.setCenter(coords);
+
+		        // 마커 표시
+		        const marker = new kakao.maps.Marker({
+		          map: map, // 마커를 표시할 지도
+		          position: coords // 마커 위치
+		        });
+
+		      } else {
+		        console.error("주소 변환 실패:", status);
+		      }
+		    });
+		  }else {
+            console.log("사용자 주소 정보가 없습니다.");
+        }
+	 });
+	 /*]]>*/
+	</script>	
+
+
+		
+		
     <script>
         // 병원 선택
         function selectHospital(element, index) {
