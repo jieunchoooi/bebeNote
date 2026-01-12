@@ -543,37 +543,17 @@
 /* 소셜 로그인 버튼 */
 .login-helper-buttons {
     display: flex;
+	flex-direction: column;
     justify-content: center;
-    gap: 15px;
-    margin-top: 15px;
+    gap: 10px;
+    margin-top: 11px;
 }
 
-.login-helper-button {
-    padding: 8px 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    background: white;
-    color: #666;
-    font-size: 13px;
+.login-helper-buttons img {
+/*    width: 183px;  */
+/*    height: auto;  */
     cursor: pointer;
-    transition: all 0.3s;
 }
-
-.naver {
-	background: #03A94D;
-	color: #FFFFFF;
-}
-
-.kakao {
-	background: #FBE314;
-	color: #040303;
-	font-weight:500;
-}
-
-.naver1{
-	font-weight: 800;
-}
-
 /* 회원가입 링크 */
 .login-signup-link {
     text-align: center;

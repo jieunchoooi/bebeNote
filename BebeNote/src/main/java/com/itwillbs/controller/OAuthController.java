@@ -65,7 +65,9 @@ public class OAuthController {
     @GetMapping("/oauth/kakao/callback")
     public String kakaoCallback(@RequestParam("code") String code, HttpServletRequest request) {
     	
+    	// 인증코드로 토큰 받기
     	String accessToken = kakaoService.getAccessToken(code);
+    	// 토큰으로 사용자 정보 가져오기
     	OAuthLoginRequestDTO userInfo = kakaoService.getUserInfo(accessToken);
     	
         // 회원 조회 / 가입
