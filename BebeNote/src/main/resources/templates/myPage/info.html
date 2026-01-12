@@ -153,10 +153,8 @@
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
 
-<script th:inline="javascript">
+<script>
 	
-	//const childId = [[${child.child_id}]];
-
 	let activeVaccineTd = null; //현재 열려있는 접종 칸
 
 	// 백신 입력
