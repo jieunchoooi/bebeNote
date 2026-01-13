@@ -1,5 +1,7 @@
 package com.itwillbs.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.ChildVaccineVO;
@@ -42,5 +44,12 @@ public class MyPageService {
 	public Object findAllDoses() {
 		return vaccineDoseRepository.findAll();
 	}
+
+	public List<ChildVaccine> findChildRecords(Long child_id) {
+		// TODO Auto-generated method stub
+		return childVaccineRepository.findByChild_id(child_id);
+	}
+
+	
 
 }
