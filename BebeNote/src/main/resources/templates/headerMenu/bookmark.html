@@ -180,6 +180,8 @@
 		/*<![CDATA[*/
 		let map;
 		let markers = [];
+		let initialMapState = null; // 초기 지도 상태 저장
+		let hospitalData = []; // 검색된 병원 데이터 저장
 		
 		document.addEventListener("DOMContentLoaded", function () {
 		 // 지도 컨테이너 가져오기
@@ -233,27 +235,37 @@
 		});
 	 }
 
+
 	 function placesSearchCB(data, status) {
-		if(status === kakao.maps.services.Status.OK) {
-			data.forEach(place => {
-				const marker = new kakao.maps.Marker({
-					map: map,
-					position: new kakao.maps.LatLng(place.y, place.x)	
-				});
-				markers.push(marker);
-				
-				// 마커 클릭시 상세정보 업데이트
-				kakao.maps.event.addListener(marker, 'click', function() {
-					updateHospitalDetail(place);
-				});
-			});
-		}
+	     if(status === kakao.maps.services.Status.OK) {
+	         hospitalData = data; // 병원 데이터 저장 
+	         
+	         data.forEach(place => {
+	             const marker = new kakao.maps.Marker({
+	                 map: map,
+	                 position: new kakao.maps.LatLng(place.y, place.x)	
+	             });
+	             markers.push(marker);
+	             
+	             // 마커 클릭시 상세정보 업데이트
+	             kakao.maps.event.addListener(marker, 'click', function() {
+	                 updateHospitalDetail(place);
+	             });
+	         });
+	         
+	         // 초기 지도 상태 저장 
+	         initialMapState = {
+	             center: map.getCenter(),
+	             level: map.getLevel()
+	         };
+	     }
 	 }
 	 
 	 function updateHospitalDetail(place){
 		const detailContent = document.getElementById('detailContent');
 		
 		detailContent.innerHTML = `
+		
 			  <div class="info-row">
 	              <div class="info-label">
 	                  <i class="fa-solid fa-hospital"></i>
@@ -308,7 +320,26 @@
 	              </div>
 	              <div class="info-value">점심시간 12:30 - 13:30<br>예약 접종 우선 진료</div>
 	          </div>
-			  
+			  <!-- 돌아가기 버튼 추가 -->
+	  		    <button onclick="restoreMapView()" class="back-to-list-btn" style="
+	  		      width: 100%;
+	  		      padding: 10px;
+	  		      margin-bottom: 15px;
+	  		      background: #f0f0f0;
+	  		      border: none;
+	  		      border-radius: 8px;
+	  		      cursor: pointer;
+	  		      display: flex;
+	  		      align-items: center;
+	  		      justify-content: center;
+	  		      gap: 8px;
+	  		      font-size: 14px;
+	  		      color: #333;
+	  		      transition: background 0.2s;
+	  		    " onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">
+	  		      <i class="fa-solid fa-arrow-left"></i>
+	  		      전체 병원 지도 보기
+	  		    </button>
 			   <!-- 액션 버튼 -->
 			   <div class="action-buttons">
 			     <a href="/main/reservation" class="action-btn btn-primary">
@@ -345,7 +376,100 @@
 		      });
 	 }
 	 
-	 
+	 // 전체 병원 지도로 복원하는 함수
+	 function restoreMapView() {
+	   if (!initialMapState) {
+	     console.log('초기 상태 없음');
+	     return;
+	   }
+	   
+	   const detailContent = document.getElementById('detailContent');
+	   
+	   detailContent.innerHTML = `
+	     <div class="info-row">
+	       <div class="info-label">
+	         <i class="fa-solid fa-hospital"></i>
+	         병원명
+	       </div>
+	       <div class="info-value">지은소아과</div>
+	     </div>
+
+	     <div class="info-row">
+	       <div class="info-label">
+	         <i class="fa-solid fa-location-dot"></i>
+	         주소
+	       </div>
+	       <div class="info-value">부산광역시 동래구 중앙대로 123</div>
+	     </div>
+
+	     <div class="info-row">
+	       <div class="info-label">
+	         <i class="fa-solid fa-phone"></i>
+	         전화번호
+	       </div>
+	       <div class="info-value">051-1234-5678</div>
+	     </div>
+
+	     <div class="info-row">
+	       <div class="info-label">
+	         <i class="fa-solid fa-clock"></i>
+	         진료시간
+	       </div>
+	       <div class="info-value">
+	         평일 09:00 - 18:00<br>
+	         토요일 09:00 - 13:00<br>
+	         일요일 휴진
+	       </div>
+	     </div>
+
+	     <div class="info-row">
+	       <div class="info-label">
+	         <i class="fa-solid fa-circle-info"></i>
+	         특이사항
+	       </div>
+	       <div class="info-value">점심시간 12:30 - 13:30<br>예약 접종 우선 진료</div>
+	     </div>
+
+	     <div class="action-buttons">
+	       <a href="/main/reservation" class="action-btn btn-primary">
+	         예약하기
+	       </a>
+	       <button class="action-btn btn-primary">
+	         길찾기
+	       </button>
+	     </div>
+	   `;
+	   
+	   // 지도 div 추가
+	   const mapDiv = document.createElement('div');
+	   mapDiv.className = 'map-placeholder';
+	   mapDiv.id = 'map';
+	   mapDiv.style.width = '100%';
+	   mapDiv.style.height = '300px';
+	   
+	   const actionButtons = detailContent.querySelector('.action-buttons');
+	   detailContent.insertBefore(mapDiv, actionButtons);
+	   
+	   // 초기 상태로 지도 재생성
+	   const options = {
+	     center: initialMapState.center,
+	     level: initialMapState.level
+	   };
+	   map = new kakao.maps.Map(mapDiv, options);
+	   
+	   // 저장된 병원 데이터로 마커 다시 생성
+	   hospitalData.forEach(place => {
+	     const marker = new kakao.maps.Marker({
+	       map: map,
+	       position: new kakao.maps.LatLng(place.y, place.x)
+	     });
+	     
+	     // 클릭 이벤트 다시 연결
+	     kakao.maps.event.addListener(marker, 'click', function() {
+	       updateHospitalDetail(place);
+	     });
+	   });
+	 }
 	 function clearMarkers() {
 		markers.forEach(m => m.setMap(null));
 		markers = [];
