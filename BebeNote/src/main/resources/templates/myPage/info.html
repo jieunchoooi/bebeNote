@@ -3,12 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <title>마이페이지 | 베베 접종 수첩</title>
 
 <link rel="stylesheet" href="/css/fragments/layout.css" />
 <link rel="stylesheet" href="/css/login/insertModal.css" />
 <link rel="stylesheet" href="/css/myPage/info.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 
 </head>
@@ -51,6 +55,7 @@
                     <span id="childBirthday">2024.01.01</span> (<span id="childGender">여</span>)<br>
                     태어난지 <span id="childDays">722</span>일째예요
                 </p>
+				<input type="hidden" id="childId" th:value="${children[0].child_id}">
             </div>
 
             <!-- 편집 모드 -->
@@ -102,45 +107,69 @@
                         <th>6차</th>
                     </tr>
                 </thead>
-<!--                <tbody>-->
-<!--                    <tr>-->
-<!--                        <td>BCG</td>-->
-<!--                        <td></td>-->
-<!--                        <td class="vaccine-empty" onclick="openVaccineInput(this)">-->
-<!--                            <span class="vaccine-placeholder">클릭해서 입력</span>-->
-<!--                            <div class="vaccine-input-box">-->
-<!--                                <input type="text" placeholder="접종한 병원">-->
-<!--                                <input type="date">-->
-<!--                                <input type="text" placeholder="백신 이름">-->
-<!--                            </div>-->
-<!--                        </td>-->
-<!--                        <td></td><td></td><td></td><td></td>-->
-<!--                    </tr>-->
-<!--                </tbody>-->
+<!--				<tbody>-->
+<!--					<tr th:each="vaccine : ${vaccines}">-->
+
+<!--					     대상전염병 -->
+<!--					    <td th:text="${vaccine.vaccine_name}">백신명</td>-->
+
+<!--					     1차 ~ 6차 고정 -->
+<!--					    <td th:each="dose, stat : ${doses}"-->
+<!--					        th:if="${stat.index < 6}"-->
+<!--					        class="vaccine-empty"-->
+<!--					        th:data-vaccine-id="${vaccine.vaccine_id}"-->
+<!--					        th:data-dose-id="${dose.dose_id}"-->
+<!--					        onclick="openVaccineInput(this)">-->
+
+<!--					        <span class="vaccine-placeholder">클릭해서 입력</span>-->
+
+<!--					        <div class="vaccine-input-box">-->
+<!--					            <input type="text" placeholder="접종한 병원">-->
+<!--					            <input type="date">-->
+<!--					            <input type="text" placeholder="백신 제품명">-->
+<!--					        </div>-->
+<!--					    </td>-->
+
+<!--					</tr>-->
+<!--				</tbody>-->
 				<tbody>
-					<tr th:each="vaccine : ${vaccines}">
-
-					    <!-- 대상전염병 -->
-					    <td th:text="${vaccine.vaccine_name}">백신명</td>
-
-					    <!-- 1차 ~ 6차 고정 -->
-					    <td th:each="dose, stat : ${doses}"
-					        th:if="${stat.index < 6}"
-					        class="vaccine-empty"
-					        th:data-vaccine-id="${vaccine.vaccine_id}"
-					        th:data-dose-id="${dose.dose_id}"
-					        onclick="openVaccineInput(this)">
-
-					        <span class="vaccine-placeholder">클릭해서 입력</span>
-
-					        <div class="vaccine-input-box">
-					            <input type="text" placeholder="접종한 병원">
-					            <input type="date">
-					            <input type="text" placeholder="백신 제품명">
-					        </div>
-					    </td>
-
-					</tr>
+				    <tr th:each="vaccine : ${vaccines}">
+				        <!-- 대상전염병 -->
+				        <td th:text="${vaccine.vaccine_name}">백신명</td>
+				
+				        <!-- 1차 ~ 6차 고정 -->
+				        <td th:each="dose, stat : ${doses}"
+				            th:if="${stat.index < 6}"
+				            th:with="key=${vaccine.vaccine_id + '_' + dose.dose_id},
+				                     record=${vaccineRecords.get(key)}"
+				            th:classappend="${record != null ? 'vaccine-empty saved' : 'vaccine-empty'}"
+				            th:data-vaccine-id="${vaccine.vaccine_id}"
+				            th:data-dose-id="${dose.dose_id}">
+				
+				            <!-- 저장된 데이터가 있으면 표시 -->
+				            <div th:if="${record != null}" class="vaccine-saved-data">
+				                <div class="saved-hospital" th:text="${record.hospital}">병원명</div>
+				                <div class="saved-date" th:text="${record.vaccinated_date}">날짜</div>
+				                <div class="saved-vaccine" th:text="${record.vaccine_product}">백신명</div>
+				            </div>
+				            <button th:if="${record != null}" 
+				                    class="vaccine-edit-btn" 
+				                    onclick="editVaccineData(this)">
+				                <i class="fa-solid fa-pen"></i>
+				            </button>
+				
+				            <!-- 저장된 데이터가 없으면 입력창 표시 -->
+				            <span th:if="${record == null}" 
+				                  class="vaccine-placeholder"
+				                  onclick="openVaccineInput(this)">클릭해서 입력</span>
+				
+				            <div class="vaccine-input-box">
+				                <input type="text" placeholder="접종한 병원">
+				                <input type="date">
+				                <input type="text" placeholder="백신 제품명">
+				            </div>
+				        </td>
+				    </tr>
 				</tbody>
             </table>
         </div>
@@ -155,10 +184,28 @@
 
 <script>
 	
+	// 페이지 로드 시 한 번만 실행
+	$(document).ready(function() {
+	    const token = $("meta[name='_csrf']").attr("content");
+	    const header = $("meta[name='_csrf_header']").attr("content");
+	    
+	    // 모든 Ajax 요청에 자동으로 CSRF 토큰 추가
+	    $(document).ajaxSend(function(e, xhr, options) {
+	        xhr.setRequestHeader(header, token);
+	    });
+	});
+	
 	let activeVaccineTd = null; //현재 열려있는 접종 칸
 
 	// 백신 입력
-	function openVaccineInput(td) {
+	function openVaccineInput(element) {
+		
+		const td = element.closest('td');
+		   
+		if (!td) {
+		       console.error('td를 찾을 수 없습니다');
+		       return;
+		}
 		
 	    // 이미 다른 칸이 열려 있으면 무시
 	    if (activeVaccineTd && activeVaccineTd !== td) {
@@ -200,11 +247,14 @@
 	}
 	
 	//백신 데이터 저장
-	/*function saveVaccineData(td) {
+	function saveVaccineData(td) {
 	    const inputBox = td.querySelector('.vaccine-input-box');
 	    const hospital = inputBox.querySelector('input[type="text"]:nth-child(1)').value.trim();
 	    const date = inputBox.querySelector('input[type="date"]').value;
 	    const vaccine = inputBox.querySelector('input[type="text"]:nth-child(3)').value.trim();
+		const childId = document.getElementById('childId').value;
+		const vaccineId = td.dataset.vaccineId;  
+		const doseId = td.dataset.doseId;
 
 	    if (!hospital || !date || !vaccine) {
 	        alert("모든 항목을 입력해주세요.");
@@ -225,7 +275,7 @@
 	        }),
 	        success: function (res) {
 
-	            // ✅ DB 저장 성공 시 화면 반영
+	            // DB 저장 성공 시 화면 반영
 	            td.classList.remove('active');
 	            td.classList.add('saved');
 	            td.innerHTML = `
@@ -245,7 +295,7 @@
 	            alert("저장 중 오류가 발생했습니다.");
 	        }
 	    });
-	}*/
+	}
 
 	// 백신 데이터 수정
 	function editVaccineData(button) {
