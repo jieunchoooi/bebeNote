@@ -107,31 +107,6 @@
                         <th>6차</th>
                     </tr>
                 </thead>
-<!--				<tbody>-->
-<!--					<tr th:each="vaccine : ${vaccines}">-->
-
-<!--					     대상전염병 -->
-<!--					    <td th:text="${vaccine.vaccine_name}">백신명</td>-->
-
-<!--					     1차 ~ 6차 고정 -->
-<!--					    <td th:each="dose, stat : ${doses}"-->
-<!--					        th:if="${stat.index < 6}"-->
-<!--					        class="vaccine-empty"-->
-<!--					        th:data-vaccine-id="${vaccine.vaccine_id}"-->
-<!--					        th:data-dose-id="${dose.dose_id}"-->
-<!--					        onclick="openVaccineInput(this)">-->
-
-<!--					        <span class="vaccine-placeholder">클릭해서 입력</span>-->
-
-<!--					        <div class="vaccine-input-box">-->
-<!--					            <input type="text" placeholder="접종한 병원">-->
-<!--					            <input type="date">-->
-<!--					            <input type="text" placeholder="백신 제품명">-->
-<!--					        </div>-->
-<!--					    </td>-->
-
-<!--					</tr>-->
-<!--				</tbody>-->
 				<tbody>
 				    <tr th:each="vaccine : ${vaccines}">
 				        <!-- 대상전염병 -->
@@ -156,6 +131,12 @@
 				                    class="vaccine-edit-btn" 
 				                    onclick="editVaccineData(this)">
 				                <i class="fa-solid fa-pen"></i>
+				            </button>
+							<button th:if="${record != null}" 
+				                    class="vaccine-delete-btn" 
+									th:data-child-vaccine-id="${record.child_vaccine_id}"
+				                    onclick="deleteVaccineData(this)">
+				                <i class="fa-solid fa-trash"></i>
 				            </button>
 				
 				            <!-- 저장된 데이터가 없으면 입력창 표시 -->
@@ -274,6 +255,8 @@
 		        vaccine_product: vaccine
 	        }),
 	        success: function (res) {
+				
+				const childVaccineId = res.childVaccineId;
 
 	            // DB 저장 성공 시 화면 반영
 	            td.classList.remove('active');
@@ -284,9 +267,17 @@
 	                    <div class="saved-date">${date}</div>
 	                    <div class="saved-vaccine">${vaccine}</div>
 	                </div>
-	                <button class="vaccine-edit-btn" onclick="editVaccineData(this)">
-	                    <i class="fa-solid fa-pen"></i>
-	                </button>
+					<button class="vaccine-edit-btn"
+			               data-child-vaccine-id="${childVaccineId}"
+			               onclick="editVaccineData(this)">
+			           <i class="fa-solid fa-pen"></i>
+			       </button>
+
+			       <button class="vaccine-delete-btn"
+			               data-child-vaccine-id="${childVaccineId}"
+			               onclick="deleteVaccineData(this)">
+			           <i class="fa-solid fa-trash"></i>
+			       </button>
 	            `;
 
 	            activeVaccineTd = null;
@@ -298,8 +289,8 @@
 	}
 
 	// 백신 데이터 수정
-	function editVaccineData(button) {
-	    const td = button.closest('td');
+	function editVaccineData(btn) {
+	    const td = btn.closest('td');
 
 	    // 다른 칸 수정 중이면 무시
 	    if (activeVaccineTd && activeVaccineTd !== td) {
@@ -327,6 +318,41 @@
 				</div>
 	        </div>
 	    `;
+	}
+	
+	// 백신 데이터 삭제
+	function deleteVaccineData(btn) {
+	    const childVaccineId = btn.dataset.childVaccineId;
+		
+		if(!confirm("해당 내용을 삭제하시겠습니까?")){
+			return;
+		}
+		
+		$.ajax({
+		    url: '/myPage/deleteVaccine',
+		    type: 'POST',
+		    contentType: 'application/json',
+		    data: JSON.stringify({
+				child_vaccine_id : childVaccineId
+		    }),
+		    success: function (res) {
+				const td = btn.closest('td');
+				
+	            td.classList.remove('saved');
+	            td.innerHTML = `
+	                <span class="vaccine-placeholder"
+	                      onclick="openVaccineInput(this)">클릭해서 입력</span>
+	                <div class="vaccine-input-box">
+	                    <input type="text" placeholder="접종한 병원">
+	                    <input type="date">
+	                    <input type="text" placeholder="백신 제품명">
+	                </div>
+	            `;
+		    },
+		    error: function () {
+		        alert("삭제 중 오류가 발생했습니다.");
+		    }
+		});
 	}
 
 // 원본 데이터 저장

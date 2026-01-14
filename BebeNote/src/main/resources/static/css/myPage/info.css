@@ -340,6 +340,14 @@ body {
     right: 6px;
     font-size: 11px;
     border: none;
-    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.vaccine-delete-btn {
+    position: absolute;
+/*    top: 6px;*/
+    right: 6px;
+    font-size: 11px;
+    border: none;
     cursor: pointer;
 }

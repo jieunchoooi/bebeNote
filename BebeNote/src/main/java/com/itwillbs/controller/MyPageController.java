@@ -64,9 +64,24 @@ public class MyPageController {
 	
 	@PostMapping("/saveVaccine")
 	@ResponseBody
-	public void saveVaccine(@RequestBody ChildVaccineVO vo) {
+	public Map<String, Object> saveVaccine(@RequestBody ChildVaccineVO vo) {
 		System.out.println("MyPageController saveVaccine()");
-		myPageService.saveVaccine(vo);
+		
+		 Long childVaccineId = myPageService.saveVaccine(vo);
+		 Map<String, Object> result = new HashMap<>();
+		 result.put("childVaccineId", childVaccineId);
+		 
+		 return result;
+		 
+	}
+	
+	@PostMapping("/deleteVaccine")
+	@ResponseBody
+	public void deleteVaccine(@RequestBody ChildVaccineVO vo) {
+		System.out.println("MyPageController deleteVaccine()");
+		
+		 myPageService.deleteVaccine(vo.getChild_vaccine_id());
+		 
 	}
 	
 	@GetMapping("/myHospital")

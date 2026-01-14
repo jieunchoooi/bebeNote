@@ -23,7 +23,7 @@ public class MyPageService {
 	private final VaccineDoseRepository vaccineDoseRepository;
 	
 
-	public void saveVaccine(ChildVaccineVO vo) {
+	public Long saveVaccine(ChildVaccineVO vo) {
 		System.out.println("MyPageService saveVaccine()");
 		
 		ChildVaccine entity = new ChildVaccine();
@@ -34,7 +34,9 @@ public class MyPageService {
         entity.setHospital(vo.getHospital());
         entity.setVaccine_product(vo.getVaccine_product());
 		
-		childVaccineRepository.save(entity);
+        ChildVaccine saved = childVaccineRepository.save(entity);
+		
+		return saved.getChild_vaccine_id();
 	}
 
 	public Object findAllVaccines() {
@@ -46,8 +48,11 @@ public class MyPageService {
 	}
 
 	public List<ChildVaccine> findChildRecords(Long child_id) {
-		// TODO Auto-generated method stub
 		return childVaccineRepository.findByChild_id(child_id);
+	}
+
+	public void deleteVaccine(Long child_vaccine_id) {
+		childVaccineRepository.deleteById(child_vaccine_id);
 	}
 
 	
