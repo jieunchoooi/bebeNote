@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>근처 소아과 - 베베 접종 수첩</title>
+    <title>즐겨찾기 병원 - 베베 접종 수첩</title>
     <link rel="stylesheet" href="/css/headerMenu/bookmark.css" />
 	<link rel="stylesheet" href="/css/login/insertModal.css" />
 	<link rel="stylesheet" href="/css/fragments/layout.css" />
@@ -24,8 +25,8 @@
         <!-- 왼쪽: 즐겨찾기 병원 목록 -->
         <div class="bookmark-section">
             <div class="section-title">
-                <i class="fa-solid fa-hospital"></i>
-                근처 소아과
+                <i class="fa-solid fa-star"></i>
+                근처 소아과 
             </div>
             
             <div class="hospital-list" id="hospitalList">
@@ -69,10 +70,10 @@
                     </div>
                 </div>
 
-                <!-- 근처 소아과가 없을 때 표시 -->
+                <!-- 즐겨찾기가 없을 때 표시 -->
                 <!-- <div class="empty-message" style="display: none;">
                     <i class="fa-regular fa-star"></i>
-                    <div>근처에 소아과가 없습니다</div>
+                    <div>즐겨찾기한 병원이 없습니다</div>
                 </div> -->
             </div>
         </div>
@@ -82,7 +83,7 @@
             <!-- 검색 -->
             <div class="search-card">
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="병원 이름 또는 주소를 검색하세요">
+                    <input type="text" class="search-input" placeholder="병원 이름 또는 주소를 검색하세요" >
                     <button class="search-btn">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         검색
@@ -94,67 +95,34 @@
             <div class="hospital-detail-card">
                 <div class="detail-header">
                     <div class="detail-title">병원 정보</div>
-                    <i class="fa-solid fa-star bookmark-star"></i>
+					<button class="bookmark-btn" onclick="toggleBookmark(event, 1)">
+						<i class="fa-solid fa-star bookmark-star"></i>	
+					</button>
                 </div>
 
                 <div class="detail-content" id="detailContent">
                     <div class="info-row">
                         <div class="info-label">
                             <i class="fa-solid fa-hospital"></i>
-                            병원명
-                        </div>
-                        <div class="info-value">지은소아과</div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-label">
-                            <i class="fa-solid fa-location-dot"></i>
-                            주소
-                        </div>
-                        <div class="info-value">부산광역시 동래구 중앙대로 123</div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-label">
-                            <i class="fa-solid fa-phone"></i>
-                            전화번호
-                        </div>
-                        <div class="info-value">051-1234-5678</div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-label">
-                            <i class="fa-solid fa-clock"></i>
-                            진료시간
-                        </div>
-                        <div class="info-value">
-                            평일 09:00 - 18:00<br>
-                            토요일 09:00 - 13:00<br>
-                            일요일 휴진
+                            즐겨찾기를 추가해 보세요.
                         </div>
                     </div>
 
-                    <div class="info-row">
-                        <div class="info-label">
-                            <i class="fa-solid fa-circle-info"></i>
-                            특이사항
-                        </div>
-                        <div class="info-value">점심시간 12:30 - 13:30<br>예약 접종 우선 진료</div>
-                    </div>
+					<!-- 지도 -->
+					<div class="map-placeholder" id="map"
+					     th:if="${#authorization.expression('isAuthenticated()')}">
+					</div>
 
-                    <!-- 지도 -->
-                    <div class="map-placeholder">
-                        <div>
-                            <i class="fa-solid fa-map-location-dot" style="font-size: 40px; margin-bottom: 10px;"></i>
-                            <div>여기에 카카오맵 또는 네이버 지도 API 연동</div>
-                        </div>
-                    </div>
+					<div class="map-placeholder login-guide"
+					     th:unless="${#authorization.expression('isAuthenticated()')}">
+					    <p>로그인 후 병원 위치를 확인할 수 있어요</p>
+					</div>
 
                     <!-- 액션 버튼 -->
                     <div class="action-buttons">
-						<a href="/main/reservation" class="action-btn btn-primary">
-								예약하기
-						</a>
+                        <a href="/main/reservation" class="action-btn btn-primary">
+							예약하기
+                        </a>
                         <button class="action-btn btn-primary">
                             길찾기
                         </button>
@@ -170,6 +138,338 @@
 		<!-- 모달 스크립트 -->
 		<div th:replace="~{fragments/header::modalScript}"></div>
 	
+		<!-- 카카오 맵 api -->
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=678d4ee39238b156ada265c491ad2c8c&libraries=services,clusterer,drawing"></script>
+	
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		let map; // 카카오맵 객체 담을 변수
+		let markers = []; // 생성된 마커들을 관리하는 배열
+		let initialMapState = null; // 초기 지도 상태 저장(검색 후 돌아가기)
+		let hospitalData = []; // 검색된 병원 데이터 저장
+		
+		document.addEventListener("DOMContentLoaded", function () {
+		 // 지도 컨테이너 가져오기
+		  const container = document.getElementById('map');
+		  // 지도 옵션 설정 
+		  const options = {
+		    center: new kakao.maps.LatLng(37.5665, 126.9780), // 기본값(서울시청)
+		    level: 5 // 확대레벨 ( 1 ~ 14, 숫자가 클수록 넓은 범위 )
+		  };
+		  // 지도 객체 생성
+		  map = new kakao.maps.Map(container, options);
+		
+		// Thymeleaf에서 주소 받기
+		// 컨트롤러에 model에 담음
+		// Thymeleaf가 [[${userAddress}]]를 실제 주소 문자열로 변환
+		const userAddress = /*[[${userAddress}]]*/ "";
+
+		// 주소 → 좌표 변환 객체
+		  const geocoder = new kakao.maps.services.Geocoder();
+
+		  // 주소가 있을시
+		  if (userAddress && userAddress.length > 0) {
+			// 주소로 좌표검색
+		    geocoder.addressSearch(userAddress, function(result, status) {
+			  // 검색 성공시
+		      if (status === kakao.maps.services.Status.OK) {
+				// 좌표 객체 생성 (y = 위도, x = 경도)
+		        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+		        // 지도 중심을 해당 좌표로 이동
+		        map.setCenter(coords);
+
+				// 지도 중심 설정 후 자동으로 소아과 검색
+				searchNearbyHospital('소아과');
+		      } else {
+		        console.error("주소 변환 실패:", status);
+		      }
+		    });
+		  }else {
+            console.log("사용자 주소 정보가 없습니다.");
+        }
+		
+		// 검색기능
+		const searchInput = document.querySelector(".search-input");
+		const searchBtn =  document.querySelector(".search-btn");
+		
+		// 버튼 클릭시 
+		searchBtn.addEventListener('click', function(){
+			const keyword = searchInput.value.trim();
+			if(keyword){
+				searchHospital(keyword)
+			}else{
+				alert("검색어를 입력해 주세요.");
+			}
+		});
+		
+		// 엔터키 클릭시
+		searchInput.addEventListener('keypress', function(e){
+			if(e.key === 'Enter'){
+				const keyword = searchInput.value.trim();
+				if(keyword){
+					searchHospital(keyword)
+				}else{
+					alert("검색어를 입력해 주세요.");
+				}
+			}
+		});
+		
+	 });
+	 
+	 const ps = new kakao.maps.services.Places();
+	 
+	 function searchNearbyHospital(keyword){
+		clearMarkers();
+		
+		const searchKeyword = keyword || '소아과'; // 검색할 키워드
+		
+		ps.keywordSearch(keyword, placesSearchCB, {
+			location: map.getCenter(), // 검색 중심점(현재 지도 중심)
+			radius: 2000,  // 2km 반경
+			size: 15 // 최대 15개 결과
+		}); 
+	 }
+
+	 function searchHospital(keyword){
+	   clearMarkers();
+	   
+	   const searchKeyword = keyword || '소아과';
+	   
+	   // 전국 검색
+	   ps.keywordSearch(searchKeyword, placesSearchCB, {
+	     size: 15   // location, radius 옵션 없음 = 전국 검색
+	   });
+	 }
+
+	 function placesSearchCB(data, status) {
+	     if(status === kakao.maps.services.Status.OK) { // 검색 성공시
+	         hospitalData = data; // 병원 데이터 저장 
+	         
+			 // 검색시 첫번째 결과를 중심으로 지도 이동
+			 if(data.length > 0){
+				const bounds = new kakao.maps.LatLngBounds();
+			 
+		         data.forEach(place => { // 각 병원에 반복 실행
+					// 마커 생성
+		             const marker = new kakao.maps.Marker({
+		                 map: map, // 표시할 지도
+		                 position: new kakao.maps.LatLng(place.y, place.x) // 마커 위치	
+		             });
+		             markers.push(marker); // 배열에 저장(나중에 삭제하기 위함)
+		             
+		             // 마커 클릭시 상세정보 업데이트
+		             kakao.maps.event.addListener(marker, 'click', function() {
+		                 updateHospitalDetail(place);
+		             });
+					 
+					 // 좌표 추가
+					 bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+		         });
+				 
+				 // 검색된 모든 마커가 보이도록 지도 범위 재설정
+				 map.setBounds(bounds);
+			 }
+	         
+	         // 초기 지도 상태 저장 
+	         initialMapState = {
+	             center: map.getCenter(), // 현재 지도중심 좌표
+	             level: map.getLevel() // 현재 확대 레벨
+	         };
+	     }		 else if (status === kakao.maps.services.Status.ZERO_RESULT) { // 검색 결과 없음
+		         alert('검색 결과가 없습니다.');
+		     } else {
+		         alert('검색 중 오류가 발생했습니다.');
+		     }
+	 }
+	 
+	 function updateHospitalDetail(place){
+		const detailContent = document.getElementById('detailContent');
+		
+		detailContent.innerHTML = `
+		
+			  <div class="info-row">
+	              <div class="info-label">
+	                  <i class="fa-solid fa-hospital"></i>
+	                  병원명
+	              </div>
+	              <div class="info-value">${place.place_name}</div>
+	          </div>
+	
+	          <div class="info-row">
+	              <div class="info-label">
+	                  <i class="fa-solid fa-location-dot"></i>
+	                  주소
+	              </div>
+	              <div class="info-value">${place.address_name || place.road_address_name || '주소 정보 없음'}</div>
+	          </div>
+	
+	          <div class="info-row">
+	              <div class="info-label">
+	                  <i class="fa-solid fa-phone"></i>
+	                  전화번호
+	              </div>
+	              <div class="info-value">${place.phone || '전화번호 정보 없음'}</div>
+	          </div>
+	
+	          <div class="info-row">
+	              <div class="info-label">
+	                  <i class="fa-solid fa-clock"></i>
+	                  진료여부
+	              </div>
+	              <div class="info-value">
+	                   <a href="${place.place_url}" 
+					   target="_blank" 
+					              style="
+								  display: inline-flex;
+								      align-items: center;
+								      justify-content: center;
+								      gap: 8px;
+								      padding: 12px 24px;
+								      background: #E8A5A5;  /* 검색 버튼 색상 */
+								      color: #FFFFFF;
+								      text-decoration: none;
+								      border-radius: 8px;
+								      font-weight: 600;
+								      font-size: 14px;
+								      transition: all 0.3s ease;
+								      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+								      border: none;
+								      cursor: pointer;
+					              "
+					              onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'"
+					              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+					              카카오맵에서 보기</a>
+	              </div>
+	          </div>
+			  
+			  <!-- 돌아가기 버튼 추가 -->
+	  		    <button onclick="restoreMapView()" class="back-to-list-btn" style="
+	  		      width: 100%;
+	  		      padding: 10px;
+	  		      margin-bottom: 15px;
+	  		      background: #f0f0f0;
+	  		      border: none;
+	  		      border-radius: 8px;
+	  		      cursor: pointer;
+	  		      display: flex;
+	  		      align-items: center;
+	  		      justify-content: center;
+	  		      gap: 8px;
+	  		      font-size: 14px;
+	  		      color: #333;
+	  		      transition: background 0.2s;
+	  		    " onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">
+	  		      <i class="fa-solid fa-arrow-left"></i>
+	  		      전체 병원 지도 보기
+	  		    </button>
+			   <!-- 액션 버튼 -->
+			   <div class="action-buttons">
+			     <a href="/main/reservation" class="action-btn btn-primary">
+			       예약하기
+			     </a>
+			     <a href="${place.place_url}" target="_blank" class="action-btn btn-primary">
+			       길찾기
+			     </a>
+			   </div>
+			  `
+			  
+			  // 지도 div를 다시 추가
+		      const mapDiv = document.createElement('div');
+		      mapDiv.className = 'map-placeholder';
+		      mapDiv.id = 'map';
+		      mapDiv.style.width = '100%';
+		      mapDiv.style.height = '300px';
+		      
+		      // 액션 버튼 바로 위에 지도 삽입
+		      const actionButtons = detailContent.querySelector('.action-buttons');
+		      detailContent.insertBefore(mapDiv, actionButtons);
+		      
+		      // 지도 객체를 새로운 컨테이너에 재생성
+		      const options = {
+		          center: new kakao.maps.LatLng(place.y, place.x),
+		          level: 4
+		      };
+		      map = new kakao.maps.Map(mapDiv, options);
+		      
+		      // 선택한 병원에 마커 표시
+		      const marker = new kakao.maps.Marker({
+		          map: map,
+		          position: new kakao.maps.LatLng(place.y, place.x)
+		      });
+	 }
+	 
+	 // 전체 병원 지도로 복원하는 함수
+	 function restoreMapView() {
+	   if (!initialMapState) {
+	     return; // 초기 상태 없으면 종료
+	   }
+	   // HTML 복원
+	   const detailContent = document.getElementById('detailContent');
+	  
+	   detailContent.innerHTML = `
+	     <div class="info-row">
+	       <div class="info-label">
+	         <i class="fa-solid fa-hospital"></i>
+	         즐겨찾기
+	       </div>
+	     </div>
+
+
+	     <div class="action-buttons">
+	       <a href="/main/reservation" class="action-btn btn-primary">
+	         예약하기
+	       </a>
+	       <button class="action-btn btn-primary">
+	         길찾기
+	       </button>
+	     </div>
+	   `;
+	   
+	   // 지도 div 추가
+	   const mapDiv = document.createElement('div');
+	   mapDiv.className = 'map-placeholder';
+	   mapDiv.id = 'map';
+	   mapDiv.style.width = '100%';
+	   mapDiv.style.height = '300px';
+	   
+	   const actionButtons = detailContent.querySelector('.action-buttons');
+	   detailContent.insertBefore(mapDiv, actionButtons);
+	   
+	   // 초기 상태로 지도 재생성
+	   const options = {
+	     center: initialMapState.center, // 저장된 중심 좌표
+	     level: initialMapState.level // 저장된 확대 레벨
+	   };
+	   map = new kakao.maps.Map(mapDiv, options);
+	   
+	   // 저장된 병원 데이터로 마커 다시 생성
+	   hospitalData.forEach(place => {
+	     const marker = new kakao.maps.Marker({
+	       map: map,
+	       position: new kakao.maps.LatLng(place.y, place.x)
+	     });
+	     
+	     // 클릭 이벤트 다시 연결
+	     kakao.maps.event.addListener(marker, 'click', function() {
+	       updateHospitalDetail(place);
+	     });
+	   });
+	 }
+	 
+	 // 마커 초기화
+	 function clearMarkers() {
+		markers.forEach(m => m.setMap(null)); // 각 마커를 지도에서 제거
+		markers = []; // 빈 배열로 만들어서 새로운 마커를 담을 준비
+	 }
+	 
+	 	 
+	 
+	 /*]]>*/
+	</script>	
+
+
+		
+		
     <script>
         // 병원 선택
         function selectHospital(element, index) {
@@ -199,7 +499,7 @@
             } else {
                 icon.classList.remove('fa-regular');
                 icon.classList.add('fa-solid');
-             //   alert('즐겨찾기에 추가되었습니다.');
+               //  alert('즐겨찾기에 추가되었습니다.');
             }
         }
     </script>
