@@ -151,6 +151,21 @@ body {
     font-weight: 600;
 }
 
+#kakao-charge{
+	margin-top:20px; 
+	text-align:right;
+}
+
+#kakao-charge-button{
+	padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    background: #d46a6a;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+}
+
 /* ===== 안내 ===== */
 .pay-info h4 {
     font-size: 15px;
@@ -216,11 +231,16 @@ body {
         <div class="card-box">
             <div class="charge-title">베베페이 충전</div>
             <div class="charge-buttons">
-                <button>10,000원</button>
-                <button>30,000원</button>
-                <button>50,000원</button>
-                <button>100,000원</button>
+                <button data-amount="10000">10,000원</button>
+                <button data-amount="30000">30,000원</button>
+                <button data-amount="50000">50,000원</button>
+                <button data-amount="100000">100,000원</button>
                 <button>기타 금액</button>
+				<div id="kakao-charge">
+				    <button id="kakao-charge-button">
+				        카카오페이로 충전하기
+				    </button>
+				</div>
             </div>
         </div>
 
@@ -242,6 +262,69 @@ body {
 
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
+
+<script>
+	let selectedAmount = 0;
+	
+	//금액선택
+	document.querySelectorAll('.charge-buttons button').forEach(btn => {
+		btn.addEventListener('click', () => {
+			selectedAmount = btn.dataset.amount;
+			
+			//선택표시
+			document.querySelectorAll('.charge-button button')
+				.forEach(b => b.style.background = '#fbeaea');
+			btn.style.background = '#e9b5b5';
+		});
+	});
+	
+	//충전하기 버튼 클릭
+	document.getElementById('kakao-charge-button').addEventListener('click',() =>{
+		if(selectedAmount == 0){
+			alert('충전 금액을 선택해주세요.');
+			return;
+		}
+		
+		//서버로 카카오페이 결제 준비 요청
+		fetch('/payment/kakao/ready',{
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json'},
+			
+		})
+		
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</script>
 
 </body>
 </html>
