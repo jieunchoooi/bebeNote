@@ -143,9 +143,9 @@
 	
 	<script th:inline="javascript">
 		/*<![CDATA[*/
-		let map;
-		let markers = [];
-		let initialMapState = null; // 초기 지도 상태 저장
+		let map; // 카카오맵 객체 담을 변수
+		let markers = []; // 생성된 마커들을 관리하는 배열
+		let initialMapState = null; // 초기 지도 상태 저장(검색 후 돌아가기)
 		let hospitalData = []; // 검색된 병원 데이터 저장
 		
 		document.addEventListener("DOMContentLoaded", function () {
@@ -192,6 +192,7 @@
 		const searchInput = document.querySelector(".search-input");
 		const searchBtn =  document.querySelector(".search-btn");
 		
+		// 버튼 클릭시 
 		searchBtn.addEventListener('click', function(){
 			const keyword = searchInput.value.trim();
 			if(keyword){
@@ -201,6 +202,7 @@
 			}
 		});
 		
+		// 엔터키 클릭시
 		searchInput.addEventListener('keypress', function(e){
 			if(e.key === 'Enter'){
 				const keyword = searchInput.value.trim();
@@ -219,13 +221,13 @@
 	 function searchNearbyHospital(keyword){
 		clearMarkers();
 		
-		const searchKeyword = keyword || '소아과';
+		const searchKeyword = keyword || '소아과'; // 검색할 키워드
 		
 		ps.keywordSearch(keyword, placesSearchCB, {
-			location: map.getCenter(),
-			radius: 2000,  // 3km 반경
-			size: 15
-		});
+			location: map.getCenter(), // 검색 중심점(현재 지도 중심)
+			radius: 2000,  // 2km 반경
+			size: 15 // 최대 15개 결과
+		}); 
 	 }
 
 	 function searchHospital(keyword){
@@ -235,24 +237,25 @@
 	   
 	   // 전국 검색
 	   ps.keywordSearch(searchKeyword, placesSearchCB, {
-	     size: 15
+	     size: 15   // location, radius 옵션 없음 = 전국 검색
 	   });
 	 }
 
 	 function placesSearchCB(data, status) {
-	     if(status === kakao.maps.services.Status.OK) {
+	     if(status === kakao.maps.services.Status.OK) { // 검색 성공시
 	         hospitalData = data; // 병원 데이터 저장 
 	         
 			 // 검색시 첫번째 결과를 중심으로 지도 이동
 			 if(data.length > 0){
 				const bounds = new kakao.maps.LatLngBounds();
 			 
-		         data.forEach(place => {
+		         data.forEach(place => { // 각 병원에 반복 실행
+					// 마커 생성
 		             const marker = new kakao.maps.Marker({
-		                 map: map,
-		                 position: new kakao.maps.LatLng(place.y, place.x)	
+		                 map: map, // 표시할 지도
+		                 position: new kakao.maps.LatLng(place.y, place.x) // 마커 위치	
 		             });
-		             markers.push(marker);
+		             markers.push(marker); // 배열에 저장(나중에 삭제하기 위함)
 		             
 		             // 마커 클릭시 상세정보 업데이트
 		             kakao.maps.event.addListener(marker, 'click', function() {
@@ -269,10 +272,10 @@
 	         
 	         // 초기 지도 상태 저장 
 	         initialMapState = {
-	             center: map.getCenter(),
-	             level: map.getLevel()
+	             center: map.getCenter(), // 현재 지도중심 좌표
+	             level: map.getLevel() // 현재 확대 레벨
 	         };
-	     }		 else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+	     }		 else if (status === kakao.maps.services.Status.ZERO_RESULT) { // 검색 결과 없음
 		         alert('검색 결과가 없습니다.');
 		     } else {
 		         alert('검색 중 오류가 발생했습니다.');
@@ -314,7 +317,28 @@
 	                  진료여부
 	              </div>
 	              <div class="info-value">
-	                   <a href="${place.place_url}" target="_blank">카카오맵에서 보기</a>
+	                   <a href="${place.place_url}" 
+					   target="_blank" 
+					              style="
+								  display: inline-flex;
+								      align-items: center;
+								      justify-content: center;
+								      gap: 8px;
+								      padding: 12px 24px;
+								      background: #E8A5A5;  /* 검색 버튼 색상 */
+								      color: #FFFFFF;
+								      text-decoration: none;
+								      border-radius: 8px;
+								      font-weight: 600;
+								      font-size: 14px;
+								      transition: all 0.3s ease;
+								      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+								      border: none;
+								      cursor: pointer;
+					              "
+					              onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'"
+					              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+					              카카오맵에서 보기</a>
 	              </div>
 	          </div>
 			  
@@ -377,12 +401,11 @@
 	 // 전체 병원 지도로 복원하는 함수
 	 function restoreMapView() {
 	   if (!initialMapState) {
-	     console.log('초기 상태 없음');
-	     return;
+	     return; // 초기 상태 없으면 종료
 	   }
-	   
+	   // HTML 복원
 	   const detailContent = document.getElementById('detailContent');
-	   
+	  
 	   detailContent.innerHTML = `
 	     <div class="info-row">
 	       <div class="info-label">
@@ -414,8 +437,8 @@
 	   
 	   // 초기 상태로 지도 재생성
 	   const options = {
-	     center: initialMapState.center,
-	     level: initialMapState.level
+	     center: initialMapState.center, // 저장된 중심 좌표
+	     level: initialMapState.level // 저장된 확대 레벨
 	   };
 	   map = new kakao.maps.Map(mapDiv, options);
 	   
@@ -432,9 +455,11 @@
 	     });
 	   });
 	 }
+	 
+	 // 마커 초기화
 	 function clearMarkers() {
-		markers.forEach(m => m.setMap(null));
-		markers = [];
+		markers.forEach(m => m.setMap(null)); // 각 마커를 지도에서 제거
+		markers = []; // 빈 배열로 만들어서 새로운 마커를 담을 준비
 	 }
 	 
 	 	 
