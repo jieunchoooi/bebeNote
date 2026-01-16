@@ -40,8 +40,20 @@ public class headerMenuController {
 	}
 	
 	@GetMapping("/nearHospital")
-	public String nearHospital() {
+	public String nearHospital(Model model, Authentication auth) {
 		System.out.println("headerMenuController nearHospital()");
+		
+		if(auth != null) {
+			// 로그인한 사용자 ID 가져옴
+			String userId = auth.getName();
+			// DB에서 회원 조회
+			Member member = memberService.findByUserId(userId);
+			
+			if(member != null && member.getAddress() != null) {
+				// 회원 정보 model에 담음
+				model.addAttribute("userAddress", member.getAddress());
+			}
+		}
 		
 		return "/headerMenu/nearHospital";
 	}
