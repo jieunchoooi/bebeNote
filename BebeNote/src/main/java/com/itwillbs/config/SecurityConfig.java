@@ -40,6 +40,7 @@ public class SecurityConfig {
 						.requestMatchers("/oauth/naver/callback").permitAll() 
 						.requestMatchers("/img/**","/css/**","/js/**","/uploadPath/**").permitAll()
 						.requestMatchers("//t1.daumcdn.net/**").permitAll()
+						.requestMatchers("/api/bookmarks/**").permitAll()
 						.anyRequest()
 						.authenticated()
 				)

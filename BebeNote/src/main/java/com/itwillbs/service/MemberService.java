@@ -1,5 +1,7 @@
 package com.itwillbs.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
@@ -9,10 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.itwillbs.domain.ChildrenVO;
 import com.itwillbs.domain.MemberVO;
+import com.itwillbs.dto.BookmarkRequest;
 import com.itwillbs.dto.OAuthLoginRequestDTO;
+import com.itwillbs.entity.Bookmark;
 import com.itwillbs.entity.Children;
 import com.itwillbs.entity.Member;
 import com.itwillbs.mapper.MemberMapper;
+import com.itwillbs.repository.BookmarkRepository;
 import com.itwillbs.repository.ChildrenRepository;
 import com.itwillbs.repository.MemberRepository;
 
@@ -26,6 +31,7 @@ public class MemberService {
 	
 	private final MemberRepository memberRepository;
 	private final ChildrenRepository childrenRepository;
+	private final BookmarkRepository bookmarkRepository;
 	
 	private final MemberMapper memberMapper;
 	
@@ -98,6 +104,43 @@ public class MemberService {
 	public Member findByUserId(String userId) {
 		
 		return memberRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+	}
+
+
+	// 즐겨찾기 추가
+	public Map<String, Object> toggleBookmark(BookmarkRequest request, Authentication auth) {
+		
+		String userId = auth.getName();
+		
+		// 기존 즐겨찾기 있는지 확인
+        Optional<Bookmark> existing = bookmarkRepository.findByUserIdAndKakaoPlaceId(userId, request.getKakaoPlaceId());
+
+        Map<String, Object> result = new HashMap<>();
+
+        if (existing.isPresent()) {
+            // 이미 즐겨찾기 되어 있으면 삭제 또는 토글
+            bookmarkRepository.delete(existing.get());
+            result.put("success", true);
+            result.put("action", "removed"); // 취소됨
+		}else {
+			// 즐겨찾기에 없으면 새로 저장
+			Bookmark bookmark = new Bookmark();
+			bookmark.setUserId(userId);
+			bookmark.setHospitalName(request.getHospitalName());
+			bookmark.setAddress(request.getAddress());
+			bookmark.setPhone(request.getPhone());
+			bookmark.setKakaoPlaceId(request.getKakaoPlaceId());
+			bookmark.setLatitude(request.getLatitude());
+			bookmark.setLongitude(request.getLongitude());
+			bookmark.setBookmarked(request.isBookmarked());
+	
+			bookmarkRepository.save(bookmark);
+			
+			result.put("success", true);
+            result.put("action", "added"); // 추가됨
+		}
+		
+	    return result;
 	}
 
 
