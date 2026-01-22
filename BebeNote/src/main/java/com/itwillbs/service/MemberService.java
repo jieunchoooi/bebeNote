@@ -107,7 +107,7 @@ public class MemberService {
 	}
 
 
-	// 즐겨찾기 추가
+	// 즐겨찾기 추가 
 	public Map<String, Object> toggleBookmark(BookmarkRequest request, Authentication auth) {
 		
 		String userId = auth.getName();
