@@ -11,6 +11,6 @@ import com.itwillbs.domain.ChildrenVO;
 @Repository
 public interface ChildrenMapper {
 
-	List<ChildrenVO> ChildInformation(String user_id);
+	List<ChildrenVO> ChildInformation(String userId);
 
 }
