@@ -6,7 +6,9 @@
 
 <mapper namespace="com.itwillbs.mapper.MemberMapper">
 
-	
-
-  
+	<select id="userBookmark" parameterType="string" resultType="com.itwillbs.dto.BookmarkRequest">
+		SELECT *
+		FROM bookmark
+		WHERE user_id = #{userId}
+  	</select>
 </mapper>

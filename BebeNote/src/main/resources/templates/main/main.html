@@ -101,60 +101,48 @@
 				 </div>
             </div>
 
+			<div class="main-card">
+			    <div class="main-card-title">즐겨찾기 소아과</div>
+
+			    <!-- 즐겨찾기 있을 때 -->
+			    <div th:if="${!#lists.isEmpty(userBookmark)}" class="main-card-content">
+
+			        <div th:each="bookmark : ${userBookmark}"
+			             class="main-hospital-item hospital-item"
+			             onclick="setCurrentHospitalFromData(this)">
+
+			            <div class="main-hospital-header">
+			                <div class="main-hospital-name"
+			                     th:text="${bookmark.hospitalName}"></div>
+
+			                <button class="main-bookmark-btn">
+			                    <i class="fa-solid fa-star"></i>
+			                </button>
+			            </div>
+
+			            <div class="main-hospital-info">
+			                <div>
+			                    <i class="fa-solid fa-location-dot"></i>
+			                    <span th:text="${bookmark.address}"></span>
+			                </div>
+			                <div>
+			                    <i class="fa-solid fa-phone"></i>
+			                    <span th:text="${bookmark.phone}"></span>
+			                </div>
+			            </div>
+
+			        </div>
+			    </div>
+
+			    <!-- 즐겨찾기 없을 때 -->
+			    <div th:if="${#lists.isEmpty(userBookmark)}" class="empty-message">
+			        즐겨찾기한 소아과가 없습니다
+			    </div>
+			</div>
+
+
             <div class="main-card">
                 <div class="main-card-title">근처 소아과</div>
-                <div class="main-card-content">
-                    <div class="main-hospital-item" onclick="selectMainHospital(this, 0)">
-                        <div class="main-hospital-header">
-                            <div class="main-hospital-name">지은소아과</div>
-                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 0)">
-                                <i class="fa-solid fa-star"></i>
-                            </button>
-                        </div>
-                        <div class="main-hospital-info">
-                            <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
-                        </div>
-                    </div>
-
-                    <div class="main-hospital-item" onclick="selectMainHospital(this, 1)">
-                        <div class="main-hospital-header">
-                            <div class="main-hospital-name">현신소아과</div>
-                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 1)">
-                                <i class="fa-regular fa-star"></i>
-                            </button>
-                        </div>
-                        <div class="main-hospital-info">
-                            <div><i class="fa-solid fa-phone"></i> 051-2345-6789</div>
-                        </div>
-                    </div>
-
-                    <div class="main-hospital-item" onclick="selectMainHospital(this, 2)">
-                        <div class="main-hospital-header">
-                            <div class="main-hospital-name">동래이동병원</div>
-                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 2)">
-                                <i class="fa-regular fa-star"></i>
-                            </button>
-                        </div>
-                        <div class="main-hospital-info">
-                            <div><i class="fa-solid fa-phone"></i> 051-3456-7890</div>
-                        </div>
-                    </div>
-                    <div class="main-hospital-item" onclick="selectMainHospital(this, 3)">
-                        <div class="main-hospital-header">
-                            <div class="main-hospital-name">서면 병원</div>
-                            <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 3)">
-                                <i class="fa-regular fa-star"></i>
-                            </button>
-                        </div>
-                        <div class="main-hospital-info">
-                            <div><i class="fa-solid fa-phone"></i> 051-3456-7891</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="main-card">
-                <div class="main-card-title">진료중인 소아과</div>
                 <div class="main-card-content"></div>
 				<div class="main-hospital-item" onclick="selectMainHospital(this, 0)">
 				    <div class="main-hospital-header">
@@ -348,6 +336,10 @@
 	           selectedChild.style.display = 'block';
 	       }
 	   }
+	   
+	   
+	   
+	   
     </script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.itwillbs.domain;
 
 import java.security.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import groovy.transform.ToString;
 import lombok.Getter;
@@ -17,8 +18,8 @@ public class ChildrenVO {
 	private String name;
 	private LocalDate birth_date;
 	private String gender;
-	private Timestamp created_at;
-	private Timestamp updated_at;
+	private LocalDateTime created_at;
+	private LocalDateTime updated_at;
 	
 	private int ageInMonths; // 계산된 개월수
 	

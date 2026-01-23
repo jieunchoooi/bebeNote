@@ -5,11 +5,22 @@
   
 <mapper namespace="com.itwillbs.mapper.ChildrenMapper">
 
-	<select id="ChildInformation" parameterType="string" resultType="com.itwillbs.domain.ChildrenVO">
-	    SELECT c.*
-	    FROM children c
-	    WHERE c.user_id = #{user_id}
-	</select>
+<resultMap id="childrenResultMap" type="com.itwillbs.domain.ChildrenVO">
+    <id property="child_id" column="child_id"/>
+    <result property="user_id" column="user_id"/>
+    <result property="name" column="name"/>
+    <result property="birth_date" column="birth_date" javaType="java.time.LocalDate"/>
+    <result property="gender" column="gender"/>
+    <result property="created_at" column="created_at"/>
+    <result property="updated_at" column="updated_at"/>
+</resultMap>
+
+<!--자녀 정보 메인에 가져감-->
+<select id="ChildInformation" parameterType="string" resultMap="childrenResultMap">
+    SELECT *
+    FROM children
+    WHERE user_id = #{userId}
+</select>
 
   
 </mapper>
