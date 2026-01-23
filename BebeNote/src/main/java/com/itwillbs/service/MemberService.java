@@ -1,6 +1,7 @@
 package com.itwillbs.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -141,6 +142,12 @@ public class MemberService {
 		}
 		
 	    return result;
+	}
+
+
+	public List<BookmarkRequest> userBookmark(String userId) {
+		
+		return memberMapper.userBookmark(userId);
 	}
 
 

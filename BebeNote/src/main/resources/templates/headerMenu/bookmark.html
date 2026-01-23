@@ -32,45 +32,34 @@
             </div>
             
             <div class="hospital-list" id="hospitalList">
+					   <div th:each="bookmark : ${userBookmark}" class="hospital-item active" onclick="selectHospital(this, 0)">
+		                    <div class="hospital-header">
+		                        <div th:text="${bookmark.hospitalName}" class="hospital-name"></div>
+		                        <button class="bookmark-btn" onclick="toggleBookmark(event, 0)">
+		                            <i class="fa-solid fa-star"></i>
+		                        </button>
+		                    </div>
+		                    <div class="hospital-info">
+		                        <div><i class="fa-solid fa-location-dot"></i> <span th:text="${bookmark.address}"></span></div>
+		                        <div><i class="fa-solid fa-phone"></i>  <span th:text="${bookmark.phone}"></span></div>
+		                    </div>
+		               </div>
                 <!-- 예시 데이터 -->
-                <div class="hospital-item active" onclick="selectHospital(this, 0)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">지은소아과</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 0)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 중앙대로 123</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
-                    </div>
-                </div>
+<!--                <div class="hospital-item active" onclick="selectHospital(this, 0)">-->
+<!--                    <div class="hospital-header">-->
+<!--                        <div class="hospital-name">지은소아과</div>-->
+<!--                        <button class="bookmark-btn" onclick="toggleBookmark(event, 0)">-->
+<!--                            <i class="fa-solid fa-star"></i>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                    <div class="hospital-info">-->
+<!--                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 중앙대로 123</div>-->
+<!--                        <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
-                <div class="hospital-item" onclick="selectHospital(this, 1)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">현신소아과</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 1)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 명륜로 456</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-2345-6789</div>
-                    </div>
-                </div>
 
-                <div class="hospital-item" onclick="selectHospital(this, 2)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">동래이동병원</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 2)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 충렬대로 789</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-3456-7890</div>
-                    </div>
-                </div>
+
 
                 <!-- 즐겨찾기가 없을 때 표시 -->
                 <!-- <div class="empty-message" style="display: none;">

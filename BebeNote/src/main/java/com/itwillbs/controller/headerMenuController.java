@@ -1,11 +1,14 @@
 package com.itwillbs.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.itwillbs.dto.BookmarkRequest;
 import com.itwillbs.entity.Member;
 import com.itwillbs.service.MemberService;
 
@@ -24,9 +27,9 @@ public class headerMenuController {
 	public String bookmark(Model model, Authentication auth) {
 		System.out.println("headerMenuController bookmark()");
 		
+		// 로그인한 사용자 ID 가져옴
+		String userId = auth.getName();
 		if(auth != null) {
-			// 로그인한 사용자 ID 가져옴
-			String userId = auth.getName();
 			// DB에서 회원 조회
 			Member member = memberService.findByUserId(userId);
 			
@@ -35,6 +38,10 @@ public class headerMenuController {
 				model.addAttribute("userAddress", member.getAddress());
 			}
 		}
+		
+		List<BookmarkRequest> userBookmark = memberService.userBookmark(userId);
+
+		model.addAttribute("userBookmark", userBookmark);
 		
 		return "/headerMenu/bookmark";
 	}
