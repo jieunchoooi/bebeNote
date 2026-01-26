@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -263,67 +263,119 @@ body {
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
 
-<script>
+<script th:inline="javascript">
+	console.log('=== 스크립트 시작 ===');
+
 	let selectedAmount = 0;
-	
-	//금액선택
-	document.querySelectorAll('.charge-buttons button').forEach(btn => {
-		btn.addEventListener('click', () => {
-			selectedAmount = btn.dataset.amount;
-			
-			//선택표시
-			document.querySelectorAll('.charge-button button')
-				.forEach(b => b.style.background = '#fbeaea');
-			btn.style.background = '#e9b5b5';
-		});
+
+	document.addEventListener('DOMContentLoaded', function() {
+	    console.log('DOM 로드 완료');
+	    
+	    // 금액 선택 버튼들
+	    const amountButtons = document.querySelectorAll('.charge-buttons button[data-amount]');
+	    console.log('금액 버튼 개수:', amountButtons.length);
+	    
+	    amountButtons.forEach(function(btn) {
+	        btn.onclick = function() {
+	            selectedAmount = parseInt(btn.getAttribute('data-amount'));
+	            console.log('선택된 금액:', selectedAmount);
+	            
+	            // 모든 버튼 배경색 초기화
+	            document.querySelectorAll('.charge-buttons button').forEach(function(b) {
+	                b.style.background = '#fbeaea';
+	            });
+	            
+	            // 선택된 버튼 강조
+	            btn.style.background = '#e9b5b5';
+	        };
+	    });
+	    
+	    // 기타 금액 버튼
+	    const customBtn = document.getElementById('custom-amount-btn');
+	    if (customBtn) {
+	        customBtn.onclick = function() {
+	            const customAmount = prompt('충전할 금액을 입력하세요 (원):');
+	            
+	            if (customAmount && !isNaN(customAmount) && parseInt(customAmount) > 0) {
+	                selectedAmount = parseInt(customAmount);
+	                console.log('기타 금액 선택:', selectedAmount);
+	                
+	                // 모든 버튼 배경색 초기화
+	                document.querySelectorAll('.charge-buttons button').forEach(function(b) {
+	                    b.style.background = '#fbeaea';
+	                });
+	                customBtn.style.background = '#e9b5b5';
+	                
+	                alert(customAmount + '원이 선택되었습니다.');
+	            } else {
+	                alert('올바른 금액을 입력해주세요.');
+	            }
+	        };
+	    }
+	    
+	    // 카카오페이 충전 버튼
+	    const kakaoBtn = document.getElementById('kakao-charge-button');
+	    console.log('카카오페이 버튼 찾음:', kakaoBtn);
+	    
+	    if (kakaoBtn) {
+	        kakaoBtn.onclick = function() {
+	            console.log('충전 버튼 클릭! 선택금액:', selectedAmount);
+	            
+	            if (!selectedAmount || selectedAmount === 0) {
+	                alert('충전 금액을 선택해주세요.');
+	                return;
+	            }
+	            
+	            console.log('결제 요청 시작...');
+
+	            fetch('/payment/ready', {
+	                method: 'POST',
+	                headers: { 
+	                    'Content-Type': 'application/json'
+	                },
+	                body: JSON.stringify({
+	                    amount: selectedAmount
+	                })
+	            })
+	            .then(function(res) {
+	                console.log('서버 응답 상태:', res.status);
+	                if (!res.ok) {
+	                    throw new Error('서버 응답 에러: ' + res.status);
+	                }
+	                return res.json();
+	            })
+	            .then(function(data) {
+	                console.log('카카오페이 응답:', data);
+	                
+	                if (data.next_redirect_pc_url) {
+	                    console.log('결제 페이지로 이동:', data.next_redirect_pc_url);
+	                    window.location.href = data.next_redirect_pc_url;
+	                } else {
+	                    alert('결제 URL을 받지 못했습니다.');
+	                    console.error('응답 데이터:', data);
+	                }
+	            })
+	            .catch(function(err) {
+	                console.error('에러 발생:', err);
+	                alert('결제 요청 중 오류 발생: ' + err.message);
+	            });
+	        };
+	    }
+	    
+	    // 결제 결과 메시지
+	    const urlParams = new URLSearchParams(window.location.search);
+	    
+	    if (urlParams.get('success') === 'true') {
+	        alert('충전이 완료되었습니다!');
+	        window.history.replaceState({}, document.title, "/myPage/payControl");
+	    } else if (urlParams.get('fail') === 'true') {
+	        alert('결제에 실패했습니다. 다시 시도해주세요.');
+	        window.history.replaceState({}, document.title, "/myPage/payControl");
+	    } else if (urlParams.get('cancel') === 'true') {
+	        alert('결제가 취소되었습니다.');
+	        window.history.replaceState({}, document.title, "/myPage/payControl");
+	    }
 	});
-	
-	//충전하기 버튼 클릭
-	document.getElementById('kakao-charge-button').addEventListener('click',() =>{
-		if(selectedAmount == 0){
-			alert('충전 금액을 선택해주세요.');
-			return;
-		}
-		
-		//서버로 카카오페이 결제 준비 요청
-		fetch('/payment/kakao/ready',{
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json'},
-			
-		})
-		
-	});
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 </script>
 
 </body>

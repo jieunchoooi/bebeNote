@@ -36,7 +36,7 @@ public class SecurityConfig {
 		return http
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/main/**").permitAll()
-						.requestMatchers("/","/insert/**","/insertPro/**","/myPage/**","/headerMenu/**").permitAll()
+						.requestMatchers("/","/insert/**","/insertPro/**","/myPage/**","/headerMenu/**","/payment/**").permitAll()
 						.requestMatchers("/index2/**","/member/**","/oauth/**").permitAll()
 						.requestMatchers("/oauth/naver/callback").permitAll() 
 						.requestMatchers("/img/**","/css/**","/js/**","/uploadPath/**").permitAll()
@@ -65,7 +65,7 @@ public class SecurityConfig {
 		                .logoutSuccessUrl("/")
 				)	
 				.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/member/oauth/naver", "/member/checkId", "/member/signup")
+                .ignoringRequestMatchers("/member/oauth/naver", "/member/checkId", "/member/signup","/payment/**")
 				)
 				.userDetailsService(myUserDetailsService)
 				.build();
