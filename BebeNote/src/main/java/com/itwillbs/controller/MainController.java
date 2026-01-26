@@ -38,7 +38,7 @@ public class MainController {
 	public String main(Model model, Authentication auth) {
 		System.out.println("MainController main()");
 		
-		String userId = auth.getName();
+		String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 		List<ChildrenVO> children = mainService.ChildInformation(userId);
 		
 		List<BookmarkRequest> userBookmark = memberService.userBookmark(userId);

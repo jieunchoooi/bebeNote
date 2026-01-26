@@ -532,6 +532,7 @@
 			.then(response => response.json())
 			.then(data => {
 				if(data.success){
+					// 서버 응답에 따라 아이콘 변경
 					if(data.action === "added"){
 					icon.classList.remove('fa-regular');
 					icon.classList.add('fa-solid');
