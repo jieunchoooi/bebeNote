@@ -22,28 +22,6 @@ public class MainService {
 	
 	private final ChildrenMapper childrenMapper ;
 
-//	public List<ChildrenVO> ChildInformation(String user_id) {
-//		System.out.println("MainService ChildInformation()");
-//		
-//		// 자녀 개월수 구하기
-//		// db에서 자녀 정보 가져오기
-//		List<ChildrenVO> children = childrenMapper.ChildInformation(user_id);
-//		// 오늘 날짜 구하기
-//		LocalDate today = LocalDate.now();
-//		
-//		for(ChildrenVO child : children) {
-//			if(child.getBirth_date() != null) {
-//				// Period: 두 날짜 사이의 기간을 나타내는 클래스
-//				Period period = Period.between(child.getBirth_date(), today);
-//				int months = period.getYears() * 12 + period.getMonths();
-//				child.setAgeInMonths(months);
-//			}
-//		}
-//		
-//		
-//		return children;
-//	}
-
 	public List<ChildrenVO> ChildInformation(String userId) {
 	    System.out.println("MainService ChildInformation()");
 	    

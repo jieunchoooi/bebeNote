@@ -35,7 +35,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		return http
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("/","/insert/**","/insertPro/**","/myPage/**","/main/**","/headerMenu/**").permitAll()
+						.requestMatchers("/main/**").permitAll()
+						.requestMatchers("/","/insert/**","/insertPro/**","/myPage/**","/headerMenu/**").permitAll()
 						.requestMatchers("/index2/**","/member/**","/oauth/**").permitAll()
 						.requestMatchers("/oauth/naver/callback").permitAll() 
 						.requestMatchers("/img/**","/css/**","/js/**","/uploadPath/**").permitAll()
@@ -49,6 +50,7 @@ public class SecurityConfig {
 						.loginProcessingUrl("/member/login")
 						.usernameParameter("user_id")
 						.passwordParameter("password")
+						.defaultSuccessUrl("/main/main", true)
 						.successHandler((request, response, authentication) -> {
 					        response.setStatus(HttpServletResponse.SC_OK); // 200
 					    })
