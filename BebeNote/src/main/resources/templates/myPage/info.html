@@ -110,7 +110,7 @@
 				<tbody>
 				    <tr th:each="vaccine : ${vaccines}">
 				        <!-- 대상전염병 -->
-				        <td th:text="${vaccine.vaccine_name}">백신명</td>
+				        <td th:text="${vaccine.vaccine_name}"></td>
 				
 				        <!-- 1차 ~ 6차 고정 -->
 				        <td th:each="dose, stat : ${doses}"
