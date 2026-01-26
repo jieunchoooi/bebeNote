@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Component
-@ConfigurationProperties(prefix = "kakaopay")
+@ConfigurationProperties(prefix = "kakao.pay")
 @Getter
 @Setter
 public class KakaoPayProperties {
