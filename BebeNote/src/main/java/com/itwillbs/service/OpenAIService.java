@@ -48,7 +48,11 @@ public class OpenAIService {
 			Map<String, Object> requestBody = new HashMap<>();
 			requestBody.put("model", "gpt-4o-mini");
 			requestBody.put("messages", List.of(
-					Map.of("role", "system", "content", "당신은 소아과 백신 전문가입니다. 아이의 예방접종 일정을 분석하고 다음 접종을 추천해주세요."),
+					Map.of("role", "system", "content", "너는 소아과 예방접종 전문가야." +
+							"사용자가 준 접종 기록을 보고 다음 접종을 1개만 추천해줘. " + "\r\n"
+							+ "                \"출력은 2문장만, 형식은 아래와 같이 정확히 맞춰줘:\\n\" +\r\n"
+							+ "                \"다음 접종은 [백신명] [차수]입니다.\\n\" +\r\n"
+							+ "                \"권장 시기는 [기준] 후 [기간], 즉 [날짜]에 맞는 게 좋아요.\""),
 					Map.of("role", "user", "content", prompt)
 			));
 			requestBody.put("max_tokens", 500);
@@ -77,21 +81,25 @@ public class OpenAIService {
 	
 	private String createPrompt(String childName, Integer childAge, List<String> completedVaccines) {
 		StringBuilder prompt = new StringBuilder();
-		prompt.append(String.format("%s(생후 %d개월)의 예방접종 기록입니다.\n\n", childName, childAge));
-		prompt.append("완료한 백신:\n");
-		
-		if(completedVaccines.isEmpty()) {
-			prompt.append("- 아직 접종한 백신이 없습니다.\\n");
-		} else {
-			for (String vaccine : completedVaccines) {
-				prompt.append("- ").append(vaccine).append("\n");
-		}
-	}
-	
-	prompt.append("\n다음 접종 일정을 추천해주세요. ");
-    prompt.append("접종해야 할 백신명, 권장 시기, 그리고 간단한 설명을 포함해주세요. ");
-    prompt.append("친근하고 이해하기 쉬운 말투로 200자 이내로 작성해주세요.");
-    
-    return prompt.toString();
+
+	    prompt.append("너는 소아과 예방접종 전문가야.\n");
+	    prompt.append("아래 정보로 다음 접종을 한 가지만 추천해줘.\n");
+	    prompt.append("출력은 딱 2문장만, 불필요한 설명/인사말은 절대 금지.\n");
+	    prompt.append("형식은 아래처럼 정확히 맞춰줘:\n");
+	    prompt.append("다음 접종은 [백신명] [차수]입니다.\n");
+	    prompt.append("권장 시기는 [기준] 후 [기간], 즉 [날짜]에 맞는 게 좋아요.\n");
+
+	    prompt.append(String.format("아이 정보: %s(생후 %d개월)\n", childName, childAge));
+	    prompt.append("완료한 백신:\n");
+
+	    if (completedVaccines.isEmpty()) {
+	        prompt.append("- 아직 접종한 백신이 없습니다.\n");
+	    } else {
+	        for (String vaccine : completedVaccines) {
+	            prompt.append("- ").append(vaccine).append("\n");
+	        }
+	    }
+
+	    return prompt.toString();
 	}
 }

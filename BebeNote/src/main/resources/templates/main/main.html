@@ -133,6 +133,9 @@
 
 			        </div>
 			    </div>
+				<div th:if="${#lists.isEmpty(userBookmark)}" class="main-card-content">
+					<span>즐겨찾기에 등록된 병원이 없습니다.</span>
+				</div>
 			</div>
 
 

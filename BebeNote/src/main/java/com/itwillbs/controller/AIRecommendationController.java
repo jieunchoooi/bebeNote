@@ -28,7 +28,7 @@ public class AIRecommendationController {
 
     @GetMapping("/api/ai-recommendation/{childId}")
     @ResponseBody
-    public AIRecommendationResponse getRecommendation(@PathVariable Long childId) {
+    public AIRecommendationResponse getRecommendation(@PathVariable("childId") Long childId) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         List<ChildrenVO> children = mainService.ChildInformation(userId);
         
