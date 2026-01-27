@@ -213,6 +213,7 @@
 	
 	<script th:inline="javascript">
 	/*<![CDATA[*/
+	
         // 메인 페이지 병원 선택
         function selectMainHospital(element, index) {
             console.log('선택된 병원 인덱스:', index);
@@ -369,6 +370,8 @@
 	           });
 	       }
 	       
+		   const bookmarkedPlaceIds = /*[[${bookmarkedPlaceIds}]]*/ [];
+		   
 	       // 근처 소아과 화면에 표시
 	       function displayNearbyHospitals(hospitals) {
 	           const listContainer = document.getElementById('nearbyHospitalList');
@@ -388,14 +391,15 @@
 	               };
 	               
 	               // 즐겨찾기 여부 확인 (선택사항)
-	               const isBookmarked = false; // 추후 구현
+	               const isBookmarked = bookmarkedPlaceIds.includes(String(hospital.id));
 	               
 	               hospitalItem.innerHTML = `
 	                   <div class="main-hospital-header">
 	                       <div class="main-hospital-name">${hospital.place_name}</div>
-	                       <button class="main-bookmark-btn" onclick="event.stopPropagation(); toggleMainBookmark(event, ${index}, ${JSON.stringify(hospital).replace(/"/g, '&quot;')})">
-	                           <i class="fa-solid fa-star"></i>
-	                       </button>
+						   <button class="main-bookmark-btn"
+						           onclick="event.stopPropagation(); return false;">
+						       <i class="fa-star ${isBookmarked ? 'fa-solid' : 'fa-regular'}"></i>
+						   </button>
 	                   </div>
 	                   <div class="main-hospital-info">
 	                       <div><i class="fa-solid fa-location-dot"></i> ${hospital.address_name || hospital.road_address_name || '주소 정보 없음'}</div>

@@ -3,6 +3,8 @@ package com.itwillbs.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,7 +69,12 @@ public class MainController {
 
 	    // 즐겨찾기 정보
 	    List<BookmarkRequest> userBookmark = memberService.userBookmark(userId);
-	    
+	    // 즐겨찾기 카카오 placeId 목록만 추출
+	    Set<String> bookmarkedPlaceIds = userBookmark.stream()
+	            .map(BookmarkRequest::getKakaoPlaceId)
+	            .collect(Collectors.toSet());
+
+	    model.addAttribute("bookmarkedPlaceIds", bookmarkedPlaceIds);
 	    model.addAttribute("userBookmark", userBookmark);
 	    model.addAttribute("children", children);
 
