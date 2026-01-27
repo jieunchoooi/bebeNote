@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.boot.json.JsonWriter.Member;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.itwillbs.domain.ChildrenVO;
 import com.itwillbs.dto.BookmarkRequest;
 import com.itwillbs.entity.ChildVaccine;
+import com.itwillbs.entity.Member;
 import com.itwillbs.entity.Vaccine;
 import com.itwillbs.entity.VaccineDose;
 import com.itwillbs.service.MainService;
@@ -45,17 +45,29 @@ public class MainController {
 	public String main(Model model, Authentication auth) {
 
 	    System.out.println("MainController main()");
+	    
+	    // 로그인 확인
+	    if(auth == null || !auth.isAuthenticated()) {
+	    	return "/main/main";
+	    }
 
 	    // 로그인 사용자 ID
 	    String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-
+	    Member member = memberService.findByUserId(userId);
+	    
+	    // 사용자 주소 정보 추가
+	    if(member != null && member.getAddress() != null) {
+	    	model.addAttribute("userAddress", member.getAddress());
+	    } else {
+	        model.addAttribute("userAddress", null);
+	    }
+	    
 	    // 자녀 정보
 	    List<ChildrenVO> children = mainService.ChildInformation(userId);
 
 	    // 즐겨찾기 정보
 	    List<BookmarkRequest> userBookmark = memberService.userBookmark(userId);
-
-	    // 공통 모델
+	    
 	    model.addAttribute("userBookmark", userBookmark);
 	    model.addAttribute("children", children);
 

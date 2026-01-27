@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>즐겨찾기 병원 - 베베 접종 수첩</title>
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>근처 소아과 - 베베 접종 수첩</title>
     <link rel="stylesheet" href="/css/headerMenu/bookmark.css" />
 	<link rel="stylesheet" href="/css/login/insertModal.css" />
 	<link rel="stylesheet" href="/css/fragments/layout.css" />
@@ -22,60 +24,47 @@
 
 	
     <div class="bookmark-container">
-        <!-- 왼쪽: 즐겨찾기 병원 목록 -->
+        <!-- 왼쪽: 근처 소아과 목록 -->
         <div class="bookmark-section">
             <div class="section-title">
                 <i class="fa-solid fa-star"></i>
-                근처 소아과
+                <span id="sectionTitleText">근처 병원</span>
             </div>
             
-            <div class="hospital-list" id="hospitalList">
-                <!-- 예시 데이터 -->
-                <div class="hospital-item active" onclick="selectHospital(this, 0)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">지은소아과</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 0)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 중앙대로 123</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
-                    </div>
-                </div>
-
-                <div class="hospital-item" onclick="selectHospital(this, 1)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">현신소아과</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 1)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 명륜로 456</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-2345-6789</div>
-                    </div>
-                </div>
-
-                <div class="hospital-item" onclick="selectHospital(this, 2)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">동래이동병원</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 2)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 충렬대로 789</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-3456-7890</div>
-                    </div>
-                </div>
-
-                <!-- 즐겨찾기가 없을 때 표시 -->
-                <!-- <div class="empty-message" style="display: none;">
-                    <i class="fa-regular fa-star"></i>
-                    <div>즐겨찾기한 병원이 없습니다</div>
-                </div> -->
-            </div>
+			<!-- 근처소아과 목록 -->
+			<div th:unless="${#lists.isEmpty(userBookmark)}" class="hospital-list bookmark-list" id="bookmarkList">
+			    <div th:each="bookmark : ${userBookmark}" 
+			         class="hospital-item"
+			         th:data-hospital-name="${bookmark.hospitalName}"
+			         th:data-address="${bookmark.address}"
+			         th:data-phone="${bookmark.phone}"
+			         th:data-kakao-place-id="${bookmark.kakaoPlaceId}"
+			         th:data-latitude="${bookmark.latitude}"
+			         th:data-longitude="${bookmark.longitude}"
+			         onclick="setCurrentHospitalFromData(this)">
+			        <div class="hospital-header">
+			            <div th:text="${bookmark.hospitalName}" class="hospital-name"></div>
+			            <button class="bookmark-btn" onclick="toggleDetailBookmark(event)">
+			                <i class="fa-solid fa-star"></i>
+			            </button>
+			        </div>
+			        <div class="hospital-info">
+			            <div><i class="fa-solid fa-location-dot"></i> <span th:text="${bookmark.address}"></span></div>
+			            <div><i class="fa-solid fa-phone"></i> <span th:text="${bookmark.phone}"></span></div>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- 검색 결과 목록 (초기에는 숨김) -->
+			<div class="hospital-list search-result-list" id="searchResultList" style="display: none;">
+			    <!-- JavaScript로 동적 생성 -->
+			</div>
+			
+              <!-- 근처 병원이 없을 때 표시 -->
+             <div th:if="${#lists.isEmpty(userBookmark)}" class="empty-message" id="emptyMessage">
+                <i class="fa-regular fa-star"></i>
+                <div>근처 소아과가 없습니다</div>
+             </div> 
         </div>
 
         <!-- 오른쪽: 검색 및 상세 정보 -->
@@ -84,27 +73,27 @@
             <div class="search-card">
                 <div class="search-box">
                     <input type="text" class="search-input" placeholder="병원 이름 또는 주소를 검색하세요" >
-                    <button class="search-btn">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        검색
-                    </button>
+					<button class="search-btn">
+                       <i class="fa-solid fa-magnifying-glass"></i>
+                       검색
+                   	</button>
                 </div>
             </div>
 
             <!-- 병원 상세 정보 -->
             <div class="hospital-detail-card">
-                <div class="detail-header">
-                    <div class="detail-title">병원 정보</div>
-					<button class="bookmark-btn" onclick="toggleBookmark(event, 1)">
-						<i class="fa-star fa-regular bookmark-star"></i>	
-					</button>
-                </div>
+				<div class="detail-header">
+				    <div class="detail-title">병원 정보</div>
+				    <button class="bookmark-btn" id="detailBookmarkBtn" onclick="toggleDetailBookmark(event)" style="display:none;">
+				        <i class="fa-star fa-regular bookmark-star"></i>
+				    </button>
+				</div>
 
                 <div class="detail-content" id="detailContent">
                     <div class="info-row">
                         <div class="info-label">
                             <i class="fa-solid fa-hospital"></i>
-                            근처 소아과
+                            근처 소아과를 확인해보세요.
                         </div>
                     </div>
 
@@ -118,15 +107,6 @@
 					    <p>로그인 후 병원 위치를 확인할 수 있어요</p>
 					</div>
 
-                    <!-- 액션 버튼 -->
-                    <div class="action-buttons">
-                        <a href="/main/reservation" class="action-btn btn-primary">
-							예약하기
-                        </a>
-                        <button class="action-btn btn-primary">
-                            길찾기
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -147,6 +127,7 @@
 		let markers = []; // 생성된 마커들을 관리하는 배열
 		let initialMapState = null; // 초기 지도 상태 저장(검색 후 돌아가기)
 		let hospitalData = []; // 검색된 병원 데이터 저장
+		let currentHospitalInfo = null; // 현재 선택된 병원 정보
 		
 		document.addEventListener("DOMContentLoaded", function () {
 		 // 지도 컨테이너 가져오기
@@ -245,6 +226,9 @@
 	     if(status === kakao.maps.services.Status.OK) { // 검색 성공시
 	         hospitalData = data; // 병원 데이터 저장 
 	         
+			 // 왼쪽 리스트 업데이트
+			 updateHospitalList(data);
+			 
 			 // 검색시 첫번째 결과를 중심으로 지도 이동
 			 if(data.length > 0){
 				const bounds = new kakao.maps.LatLngBounds();
@@ -275,138 +259,240 @@
 	             center: map.getCenter(), // 현재 지도중심 좌표
 	             level: map.getLevel() // 현재 확대 레벨
 	         };
-	     }		 else if (status === kakao.maps.services.Status.ZERO_RESULT) { // 검색 결과 없음
+	     } else if (status === kakao.maps.services.Status.ZERO_RESULT) { // 검색 결과 없음
 		         alert('검색 결과가 없습니다.');
 		     } else {
 		         alert('검색 중 오류가 발생했습니다.');
 		     }
 	 }
 	 
+	 // 왼쪽 리스트 업데이트 함수 추가
+	 function updateHospitalList(hospitals) {
+	     const searchResultList = document.getElementById('searchResultList');
+	     const bookmarkList = document.getElementById('bookmarkList');
+	     const emptyMessage = document.getElementById('emptyMessage');
+	     const sectionTitle = document.getElementById('sectionTitleText');
+	     
+	     // 제목 변경
+	     sectionTitle.textContent = '검색 결과 (' + hospitals.length + '개)';
+	     
+	     // 즐겨찾기 리스트 숨기기
+	     if(bookmarkList) bookmarkList.style.display = 'none';
+	     if(emptyMessage) emptyMessage.style.display = 'none';
+	     
+	     // 검색 결과 리스트 표시
+	     searchResultList.style.display = 'block';
+	     searchResultList.innerHTML = '';
+	     
+	     hospitals.forEach(place => {
+	         const isBookmarked = checkIfBookmarked(place.id);
+	         
+	         const hospitalItem = document.createElement('div');
+	         hospitalItem.className = 'hospital-item';
+	         
+	         // place 객체를 문자열로 변환 (JSON.stringify 사용)
+	         const placeData = JSON.stringify({
+	             place_name: place.place_name,
+	             address_name: place.address_name || place.road_address_name,
+	             phone: place.phone || '',
+	             id: place.id,
+	             y: place.y,
+	             x: place.x,
+	             place_url: place.place_url
+	         });
+	         
+	         hospitalItem.onclick = function() {
+	             // 모든 아이템에서 active 제거
+	             document.querySelectorAll('.hospital-item').forEach(item => {
+	                 item.classList.remove('active');
+	             });
+	             // 클릭한 아이템에 active 추가
+	             this.classList.add('active');
+	             
+	             updateHospitalDetail(place);
+	         };
+	         
+	         hospitalItem.innerHTML = `
+	             <div class="hospital-header">
+	                 <div class="hospital-name">${place.place_name}</div>
+	                 <button class="bookmark-btn" onclick="event.stopPropagation(); toggleBookmarkFromList(event, this, ${placeData.replace(/"/g, '&quot;')})">
+	                     <i class="fa-${isBookmarked ? 'solid' : 'regular'} fa-star"></i>
+	                 </button>
+	             </div>
+	             <div class="hospital-info">
+	                 <div><i class="fa-solid fa-location-dot"></i> <span>${place.address_name || place.road_address_name || '주소 정보 없음'}</span></div>
+	                 <div><i class="fa-solid fa-phone"></i> <span>${place.phone || '전화번호 정보 없음'}</span></div>
+	             </div>
+	         `;
+	         
+	         searchResultList.appendChild(hospitalItem);
+	     });
+	 }
+	 
+	 // 리스트에서 즐겨찾기 토글하는 함수
+	 function toggleBookmarkFromList(event, button, placeInfo) {
+	     event.stopPropagation();
+	     toggleBookmark(event, placeInfo);
+	 }
+	 
+	 // 근처 소아과 목록으로 되돌리기 함수 추가
+	 function showNearkList() {
+	    const searchResultList = document.getElementById('searchResultList');
+	    const nearkList = document.getElementById('bookmarkList');
+	    const emptyMessage = document.getElementById('emptyMessage');
+	    const sectionTitle = document.getElementById('sectionTitleText');
+	    
+	 }
+	 
 	 function updateHospitalDetail(place){
-		const detailContent = document.getElementById('detailContent');
-		
-		detailContent.innerHTML = `
-		
-			  <div class="info-row">
-	              <div class="info-label">
-	                  <i class="fa-solid fa-hospital"></i>
-	                  병원명
-	              </div>
-	              <div class="info-value">${place.place_name}</div>
-	          </div>
-	
-	          <div class="info-row">
-	              <div class="info-label">
-	                  <i class="fa-solid fa-location-dot"></i>
-	                  주소
-	              </div>
-	              <div class="info-value">${place.address_name || place.road_address_name || '주소 정보 없음'}</div>
-	          </div>
-	
-	          <div class="info-row">
-	              <div class="info-label">
-	                  <i class="fa-solid fa-phone"></i>
-	                  전화번호
-	              </div>
-	              <div class="info-value">${place.phone || '전화번호 정보 없음'}</div>
-	          </div>
-	
-	          <div class="info-row">
-	              <div class="info-label">
-	                  <i class="fa-solid fa-clock"></i>
-	                  진료여부
-	              </div>
-	              <div class="info-value">
-	                   <a href="${place.place_url}" 
-					   target="_blank" 
-					              style="
-								  	  display: inline-flex;
-								      align-items: center;
-								      justify-content: center;
-								      gap: 8px;
-								      padding: 12px 24px;
-								      background: #E8A5A5;  /* 검색 버튼 색상 */
-								      color: #FFFFFF;
-								      text-decoration: none;
-								      border-radius: 8px;
-								      font-weight: 600;
-								      font-size: 14px;
-								      transition: all 0.3s ease;
-								      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-								      border: none;
-								      cursor: pointer;
-					              "
-					              onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'"
-					              onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
-					              카카오맵에서 보기</a>
-	              </div>
-	          </div>
-			  
-			<!-- 즐겨찾기-->
-			   <div class="bookmark-action" style="margin: 15px 0; text-align: center;">
-		           <button class="bookmark-btn-detail" onclick='toggleBookmark(event, ${JSON.stringify(place).replace(/'/g, "&apos;")})' 
-		                   style="padding: 10px 20px; border: none; border-radius: 8px; 
-		                          background: #FFE5E5; cursor: pointer; font-size: 14px;">
-		               <i class="fa-regular fa-star" style="color: #E8A5A5; margin-right: 5px;"></i>
-		               즐겨찾기 추가
-		           </button>
-		       </div>
-			  
-			  
-			  <!-- 돌아가기 버튼 추가 -->
-	  		    <button onclick="restoreMapView()" class="back-to-list-btn" style="
-	  		      width: 100%;
-	  		      padding: 10px;
-	  		      margin-bottom: 15px;
-	  		      background: #f0f0f0;
-	  		      border: none;
-	  		      border-radius: 8px;
-	  		      cursor: pointer;
-	  		      display: flex;
-	  		      align-items: center;
-	  		      justify-content: center;
-	  		      gap: 8px;
-	  		      font-size: 14px;
-	  		      color: #333;
-	  		      transition: background 0.2s;
-	  		    " onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">
-	  		      <i class="fa-solid fa-arrow-left"></i>
-	  		      전체 병원 지도 보기
-	  		    </button>
-			   <!-- 액션 버튼 -->
-			   <div class="action-buttons">
-			     <a href="/main/reservation" class="action-btn btn-primary">
-			       예약하기
-			     </a>
-			     <a href="${place.place_url}" target="_blank" class="action-btn btn-primary">
-			       길찾기
-			     </a>
-			   </div>
-			  `
-			  
-			  // 지도 div를 다시 추가
-		      const mapDiv = document.createElement('div');
-		      mapDiv.className = 'map-placeholder';
-		      mapDiv.id = 'map';
-		      mapDiv.style.width = '100%';
-		      mapDiv.style.height = '300px';
-		      
-		      // 액션 버튼 바로 위에 지도 삽입
-		      const actionButtons = detailContent.querySelector('.action-buttons');
-		      detailContent.insertBefore(mapDiv, actionButtons);
-		      
-		      // 지도 객체를 새로운 컨테이너에 재생성
-		      const options = {
-		          center: new kakao.maps.LatLng(place.y, place.x),
-		          level: 4
-		      };
-		      map = new kakao.maps.Map(mapDiv, options);
-		      
-		      // 선택한 병원에 마커 표시
-		      const marker = new kakao.maps.Marker({
-		          map: map,
-		          position: new kakao.maps.LatLng(place.y, place.x)
-		      });
+	     currentHospitalInfo = place; // 병원 정보 저장
+	     
+		 // 왼쪽 리스트에서 해당 병원 찾아서 active 처리
+	     document.querySelectorAll('.hospital-item').forEach(item => {
+	         item.classList.remove('active');
+	         
+	         // 병원 이름이나 ID로 일치하는 항목 찾기
+	         if (item.dataset.hospitalName === place.place_name || 
+	             item.dataset.kakaoPlaceId === place.id) {
+	             item.classList.add('active');
+	         }
+	     });
+		 
+	     const detailContent = document.getElementById('detailContent');
+	     
+	     detailContent.innerHTML = `
+	         <div class="info-row">
+	             <div class="info-label">
+	                 <i class="fa-solid fa-hospital"></i>
+	                 병원명
+	             </div>
+	             <div class="info-value">${place.place_name}</div>
+	         </div>
+
+	         <div class="info-row">
+	             <div class="info-label">
+	                 <i class="fa-solid fa-location-dot"></i>
+	                 주소
+	             </div>
+	             <div class="info-value">${place.address_name || place.road_address_name || '주소 정보 없음'}</div>
+	         </div>
+
+	         <div class="info-row">
+	             <div class="info-label">
+	                 <i class="fa-solid fa-phone"></i>
+	                 전화번호
+	             </div>
+	             <div class="info-value">${place.phone || '전화번호 정보 없음'}</div>
+	         </div>
+
+	         <div class="info-row">
+	             <div class="info-label">
+	                 <i class="fa-solid fa-clock"></i>
+	                 진료여부
+	             </div>
+	             <div class="info-value">
+	                 <a href="${place.place_url}" 
+	                    target="_blank" 
+	                    style="display: inline-flex; 
+							   align-items: center; 
+							   justify-content: center; 
+							   gap: 8px; padding: 12px 24px; 
+							   background: #E8A5A5; color: #FFFFFF; 
+							   text-decoration: none; 
+							   border-radius: 8px; 
+							   font-weight: 600; font-size: 14px; 
+							   transition: all 0.3s ease; 
+							   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+							   border: none; 
+							   cursor: pointer;"
+	                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'"
+	                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+	                    카카오맵에서 보기
+	                 </a>
+	             </div>
+	         </div>
+	         
+	         <!-- 돌아가기 버튼 -->
+	         <button onclick="restoreMapView()" 
+			 		 class="back-to-list-btn" 
+					 style="width: 100%; 
+					        padding: 10px; 
+							margin-bottom: 15px; 
+							background: #f0f0f0; 
+							border: none; border-radius: 8px; 
+							cursor: pointer; 
+							display: flex; 
+							align-items: center; 
+							justify-content: center; 
+							gap: 8px; font-size: 14px; 
+							color: #333; 
+							transition: background 0.2s;"
+							onmouseover="this.style.background='#e0e0e0'" 
+							onmouseout="this.style.background='#f0f0f0'">
+	             <i class="fa-solid fa-arrow-left"></i>
+	             전체 병원 지도 보기
+	         </button>
+	         
+	         <!-- 액션 버튼 -->
+	         <div class="action-buttons">
+	             <a href="/main/reservation" class="action-btn btn-primary">예약하기</a>
+	             <a href="${place.place_url}" target="_blank" class="action-btn btn-primary">길찾기</a>
+	         </div>
+	     `;
+	     
+	     // 즐겨찾기 버튼 표시
+	     const detailBookmarkBtn = document.getElementById('detailBookmarkBtn');
+	     detailBookmarkBtn.style.display = 'block';
+	     
+	     // 즐겨찾기 상태 확인 및 아이콘 업데이트
+	     const icon = detailBookmarkBtn.querySelector('i');
+	     
+	     // 왼쪽 리스트에서 해당 병원이 즐겨찾기인지 확인
+	     const isBookmarked = checkIfBookmarked(place.id || place.place_name);
+	     
+	     if (isBookmarked) {
+	         icon.classList.remove('fa-regular');
+	         icon.classList.add('fa-solid');
+	     } else {
+	         icon.classList.remove('fa-solid');
+	         icon.classList.add('fa-regular');
+	     }
+	     
+	     // 지도 div를 다시 추가
+	     const mapDiv = document.createElement('div');
+	     mapDiv.className = 'map-placeholder';
+	     mapDiv.id = 'map';
+	     mapDiv.style.width = '100%';
+	     mapDiv.style.height = '300px';
+	     
+	     // 액션 버튼 바로 위에 지도 삽입
+	     const actionButtons = detailContent.querySelector('.action-buttons');
+	     detailContent.insertBefore(mapDiv, actionButtons);
+	     
+	     // 지도 객체를 새로운 컨테이너에 재생성
+	     const options = {
+	         center: new kakao.maps.LatLng(place.y, place.x),
+	         level: 4
+	     };
+	     map = new kakao.maps.Map(mapDiv, options);
+	     
+	     // 선택한 병원에 마커 표시
+	     const marker = new kakao.maps.Marker({
+	         map: map,
+	         position: new kakao.maps.LatLng(place.y, place.x)
+	     });
+	 }
+
+	 // 즐겨찾기 여부 확인 함수 
+	 function checkIfBookmarked(hospitalId) {
+	     // 왼쪽 리스트에서 해당 병원이 있는지 확인
+	     const bookmarkedItems = document.querySelectorAll('#bookmarkList .hospital-item');
+	     for (let item of bookmarkedItems) {
+	         if (item.dataset.kakaoPlaceId === hospitalId || item.dataset.hospitalName === hospitalId) {
+	             return true;
+	         }
+	     }
+	     return false;
 	 }
 	 
 	 // 전체 병원 지도로 복원하는 함수
@@ -414,6 +500,15 @@
 	   if (!initialMapState) {
 	     return; // 초기 상태 없으면 종료
 	   }
+	   
+	   // 근처 소아과 목록으로 전환
+	   // showNearkList();
+	   
+	   // 왼쪽 카드의 active 클래스 모두 제거
+	   document.querySelectorAll('.hospital-item').forEach(item => {
+	     item.classList.remove('active');
+	   });
+	   
 	   // HTML 복원
 	   const detailContent = document.getElementById('detailContent');
 	  
@@ -421,18 +516,8 @@
 	     <div class="info-row">
 	       <div class="info-label">
 	         <i class="fa-solid fa-hospital"></i>
-	         즐겨찾기
+	         근처 소아과을 확인해보세요.
 	       </div>
-	     </div>
-
-
-	     <div class="action-buttons">
-	       <a href="/main/reservation" class="action-btn btn-primary">
-	         예약하기
-	       </a>
-	       <button class="action-btn btn-primary">
-	         길찾기
-	       </button>
 	     </div>
 	   `;
 	   
@@ -443,8 +528,7 @@
 	   mapDiv.style.width = '100%';
 	   mapDiv.style.height = '300px';
 	   
-	   const actionButtons = detailContent.querySelector('.action-buttons');
-	   detailContent.insertBefore(mapDiv, actionButtons);
+	   detailContent.appendChild(mapDiv);
 	   
 	   // 초기 상태로 지도 재생성
 	   const options = {
@@ -465,6 +549,9 @@
 	       updateHospitalDetail(place);
 	     });
 	   });
+	   
+	   // 즐겨찾기 버튼 숨기기
+	   document.getElementById('detailBookmarkBtn').style.display = 'none';
 	 }
 	 
 	 // 마커 초기화
@@ -496,24 +583,86 @@
             console.log('선택된 병원 인덱스:', index);
         }
 
-		
-		       // 즐겨찾기 토글
-		       function toggleBookmark(event, index) {
-		           event.stopPropagation();
-		           const button = event.currentTarget;
-		           const icon = button.querySelector('i');
-		           
-		           // 즐겨찾기 토글 로직
-		           if (icon.classList.contains('fa-solid')) {
-		               icon.classList.remove('fa-solid');
-		               icon.classList.add('fa-regular');
-		               // alert('즐겨찾기에서 제거되었습니다.');
-		           } else {
-		               icon.classList.remove('fa-regular');
-		               icon.classList.add('fa-solid');
-		              //  alert('즐겨찾기에 추가되었습니다.');
-		           }
-		       }
+		// 즐겨찾기 토글
+	     function toggleBookmark(event, hospitalInfo) {
+	         event.stopPropagation();
+	         const button = event.currentTarget;
+	         const icon = button.querySelector('i');
+			
+			 const isBookmarked = icon.classList.contains('fa-solid');
+			 
+			 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+			 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+	         
+	         fetch('/api/bookmark/toggle', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					[csrfHeader]: csrfToken 
+				},
+				body: JSON.stringify({
+					hospitalName: hospitalInfo.place_name,
+					address: hospitalInfo.address_name || hospitalInfo.road_address_name,
+					phone: hospitalInfo.phone || '',
+					kakaoPlaceId: hospitalInfo.id,
+					latitude: hospitalInfo.y,
+					longitude: hospitalInfo.x,
+					isBookmarked: isBookmarked
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if(data.success){
+					// 서버 응답에 따라 아이콘 변경
+					if(data.action === "added"){
+					icon.classList.remove('fa-regular');
+					icon.classList.add('fa-solid');
+					}else if(data.action === "removed"){
+						icon.classList.remove('fa-solid');
+						icon.classList.add('fa-regular');
+					}
+				}else{
+					alert("오류");
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				alert("오류");
+			})
+	     }
+		 
+		 // 상세 페이지 즐겨찾기 버튼용 함수
+		 function toggleDetailBookmark(event) {
+		     if(!currentHospitalInfo) {
+		         alert('병원을 먼저 선택해주세요.');
+		         return;
+		     }
+		     
+		     toggleBookmark(event, currentHospitalInfo);
+		 }
+			 
+		 function setCurrentHospitalFromData(element) {
+		     // 모든 아이템에서 active 클래스 제거
+		     document.querySelectorAll('.hospital-item').forEach(item => {
+		         item.classList.remove('active');
+		     });
+		     
+		     // 클릭한 아이템에만 active 클래스 추가
+		     element.classList.add('active');
+		     
+		     // 병원 정보 저장
+		     currentHospitalInfo = {
+		         place_name: element.dataset.hospitalName,
+		         address_name: element.dataset.address,
+		         phone: element.dataset.phone,
+		         id: element.dataset.kakaoPlaceId,
+		         y: element.dataset.latitude,
+		         x: element.dataset.longitude
+		     };
+			 
+			 // 오른쪽 상세 정보 업데이트
+			 updateHospitalDetail(currentHospitalInfo);
+		 }
     </script>
 </body>
 </html>

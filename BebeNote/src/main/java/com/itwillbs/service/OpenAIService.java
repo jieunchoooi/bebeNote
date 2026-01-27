@@ -1,5 +1,7 @@
 package com.itwillbs.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,16 +45,20 @@ public class OpenAIService {
 		try {
 			// 프롬프트 생성
 			String prompt = createPrompt(childName, childAge, completedVaccines);
-			
+			LocalDate today = LocalDate.now();
+			String todayStr = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		    log.info("오늘 기준 프롬프트:\n{}" +  prompt);
+		    
 			// API 요청 Body 생성
 			Map<String, Object> requestBody = new HashMap<>();
 			requestBody.put("model", "gpt-4o-mini");
 			requestBody.put("messages", List.of(
-					Map.of("role", "system", "content", "너는 소아과 예방접종 전문가야." +
-							"사용자가 준 접종 기록을 보고 다음 접종을 1개만 추천해줘. " + "\r\n"
-							+ "                \"출력은 2문장만, 형식은 아래와 같이 정확히 맞춰줘:\\n\" +\r\n"
-							+ "                \"다음 접종은 [백신명] [차수]입니다.\\n\" +\r\n"
-							+ "                \"권장 시기는 [기준] 후 [기간], 즉 [날짜]에 맞는 게 좋아요.\""),
+					Map.of("role", "system", "content", "너는 소아과 예방접종 전문가야.\n" +
+			                "사용자가 준 접종 기록을 보고 오늘 날짜(" + todayStr + ") 기준 다음 접종을 1개만 추천해줘.\n" +
+			                "출력은 2문장만, 형식은 아래와 같이 정확히 맞춰줘:\n" +
+			                "다음 접종은 [백신명] [차수]입니다.\n" +
+			                "권장 시기는 [기준] 후 [기간], 즉 [날짜]에 맞는 게 좋아요.\n" +
+			                "사용자 접종 기록:\n" ),
 					Map.of("role", "user", "content", prompt)
 			));
 			requestBody.put("max_tokens", 500);
