@@ -18,6 +18,7 @@ import com.itwillbs.entity.ChildVaccine;
 import com.itwillbs.entity.Children;
 import com.itwillbs.service.ChildrenService;
 import com.itwillbs.service.MyPageService;
+import com.itwillbs.service.PaymentService;
 
 import groovy.util.logging.Log;
 import jakarta.servlet.http.HttpSession;
@@ -31,6 +32,7 @@ public class MyPageController {
 	
 	private final MyPageService myPageService;
 	private final ChildrenService childrenService;
+	private final PaymentService paymentService; 
 	
 	@GetMapping("/info")
 	public String info(HttpSession session, Model model) {
@@ -97,8 +99,15 @@ public class MyPageController {
 	}
 	
 	@GetMapping("/payControl")
-	public String payControl() {
+	public String payControl(Model model) {
 		System.out.println("MyPageController payControl()");
+		
+		// 로그인한 사용자 ID 가져오기
+		String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		// 베베페이 잔액 조회
+		int balance = paymentService.getBebepayBalance(user_id);
+		model.addAttribute("balance", balance);
 			return "myPage/payControl";
 	}
 	
