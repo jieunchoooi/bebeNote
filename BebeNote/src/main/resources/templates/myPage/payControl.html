@@ -221,7 +221,7 @@ body {
                 <div class="bebepay-badge">자사페이</div>
             </div>
 
-            <div class="bebepay-balance">₩ 120,000</div>
+            <div class="bebepay-balance" th:text="${'₩ ' + #numbers.formatInteger(balance, 3, 'COMMA')}">₩ 0</div>
             <div class="bebepay-desc">
                 예방접종 · 병원 결제 시 베베페이로 간편하게 사용하세요
             </div>
