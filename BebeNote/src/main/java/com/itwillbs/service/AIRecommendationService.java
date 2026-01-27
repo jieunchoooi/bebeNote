@@ -49,30 +49,35 @@ public class AIRecommendationService {
     }
 	
     private List<String> getCompletedVaccines(Long childId) {
-    	 List<ChildVaccine> records = childVaccineRepository.findByChild_id(childId);
-         List<Vaccine> vaccines = vaccineRepository.findAll();
-         List<VaccineDose> allDoses = vaccineDoseRepository.findAll();
-         
-         Map<Long, String> vaccineNames = new HashMap<>();
-         for (Vaccine v : vaccines) {
-             vaccineNames.put(v.getVaccine_id(), v.getVaccine_name());
-         }
-         
-         Map<Long, String> doseLabels = new HashMap<>();
-         for (VaccineDose d : allDoses) {
-             doseLabels.put(d.getDose_id(), d.getDose_label());
-         }
-         
-         List<String> completed = new ArrayList<>();
-         for (ChildVaccine record : records) {
-             String vaccineName = vaccineNames.get(record.getVaccine_id());
-             String doseLabel = doseLabels.get(record.getDose_id());
-             if (vaccineName != null && doseLabel != null) {
-                 completed.add(vaccineName + " " + doseLabel);
-             }
-         }
-         
-         return completed;
+        List<ChildVaccine> records = childVaccineRepository.findByChild_id(childId);
+        List<Vaccine> vaccines = vaccineRepository.findAll();
+        List<VaccineDose> allDoses = vaccineDoseRepository.findAll();
+        
+        Map<Long, String> vaccineNames = new HashMap<>();
+        for (Vaccine v : vaccines) {
+            vaccineNames.put(v.getVaccine_id(), v.getVaccine_name());
+        }
+        
+        // vaccine_id와 dose_order로 매핑 
+        Map<String, String> doseLabels = new HashMap<>();
+        for (VaccineDose d : allDoses) {
+            String key = d.getVaccine_id() + "_" + d.getDose_order();
+            doseLabels.put(key, d.getDose_label());
+        }
+        
+        List<String> completed = new ArrayList<>();
+        for (ChildVaccine record : records) {
+            String vaccineName = vaccineNames.get(record.getVaccine_id());
+            // dose_id를 그대로 dose_order로 사용
+            String key = record.getVaccine_id() + "_" + record.getDose_id();
+            String doseLabel = doseLabels.get(key);
+            
+            if (vaccineName != null && doseLabel != null) {
+                completed.add(vaccineName + " " + doseLabel);
+            }
+        }
+        
+        return completed;
     }
     
 	
