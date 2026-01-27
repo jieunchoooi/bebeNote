@@ -235,7 +235,7 @@ body {
                 <button data-amount="30000">30,000원</button>
                 <button data-amount="50000">50,000원</button>
                 <button data-amount="100000">100,000원</button>
-                <button>기타 금액</button>
+<!--                <button>기타 금액</button>-->
 				<div id="kakao-charge">
 				    <button id="kakao-charge-button">
 				        카카오페이로 충전하기
@@ -281,7 +281,7 @@ body {
 	            console.log('선택된 금액:', selectedAmount);
 	            
 	            // 모든 버튼 배경색 초기화
-	            document.querySelectorAll('.charge-buttons button').forEach(function(b) {
+	            document.querySelectorAll('.charge-buttons button[data-amount]').forEach(function(b) {
 	                b.style.background = '#fbeaea';
 	            });
 	            

@@ -242,6 +242,9 @@
 	   function selectChild() {
 	       const select = document.getElementById('childSelect');
 	       const selectedIndex = select.value;
+		   
+		   // 세션 스토리지에 선택된 자녀 인덱스 저장
+		   sessionStorage.setItem('selectedChildIndex', selectedIndex);
 	       
 	       // 모든 자녀 정보 숨기기
 	       const allChildren = document.querySelectorAll('.child-info');
@@ -256,7 +259,7 @@
 	       }
 	   }
 	   
-	   
+  
 	   // AI 추천 함수
 	   
 	   const children = /*[[${children}]]*/ [];
