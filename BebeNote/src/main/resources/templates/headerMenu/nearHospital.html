@@ -435,7 +435,7 @@
 	         
 	         <!-- 액션 버튼 -->
 	         <div class="action-buttons">
-	             <a href="/main/reservation" class="action-btn btn-primary">예약하기</a>
+	             <button class="action-btn btn-primary" onclick='goToReservation(${JSON.stringify(place)})'>예약하기</button>
 	             <a href="${place.place_url}" target="_blank" class="action-btn btn-primary">길찾기</a>
 	         </div>
 	     `;
@@ -483,6 +483,12 @@
 	     });
 	 }
 
+	 // 예약하기 페이지 갈때 정보 가져가기
+	  function goToReservation(place) {
+	      sessionStorage.setItem('selectedHospital', JSON.stringify(place));
+	      window.location.href = "/main/reservation";
+	  }
+	 
 	 // 즐겨찾기 여부 확인 함수 
 	 function checkIfBookmarked(hospitalId) {
 	     // 왼쪽 리스트에서 해당 병원이 있는지 확인

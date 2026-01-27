@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>진료예약 - 베베 접종 수첩</title>
     <link rel="stylesheet" href="/css/main/reservation.css" />
-	<link rel="stylesheet" href="/css/login/insertModal.css" />
-	<link rel="stylesheet" href="/css/fragments/layout.css" />
+   <link rel="stylesheet" href="/css/login/insertModal.css" />
+   <link rel="stylesheet" href="/css/fragments/layout.css" />
+   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-	<!-- header -->
-		<div th:replace="~{fragments/header::header}"></div>
-		
-	    <!-- 회원가입 모달 -->
-	    <div th:replace="~{fragments/insertModal::insertModal}"></div>
-		
-	<!--	로그인 모달-->
-		<div th:replace="~{fragments/loginModal::loginModal}"></div>    
+   <!-- header -->
+      <div th:replace="~{fragments/header::header}"></div>
+      
+       <!-- 회원가입 모달 -->
+       <div th:replace="~{fragments/insertModal::insertModal}"></div>
+      
+   <!--   로그인 모달-->
+      <div th:replace="~{fragments/loginModal::loginModal}"></div>    
 
-	
+   
     <div class="bookmark-container">
         <!-- 왼쪽: 즐겨찾기 병원 목록 -->
         <div class="bookmark-section">
@@ -29,77 +32,64 @@
             </div>
             
             <div class="hospital-list" id="hospitalList">
-                <!-- 예시 데이터 -->
-                <div class="hospital-item active" onclick="selectHospital(this, 0)">
-                    <div class="hospital-header">
-                        <div class="hospital-name">지은소아과</div>
-                        <button class="bookmark-btn" onclick="toggleBookmark(event, 0)">
-                            <i class="fa-solid fa-star"></i>
-                        </button>
-                    </div>
-                    <div class="hospital-info">
-                        <div><i class="fa-solid fa-location-dot"></i> 부산광역시 동래구 중앙대로 123</div>
-                        <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
-                    </div>
+            
+            <!-- 예약 영역 -->
+            <div class="reservation-box">
+                <div class="reservation-title">
+                    날짜와 시간을 선택해주세요
                 </div>
-				
-				<!-- 예약 영역 -->
-				<div class="reservation-box">
-				    <div class="reservation-title">
-				        날짜와 시간을 선택해주세요
-				    </div>
 
-				    <!-- 캘린더 헤더 -->
-				    <div class="calendar-header">
-				        <button onclick="changeMonth(-1)">◀</button>
-				        <span class="current-month" id="currentMonth"></span>
-				        <button onclick="changeMonth(1)">▶</button>
-				    </div>
+                <!-- 캘린더 헤더 -->
+                <div class="calendar-header">
+                    <button onclick="changeMonth(-1)">◀</button>
+                    <span class="current-month" id="currentMonth"></span>
+                    <button onclick="changeMonth(1)">▶</button>
+                </div>
 
-				    <!-- 요일 -->
-				    <div class="calendar-weekdays">
-				        <div class="weekday sunday">일</div>
-				        <div class="weekday">월</div>
-				        <div class="weekday">화</div>
-				        <div class="weekday">수</div>
-				        <div class="weekday">목</div>
-				        <div class="weekday">금</div>
-				        <div class="weekday saturday">토</div>
-				    </div>
+                <!-- 요일 -->
+                <div class="calendar-weekdays">
+                    <div class="weekday sunday">일</div>
+                    <div class="weekday">월</div>
+                    <div class="weekday">화</div>
+                    <div class="weekday">수</div>
+                    <div class="weekday">목</div>
+                    <div class="weekday">금</div>
+                    <div class="weekday saturday">토</div>
+                </div>
 
-				    <!-- 날짜 -->
-				    <div class="calendar-days" id="calendarDays"></div>
+                <!-- 날짜 -->
+                <div class="calendar-days" id="calendarDays"></div>
 
-				    <!-- 시간 선택 -->
-				    <div class="reservation-section">
-				        <div class="section-label">오전</div>
-				        <div class="time-grid">
-				            <button class="time-btn" onclick="selectTime(this)">09:00</button>
-				            <button class="time-btn" onclick="selectTime(this)">09:30</button>
-				            <button class="time-btn" onclick="selectTime(this)">10:00</button>
-				            <button class="time-btn disabled">10:30</button>
-				            <button class="time-btn" onclick="selectTime(this)">11:00</button>
-				            <button class="time-btn" onclick="selectTime(this)">11:30</button>
-				        </div>
-						<div class="section-label">오후</div>
-						<div class="time-grid">
-						<button class="time-btn" onclick="selectTime(this)">13:00</button>
-						<button class="time-btn" onclick="selectTime(this)">13:30</button>
-						<button class="time-btn" onclick="selectTime(this)">14:00</button>
-						<button class="time-btn disabled">14:30</button>
-						<button class="time-btn" onclick="selectTime(this)">15:00</button>
-						<button class="time-btn" onclick="selectTime(this)">15:30</button>
-						<button class="time-btn" onclick="selectTime(this)">16:00</button>
-						<button class="time-btn" onclick="selectTime(this)">16:30</button>
-						<button class="time-btn" onclick="selectTime(this)">17:00</button>
-						</div>
-				    </div>
+                <!-- 시간 선택 -->
+                <div class="reservation-section">
+                    <div class="section-label">오전</div>
+                    <div class="time-grid">
+                        <button class="time-btn" onclick="selectTime(this)">09:00</button>
+                        <button class="time-btn" onclick="selectTime(this)">09:30</button>
+                        <button class="time-btn" onclick="selectTime(this)">10:00</button>
+                        <button class="time-btn disabled">10:30</button>
+                        <button class="time-btn" onclick="selectTime(this)">11:00</button>
+                        <button class="time-btn" onclick="selectTime(this)">11:30</button>
+                    </div>
+                  <div class="section-label">오후</div>
+                  <div class="time-grid">
+                  <button class="time-btn" onclick="selectTime(this)">13:00</button>
+                  <button class="time-btn" onclick="selectTime(this)">13:30</button>
+                  <button class="time-btn" onclick="selectTime(this)">14:00</button>
+                  <button class="time-btn disabled">14:30</button>
+                  <button class="time-btn" onclick="selectTime(this)">15:00</button>
+                  <button class="time-btn" onclick="selectTime(this)">15:30</button>
+                  <button class="time-btn" onclick="selectTime(this)">16:00</button>
+                  <button class="time-btn" onclick="selectTime(this)">16:30</button>
+                  <button class="time-btn" onclick="selectTime(this)">17:00</button>
+                  </div>
+                </div>
 
-				    <!-- 예약 버튼 -->
-				    <button class="reserve-btn" onclick="makeReservation()">
-				        예약하기
-				    </button>
-				</div>
+                <!-- 예약 버튼 -->
+                <button class="reserve-btn" onclick="makeReservation()">
+                    예약하기
+                </button>
+            </div>
 
             </div>
         </div>
@@ -160,12 +150,14 @@
                     </div>
 
                     <!-- 지도 -->
-                    <div class="map-placeholder">
-                        <div>
-                            <i class="fa-solid fa-map-location-dot" style="font-size: 40px; margin-bottom: 10px;"></i>
-                            <div>여기에 카카오맵 또는 네이버 지도 API 연동</div>
-                        </div>
-                    </div>
+					<div class="map-placeholder" id="map"
+					     th:if="${#authorization.expression('isAuthenticated()')}">
+					</div>
+
+					<div class="map-placeholder login-guide"
+					     th:unless="${#authorization.expression('isAuthenticated()')}">
+					    <p>로그인 후 병원 위치를 확인할 수 있어요</p>
+					</div>
 
                     <!-- 액션 버튼 -->
                     <div class="action-buttons">
@@ -178,12 +170,125 @@
         </div>
     </div>
 
-	<!-- footer -->
-		<div th:replace="~{fragments/footer::footer}"></div>
+   <!-- footer -->
+      <div th:replace="~{fragments/footer::footer}"></div>
 
-		<!-- 모달 스크립트 -->
-		<div th:replace="~{fragments/header::modalScript}"></div>
-	
+      <!-- 모달 스크립트 -->
+      <div th:replace="~{fragments/header::modalScript}"></div>
+   
+<!--	카카오 맵 api-->
+      <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=678d4ee39238b156ada265c491ad2c8c&libraries=services,clusterer,drawing"></script>
+	  
+	  <script th:inline="javascript">
+	  	/*<![CDATA[*/
+	  	let map; // 카카오맵 객체 담을 변수
+	  	let markers = []; // 생성된 마커들을 관리하는 배열
+	  	let initialMapState = null; // 초기 지도 상태 저장(검색 후 돌아가기)
+	  	let hospitalData = []; // 검색된 병원 데이터 저장
+	  	
+	  	document.addEventListener("DOMContentLoaded", function () {
+	  	 // 지도 컨테이너 가져오기
+	  	  const container = document.getElementById('map');
+	  	  // 지도 옵션 설정 
+	  	  const options = {
+	  	    center: new kakao.maps.LatLng(37.5665, 126.9780), // 기본값(서울시청)
+	  	    level: 5 // 확대레벨 ( 1 ~ 14, 숫자가 클수록 넓은 범위 )
+	  	  };
+	  	  // 지도 객체 생성
+	  	  map = new kakao.maps.Map(container, options);
+	  	
+	  	// Thymeleaf에서 주소 받기
+	  	// 컨트롤러에 model에 담음
+	  	// Thymeleaf가 [[${userAddress}]]를 실제 주소 문자열로 변환
+	  	const userAddress = /*[[${userAddress}]]*/ "";
+
+		// sessionStorage에서 병원 정보 가져오기
+		    const selectedHospital = sessionStorage.getItem('selectedHospital');
+		    
+		    if (selectedHospital) {
+		        const hospitalInfo = JSON.parse(selectedHospital);
+		        
+		        // 오른쪽 상세정보 업데이트
+		        const detailContent = document.getElementById('detailContent');
+		        detailContent.innerHTML = `
+		            <div class="info-row">
+		                <div class="info-label">
+		                    <i class="fa-solid fa-hospital"></i>
+		                    병원명
+		                </div>
+		                <div class="info-value">${hospitalInfo.place_name}</div>
+		            </div>
+
+		            <div class="info-row">
+		                <div class="info-label">
+		                    <i class="fa-solid fa-location-dot"></i>
+		                    주소
+		                </div>
+		                <div class="info-value">${hospitalInfo.address_name}</div>
+		            </div>
+
+		            <div class="info-row">
+		                <div class="info-label">
+		                    <i class="fa-solid fa-phone"></i>
+		                    전화번호
+		                </div>
+		                <div class="info-value">${hospitalInfo.phone || '전화번호 정보 없음'}</div>
+		            </div>
+
+		            <div class="info-row">
+		                <div class="info-label">
+		                    <i class="fa-solid fa-clock"></i>
+		                    진료여부
+		                </div>
+		                <div class="info-value">
+		                    <a href="${hospitalInfo.place_url || '#'}" 
+		                       target="_blank" 
+		                       style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: #E8A5A5; color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
+		                        카카오맵에서 보기
+		                    </a>
+		                </div>
+		            </div>
+
+		            <!-- 지도 -->
+		            <div class="map-placeholder" id="hospitalMap" style="width: 100%; height: 300px; margin-top: 20px;"></div>
+
+		            <!-- 액션 버튼 -->
+		            <div class="action-buttons">
+		                <a href="https://place.map.kakao.com/${hospitalInfo.id}" 
+		                   target="_blank" 
+		                   class="action-btn reserve-btn">
+		                    길찾기
+		                </a>
+		            </div>
+		        `;
+		        
+		        // 지도 재생성 및 마커 표시
+		        const hospitalMapDiv = document.getElementById('hospitalMap');
+		        if(hospitalMapDiv) {
+		            const mapOptions = {
+		                center: new kakao.maps.LatLng(hospitalInfo.y, hospitalInfo.x),
+		                level: 4
+		            };
+		            const hospitalMap = new kakao.maps.Map(hospitalMapDiv, mapOptions);
+		            
+		            // 마커 표시
+		            new kakao.maps.Marker({
+		                map: hospitalMap,
+		                position: new kakao.maps.LatLng(hospitalInfo.y, hospitalInfo.x)
+		            });
+		        }
+		        
+		        // sessionStorage 정리 (선택사항 - 한번만 사용하려면 주석 해제)
+		        // sessionStorage.removeItem('selectedHospital');
+		    }
+		    
+		    // 캘린더 렌더링
+		    renderCalendar();
+		});
+	  
+	    /*]]>*/
+	   </script>	
+	  
     <script>
         // 병원 선택
         function selectHospital(element, index) {
