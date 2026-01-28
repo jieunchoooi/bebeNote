@@ -30,7 +30,14 @@
         <div class="main-top-row">
             <div class="main-baby-info-card">
                 <div class="main-profile-section">
-                    <div class="main-profile-image"><i class="fa-solid fa-child-reaching"></i></div>
+					<div class="main-profile-image">
+			           <img th:if="${children != null && children.size() > 0 && children[0].child_img != null}" 
+			                th:src="@{${children[0].child_img}}" 
+			                alt="프로필 사진" 
+			                style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+			           <i th:if="${children == null || children.size() == 0 || children[0].child_img == null}" 
+			              class="fa-solid fa-child-reaching"></i>
+			        </div>
                     <div class="main-profile-info">
 						<div sec:authorize="isAuthenticated()">
 							<a href="#" onclick="openAddChildModal(); return false;" class="main-birth-info">자녀 추가</a>
@@ -237,22 +244,34 @@
 	    }
 	    
 	    // 자녀 선택 함수
-	    function selectChild() {
-	        const select = document.getElementById('childSelect');
-	        const selectedIndex = select.value;
-	        
-	        sessionStorage.setItem('selectedChildIndex', selectedIndex);
-	        
-	        const allChildren = document.querySelectorAll('.child-info');
-	        allChildren.forEach(child => {
-	            child.style.display = 'none';
-	        });
-	        
-	        const selectedChild = document.getElementById('child-info-' + selectedIndex);
-	        if (selectedChild) {
-	            selectedChild.style.display = 'block';
-	        }
-	    }
+		// 자녀 선택 함수
+		function selectChild() {
+		    const select = document.getElementById('childSelect');
+		    const selectedIndex = select.value;
+		    
+		    sessionStorage.setItem('selectedChildIndex', selectedIndex);
+		    
+		    // 자녀 정보 변경
+		    const allChildren = document.querySelectorAll('.child-info');
+		    allChildren.forEach(child => {
+		        child.style.display = 'none';
+		    });
+		    
+		    const selectedChild = document.getElementById('child-info-' + selectedIndex);
+		    if (selectedChild) {
+		        selectedChild.style.display = 'block';
+		    }
+		    
+		    // 프로필 이미지 변경
+		    const selectedChildData = children[selectedIndex];
+		    const profileImage = document.querySelector('.main-profile-image');
+		    
+		    if (selectedChildData && selectedChildData.child_img) {
+		        profileImage.innerHTML = `<img src="${selectedChildData.child_img}" alt="프로필 사진" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+		    } else {
+		        profileImage.innerHTML = `<i class="fa-solid fa-child-reaching"></i>`;
+		    }
+		}
 
 	    // 데이터 가져오기
 	    const children = /*[[${children}]]*/ [];

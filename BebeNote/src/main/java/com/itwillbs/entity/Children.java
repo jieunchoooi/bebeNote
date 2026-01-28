@@ -40,7 +40,7 @@ public class Children {
 	@Column(name = "gender", nullable = false)
 	private String gender;
 	
-	@Column(name = "child_img")
+	@Column(name = "child_img", nullable = true)
 	private String child_img;
 	
 	@CreationTimestamp
