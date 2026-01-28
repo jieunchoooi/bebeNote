@@ -67,7 +67,7 @@
                         <button class="time-btn" onclick="selectTime(this)">09:00</button>
                         <button class="time-btn" onclick="selectTime(this)">09:30</button>
                         <button class="time-btn" onclick="selectTime(this)">10:00</button>
-                        <button class="time-btn disabled">10:30</button>
+                        <button class="time-btn" onclick="selectTime(this)">10:30</button>
                         <button class="time-btn" onclick="selectTime(this)">11:00</button>
                         <button class="time-btn" onclick="selectTime(this)">11:30</button>
                     </div>
@@ -76,7 +76,7 @@
                   <button class="time-btn" onclick="selectTime(this)">13:00</button>
                   <button class="time-btn" onclick="selectTime(this)">13:30</button>
                   <button class="time-btn" onclick="selectTime(this)">14:00</button>
-                  <button class="time-btn disabled">14:30</button>
+                  <button class="time-btn" onclick="selectTime(this)">14:30</button>
                   <button class="time-btn" onclick="selectTime(this)">15:00</button>
                   <button class="time-btn" onclick="selectTime(this)">15:30</button>
                   <button class="time-btn" onclick="selectTime(this)">16:00</button>
@@ -110,7 +110,7 @@
                             <i class="fa-solid fa-hospital"></i>
                             병원명
                         </div>
-                        <div class="info-value">지은소아과</div>
+                        <div class="info-value">병원을 선택해주세요</div>
                     </div>
 
                     <div class="info-row">
@@ -118,7 +118,7 @@
                             <i class="fa-solid fa-location-dot"></i>
                             주소
                         </div>
-                        <div class="info-value">부산광역시 동래구 중앙대로 123</div>
+                        <div class="info-value">-</div>
                     </div>
 
                     <div class="info-row">
@@ -126,45 +126,19 @@
                             <i class="fa-solid fa-phone"></i>
                             전화번호
                         </div>
-                        <div class="info-value">051-1234-5678</div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-label">
-                            <i class="fa-solid fa-clock"></i>
-                            진료시간
-                        </div>
-                        <div class="info-value">
-                            평일 09:00 - 18:00<br>
-                            토요일 09:00 - 13:00<br>
-                            일요일 휴진
-                        </div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-label">
-                            <i class="fa-solid fa-circle-info"></i>
-                            특이사항
-                        </div>
-                        <div class="info-value">점심시간 12:30 - 13:30<br>예약 접종 우선 진료</div>
+                        <div class="info-value">-</div>
                     </div>
 
                     <!-- 지도 -->
 					<div class="map-placeholder" id="map"
 					     th:if="${#authorization.expression('isAuthenticated()')}">
+					     <p>병원을 선택하면 지도가 표시됩니다</p>
 					</div>
 
 					<div class="map-placeholder login-guide"
 					     th:unless="${#authorization.expression('isAuthenticated()')}">
 					    <p>로그인 후 병원 위치를 확인할 수 있어요</p>
 					</div>
-
-                    <!-- 액션 버튼 -->
-                    <div class="action-buttons">
-                        <button class="action-btn reserve-btn">
-                            길찾기
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -181,151 +155,126 @@
 	  
 	  <script th:inline="javascript">
 	  	/*<![CDATA[*/
+	  	
+	  	// CSRF 토큰 가져오기
+	    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+	    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+	  	
 	  	let map; // 카카오맵 객체 담을 변수
-	  	let markers = []; // 생성된 마커들을 관리하는 배열
-	  	let initialMapState = null; // 초기 지도 상태 저장(검색 후 돌아가기)
-	  	let hospitalData = []; // 검색된 병원 데이터 저장
+	  	let currentHospital = null; // 현재 선택된 병원 정보
 	  	
 	  	document.addEventListener("DOMContentLoaded", function () {
-	  	 // 지도 컨테이너 가져오기
-	  	  const container = document.getElementById('map');
-	  	  // 지도 옵션 설정 
-	  	  const options = {
-	  	    center: new kakao.maps.LatLng(37.5665, 126.9780), // 기본값(서울시청)
-	  	    level: 5 // 확대레벨 ( 1 ~ 14, 숫자가 클수록 넓은 범위 )
-	  	  };
-	  	  // 지도 객체 생성
-	  	  map = new kakao.maps.Map(container, options);
+		  	// 지도 컨테이너 가져오기
+		  	const container = document.getElementById('map');
+		  	
+		  	// 로그인 여부 확인 (지도 컨테이너가 있는지로 판단)
+		  	if (container && !container.classList.contains('login-guide')) {
+			  	// 지도 옵션 설정 
+			  	const options = {
+			  	    center: new kakao.maps.LatLng(37.5665, 126.9780), // 기본값(서울시청)
+			  	    level: 5 // 확대레벨
+			  	};
+			  	// 지도 객체 생성
+			  	map = new kakao.maps.Map(container, options);
+		  	}
 	  	
-	  	// Thymeleaf에서 주소 받기
-	  	// 컨트롤러에 model에 담음
-	  	// Thymeleaf가 [[${userAddress}]]를 실제 주소 문자열로 변환
-	  	const userAddress = /*[[${userAddress}]]*/ "";
-
-		// sessionStorage에서 병원 정보 가져오기
+		  	// sessionStorage에서 병원 정보 가져오기
 		    const selectedHospital = sessionStorage.getItem('selectedHospital');
 		    
 		    if (selectedHospital) {
 		        const hospitalInfo = JSON.parse(selectedHospital);
+		        currentHospital = hospitalInfo; // 전역 변수에 저장
 		        
 		        // 오른쪽 상세정보 업데이트
-		        const detailContent = document.getElementById('detailContent');
-		        detailContent.innerHTML = `
-		            <div class="info-row">
-		                <div class="info-label">
-		                    <i class="fa-solid fa-hospital"></i>
-		                    병원명
-		                </div>
-		                <div class="info-value">${hospitalInfo.place_name}</div>
-		            </div>
-
-		            <div class="info-row">
-		                <div class="info-label">
-		                    <i class="fa-solid fa-location-dot"></i>
-		                    주소
-		                </div>
-		                <div class="info-value">${hospitalInfo.address_name}</div>
-		            </div>
-
-		            <div class="info-row">
-		                <div class="info-label">
-		                    <i class="fa-solid fa-phone"></i>
-		                    전화번호
-		                </div>
-		                <div class="info-value">${hospitalInfo.phone || '전화번호 정보 없음'}</div>
-		            </div>
-
-		            <div class="info-row">
-		                <div class="info-label">
-		                    <i class="fa-solid fa-clock"></i>
-		                    진료여부
-		                </div>
-		                <div class="info-value">
-		                    <a href="${hospitalInfo.place_url || '#'}" 
-		                       target="_blank" 
-		                       style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: #E8A5A5; color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
-		                        카카오맵에서 보기
-		                    </a>
-		                </div>
-		            </div>
-
-		            <!-- 지도 -->
-		            <div class="map-placeholder" id="hospitalMap" style="width: 100%; height: 300px; margin-top: 20px;"></div>
-
-		            <!-- 액션 버튼 -->
-		            <div class="action-buttons">
-		                <a href="https://place.map.kakao.com/${hospitalInfo.id}" 
-		                   target="_blank" 
-		                   class="action-btn reserve-btn">
-		                    길찾기
-		                </a>
-		            </div>
-		        `;
-		        
-		        // 지도 재생성 및 마커 표시
-		        const hospitalMapDiv = document.getElementById('hospitalMap');
-		        if(hospitalMapDiv) {
-		            const mapOptions = {
-		                center: new kakao.maps.LatLng(hospitalInfo.y, hospitalInfo.x),
-		                level: 4
-		            };
-		            const hospitalMap = new kakao.maps.Map(hospitalMapDiv, mapOptions);
-		            
-		            // 마커 표시
-		            new kakao.maps.Marker({
-		                map: hospitalMap,
-		                position: new kakao.maps.LatLng(hospitalInfo.y, hospitalInfo.x)
-		            });
-		        }
-		        
-		        // sessionStorage 정리 (선택사항 - 한번만 사용하려면 주석 해제)
-		        // sessionStorage.removeItem('selectedHospital');
+		        updateHospitalDetail(hospitalInfo);
 		    }
 		    
 		    // 캘린더 렌더링
 		    renderCalendar();
 		});
+		
+		// 병원 상세정보 업데이트 함수
+		function updateHospitalDetail(hospitalInfo) {
+		    const detailContent = document.getElementById('detailContent');
+		    detailContent.innerHTML = `
+		        <div class="info-row">
+		            <div class="info-label">
+		                <i class="fa-solid fa-hospital"></i>
+		                병원명
+		            </div>
+		            <div class="info-value">${hospitalInfo.place_name}</div>
+		        </div>
+
+		        <div class="info-row">
+		            <div class="info-label">
+		                <i class="fa-solid fa-location-dot"></i>
+		                주소
+		            </div>
+		            <div class="info-value">${hospitalInfo.address_name}</div>
+		        </div>
+
+		        <div class="info-row">
+		            <div class="info-label">
+		                <i class="fa-solid fa-phone"></i>
+		                전화번호
+		            </div>
+		            <div class="info-value">${hospitalInfo.phone || '전화번호 정보 없음'}</div>
+		        </div>
+
+		        <div class="info-row">
+		            <div class="info-label">
+		                <i class="fa-solid fa-clock"></i>
+		                진료여부
+		            </div>
+		            <div class="info-value">
+		                <a href="${hospitalInfo.place_url || '#'}" 
+		                   target="_blank" 
+		                   style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: #E8A5A5; color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
+		                    카카오맵에서 보기
+		                </a>
+		            </div>
+		        </div>
+
+		        <!-- 지도 -->
+		        <div class="map-placeholder" id="hospitalMap" style="width: 100%; height: 300px; margin-top: 20px; border: none;"></div>
+
+		        <!-- 액션 버튼 -->
+		        <div class="action-buttons">
+		            <a href="https://map.kakao.com/link/to/${hospitalInfo.place_name},${hospitalInfo.y},${hospitalInfo.x}" 
+		               target="_blank" 
+		               class="action-btn reserve-btn">
+		                <i class="fa-solid fa-location-arrow"></i>
+		                길찾기
+		            </a>
+		        </div>
+		    `;
+		    
+		    // 지도 재생성 및 마커 표시
+		    const hospitalMapDiv = document.getElementById('hospitalMap');
+		    if(hospitalMapDiv) {
+		        const mapOptions = {
+		            center: new kakao.maps.LatLng(hospitalInfo.y, hospitalInfo.x),
+		            level: 4
+		        };
+		        const hospitalMap = new kakao.maps.Map(hospitalMapDiv, mapOptions);
+		        
+		        // 마커 표시
+		        new kakao.maps.Marker({
+		            map: hospitalMap,
+		            position: new kakao.maps.LatLng(hospitalInfo.y, hospitalInfo.x)
+		        });
+		    }
+		}
 	  
 	    /*]]>*/
 	   </script>	
 	  
     <script>
-        // 병원 선택
-        function selectHospital(element, index) {
-            // 모든 아이템에서 active 클래스 제거
-            document.querySelectorAll('.hospital-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // 선택된 아이템에 active 클래스 추가
-            element.classList.add('active');
-            
-            // 여기에 상세 정보 업데이트 로직 추가
-            console.log('선택된 병원 인덱스:', index);
-        }
-
-        // 즐겨찾기 토글
-        function toggleBookmark(event, index) {
-            event.stopPropagation();
-            const button = event.currentTarget;
-            const icon = button.querySelector('i');
-            
-            // 즐겨찾기 토글 로직
-            if (icon.classList.contains('fa-solid')) {
-                icon.classList.remove('fa-solid');
-                icon.classList.add('fa-regular');
-               // alert('즐겨찾기에서 제거되었습니다.');
-            } else {
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-               // alert('즐겨찾기에 추가되었습니다.');
-            }
-        }
-
         // ============ 캘린더 관련 코드 ============
         let currentDate = new Date();
         let selectedDate = null;
         let selectedTime = null;
+        let reservedTimes = []; // 예약된 시간 목록
 
         function renderCalendar() {
             const year = currentDate.getFullYear();
@@ -350,23 +299,26 @@
             
             // 이번 달 날짜들
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
             for (let day = 1; day <= lastDay.getDate(); day++) {
                 const currentDateCheck = new Date(year, month, day);
                 const isToday = currentDateCheck.toDateString() === today.toDateString();
+                const isPast = currentDateCheck < today;
                 const dayOfWeek = currentDateCheck.getDay();
                 
                 let className = '';
                 if (isToday) className += 'today ';
                 if (dayOfWeek === 0) className += 'sunday ';
                 if (dayOfWeek === 6) className += 'saturday ';
-                
-                // 예약 있는 날짜 예시
-                if (day === 5 || day === 12 || day === 20) {
-                    className += 'has-event ';
-                }
+                if (isPast) className += 'disabled ';
                 
                 const dayElement = createDayElement(day, className);
-                dayElement.onclick = () => selectDate(currentDateCheck, dayElement);
+                
+                if (!isPast) {
+                    dayElement.onclick = () => selectDate(currentDateCheck, dayElement);
+                }
+                
                 calendarDays.appendChild(dayElement);
             }
             
@@ -388,9 +340,24 @@
         function changeMonth(delta) {
             currentDate.setMonth(currentDate.getMonth() + delta);
             renderCalendar();
+            
+            // 선택 초기화
+            selectedDate = null;
+            selectedTime = null;
+            reservedTimes = [];
+            document.querySelectorAll('.time-btn.active').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 모든 시간 버튼 다시 활성화
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('disabled');
+                btn.onclick = () => selectTime(btn);
+            });
         }
 
-        function selectDate(date, element) {
+        async function selectDate(date, element) {
+            // 선택 표시
             document.querySelectorAll('.day.selected').forEach(el => {
                 el.classList.remove('selected');
             });
@@ -400,7 +367,92 @@
             }
             
             selectedDate = date;
+            selectedTime = null;
+            
+            // 선택한 시간 초기화
+            document.querySelectorAll('.time-btn.active').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 해당 날짜의 예약된 시간 조회
+            await loadReservedTimes(date);
+            
+            // 당일인 경우 지나간 시간 비활성화
+            checkPastTimes(date);
+            
             console.log('선택된 날짜:', date.toLocaleDateString());
+        }
+
+        async function loadReservedTimes(date) {
+            if (!currentHospital) {
+                console.log('병원 정보 없음');
+                return;
+            }
+            
+            const dateStr = formatDate(date);
+            
+            try {
+                const response = await fetch(`/api/reservations/reserved-times?hospitalName=${encodeURIComponent(currentHospital.place_name)}&date=${dateStr}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    reservedTimes = result.data;
+                    updateTimeButtons();
+                }
+            } catch (error) {
+                console.error('예약 시간 조회 실패:', error);
+            }
+        }
+
+        function updateTimeButtons() {
+            const timeButtons = document.querySelectorAll('.time-btn');
+            
+            timeButtons.forEach(btn => {
+                const time = btn.textContent.trim();
+                
+                // 기존 disabled 클래스 제거 및 이벤트 재설정
+                btn.classList.remove('disabled');
+                btn.onclick = () => selectTime(btn);
+                
+                // 예약된 시간이면 disabled 처리
+                if (reservedTimes.includes(time)) {
+                    btn.classList.add('disabled');
+                    btn.onclick = null;
+                }
+            });
+        }
+
+        // 당일 지나간 시간 비활성화 함수
+        function checkPastTimes(selectedDate) {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const selected = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+            
+            // 선택한 날짜가 오늘이 아니면 return
+            if (selected.getTime() !== today.getTime()) {
+                return;
+            }
+            
+            // 현재 시간 (분 단위까지)
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            
+            // 모든 시간 버튼 확인
+            const timeButtons = document.querySelectorAll('.time-btn');
+            
+            timeButtons.forEach(btn => {
+                const timeText = btn.textContent.trim(); // "09:00", "13:30" 등
+                const [hour, minute] = timeText.split(':').map(Number);
+                
+                // 지나간 시간인지 확인
+                const isPast = (hour < currentHour) || 
+                              (hour === currentHour && minute <= currentMinute);
+                
+                if (isPast) {
+                    btn.classList.add('disabled');
+                    btn.onclick = null;
+                }
+            });
         }
 
         function selectTime(button) {
@@ -411,11 +463,11 @@
             });
             
             button.classList.add('active');
-            selectedTime = button.textContent;
+            selectedTime = button.textContent.trim();
             console.log('선택된 시간:', selectedTime);
         }
 
-        function makeReservation() {
+        async function makeReservation() {
             if (!selectedDate) {
                 alert('날짜를 선택해주세요.');
                 return;
@@ -424,14 +476,60 @@
                 alert('시간을 선택해주세요.');
                 return;
             }
+            if (!currentHospital) {
+                alert('병원 정보를 찾을 수 없습니다.\n병원 검색 페이지에서 병원을 선택해주세요.');
+                return;
+            }
             
-            alert(`예약이 완료되었습니다!\n날짜: ${selectedDate.toLocaleDateString()}\n시간: ${selectedTime}`);
+            const reservationData = {
+                hospitalName: currentHospital.place_name,
+                hospitalAddress: currentHospital.address_name,
+                hospitalPhone: currentHospital.phone || '',
+                kakaoPlaceId: currentHospital.id,
+                reservationDate: formatDate(selectedDate),
+                reservationTime: selectedTime,
+                memo: ''
+            };
+            
+            try {
+                const response = await fetch('/api/reservations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify(reservationData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`예약이 완료되었습니다!\n\n병원: ${currentHospital.place_name}\n날짜: ${selectedDate.toLocaleDateString()}\n시간: ${selectedTime}`);
+                    
+                    // 예약 목록 페이지로 이동 (또는 페이지 새로고침)
+                    // location.href = '/mypage/reservations';
+                    location.reload(); // 또는 페이지 새로고침
+                } else {
+                    alert(result.message || '예약에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('예약 실패:', error);
+                
+                // 401 에러인 경우 (로그인 필요)
+                if (error.message && error.message.includes('401')) {
+                    alert('로그인이 필요한 서비스입니다.');
+                } else {
+                    alert('예약 처리 중 오류가 발생했습니다.');
+                }
+            }
         }
 
-        // 페이지 로드 시 캘린더 렌더링
-        document.addEventListener('DOMContentLoaded', function() {
-            renderCalendar();
-        });
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
     </script>
 </body>
 </html>

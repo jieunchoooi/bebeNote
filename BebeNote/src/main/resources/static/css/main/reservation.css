@@ -15,6 +15,7 @@ body {
 .bookmark-container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 20px;
     display: grid;
     grid-template-columns: 400px 1fr;
     gap: 20px;
@@ -24,9 +25,9 @@ body {
 /* 왼쪽 영역 - 즐겨찾기 병원 목록 */
 .bookmark-section {
     background: white;
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 30px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
 }
@@ -53,7 +54,7 @@ body {
 
 .hospital-item {
     background: #fef5f5;
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 20px;
     margin-bottom: 15px;
     cursor: pointer;
@@ -145,7 +146,7 @@ body {
 .reservation-box {
     margin-top: 20px;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 1px solid #eee;
     background: #fff;
 }
@@ -254,21 +255,26 @@ body {
 
 .day.selected {
     background: #f3d5d5;
-    color: white;
+    color: #424242;
     font-weight: bold;
 }
 
-.day.sunday:not(.today):not(.selected):not(.other-month) {
+.day.sunday:not(.today):not(.selected):not(.other-month):not(.disabled) {
     color: #ff6b6b;
 }
 
-.day.saturday:not(.today):not(.selected):not(.other-month) {
+.day.saturday:not(.today):not(.selected):not(.other-month):not(.disabled) {
     color: #4dabf7;
 }
 
 .day.disabled {
     color: #ddd;
     cursor: not-allowed;
+    background-color: #f9f9f9;
+}
+
+.day.disabled:hover {
+    background-color: #f9f9f9;
 }
 
 .day.has-event::after {
@@ -295,9 +301,9 @@ body {
 
 .section-label {
     font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: #444;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #424242;
 }
 
 .time-grid {
@@ -308,38 +314,47 @@ body {
 }
 
 .time-btn {
-    padding: 8px 0;
-    border-radius: 5px;
+    padding: 10px 0;
+    border-radius: 6px;
     border: 1px solid #ddd;
     background: #fff;
     cursor: pointer;
     font-size: 13px;
     transition: all 0.2s;
+    font-weight: 500;
 }
 
 .time-btn:hover:not(.disabled) {
     border-color: #deaaaa;
     color: #deaaaa;
+    background: #fef5f5;
 }
 
 .time-btn.active {
     background: #deaaaa;
     color: #fff;
     border-color: #deaaaa;
+    font-weight: 600;
 }
 
 .time-btn.disabled {
     background: #f5f5f5;
-    color: #aaa;
+    color: #ccc;
     border-color: #eee;
     cursor: not-allowed;
+}
+
+.time-btn.disabled:hover {
+    background: #f5f5f5;
+    color: #ccc;
+    border-color: #eee;
 }
 
 /* 예약 버튼 */
 .reserve-btn {
     width: 100%;
-    padding: 12px 0;
-    border-radius: 5px;
+    padding: 14px 0;
+    border-radius: 6px;
     border: none;
     background: #deaaaa;
     color: #fff;
@@ -351,6 +366,12 @@ body {
 
 .reserve-btn:hover {
     background: #d19898;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(222, 170, 170, 0.3);
+}
+
+.reserve-btn:active {
+    transform: translateY(0);
 }
 
 /* 오른쪽 영역 */
@@ -363,9 +384,9 @@ body {
 /* 병원 정보 카드 */
 .hospital-detail-card {
     background: white;
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 30px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -380,7 +401,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: #deaaaa;
+    background: linear-gradient(90deg, #deaaaa, #f3d5d5);
 }
 
 .detail-header {
@@ -389,7 +410,7 @@ body {
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid #f5f5f5;
 }
 
 .detail-title {
@@ -406,7 +427,7 @@ body {
 }
 
 .bookmark-star:hover {
-    transform: scale(1.2);
+    transform: scale(1.2) rotate(15deg);
 }
 
 .detail-content {
@@ -416,28 +437,31 @@ body {
 
 .info-row {
     display: flex;
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 18px;
+    padding: 16px;
     background: #fef5f5;
-    border-radius: 5px;
+    border-radius: 8px;
+    border-left: 3px solid #deaaaa;
 }
 
 .info-label {
     min-width: 120px;
-    font-weight: bold;
+    font-weight: 600;
     color: #424242;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
 }
 
 .info-label i {
     color: #deaaaa;
+    margin-top: 2px;
 }
 
 .info-value {
     color: #666;
     line-height: 1.6;
+    flex: 1;
 }
 
 .action-buttons {
@@ -450,22 +474,28 @@ body {
     flex: 1;
     padding: 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    text-decoration: none;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(222, 170, 170, 0.3);
 }
 
 /* 지도 영역 */
 .map-placeholder {
     height: 300px;
     background: #fef5f5;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 2px dashed #deaaaa;
     display: flex;
     align-items: center;
@@ -474,25 +504,54 @@ body {
     margin-top: 20px;
 }
 
+.map-placeholder.login-guide {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.map-placeholder p {
+    margin: 0;
+    font-size: 14px;
+}
+
 .map-placeholder i {
     color: #deaaaa;
+    font-size: 48px;
+    margin-bottom: 10px;
 }
 
 /* 스크롤바 스타일 */
 ::-webkit-scrollbar {
-/*    width: 8px;*/
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
     background: #deaaaa;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: #d19898;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .bookmark-container {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+    
+    .bookmark-section,
+    .hospital-detail-card {
+        padding: 20px;
+    }
+    
+    .time-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
