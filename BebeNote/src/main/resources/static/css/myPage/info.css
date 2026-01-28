@@ -86,18 +86,16 @@ body {
 }
 
 .child-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #f3d5d5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.child-avatar i {
-    font-size: 36px;
-    color: #fff;
+	font-size: 36px;
+	color: #fff;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	background: #f3d5d5;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
 }
 
 .child-info {
@@ -127,6 +125,34 @@ body {
 
 .child-edit-btn:hover {
     background: #deaaaa;
+}
+
+/* 카메라 버튼 스타일 */
+.avatar-camera-btn {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	border: 2px solid white;
+	background: #deaaaa;
+	color: white;
+	cursor: pointer;
+	display: none;  /* 기본 숨김 */
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	transition: all 0.2s;
+}
+
+.child-card.editing .avatar-camera-btn {
+    display: flex;  /* 편집 모드에서만 표시 */
+}
+
+.avatar-camera-btn:hover {
+    background: #d19898;
+    transform: scale(1.1);
 }
 
 /* ===== 편집 모드 ===== */

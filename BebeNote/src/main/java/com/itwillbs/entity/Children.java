@@ -40,6 +40,9 @@ public class Children {
 	@Column(name = "gender", nullable = false)
 	private String gender;
 	
+	@Column(name = "child_img")
+	private String child_img;
+	
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private Timestamp created_at;

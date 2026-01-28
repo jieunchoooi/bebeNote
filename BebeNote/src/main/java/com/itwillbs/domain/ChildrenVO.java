@@ -20,6 +20,7 @@ public class ChildrenVO {
 	private String gender;
 	private LocalDateTime created_at;
 	private LocalDateTime updated_at;
+	private String child_img;
 	
 	private int ageInMonths; // 계산된 개월수
 	

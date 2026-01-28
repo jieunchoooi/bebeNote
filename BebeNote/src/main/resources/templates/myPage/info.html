@@ -42,54 +42,37 @@
     <!-- 콘텐츠 -->
     <section class="mypage-content">
 
-        <!-- 자녀 정보 카드 -->
-        <div class="mypage-card child-card" id="childCard">
-            <div class="child-avatar">
-                <i class="fa-solid fa-child-reaching"></i>
-            </div>
+		<!-- 자녀 정보 카드 -->
+		<div class="mypage-card child-card" id="childCard" th:each="child : ${childInfo}">
+		    <div class="child-avatar">
+		        <!-- child_img가 있으면 이미지 표시, 없으면 아이콘 표시 -->
+		        <img th:if="${child.child_img != null}" 
+		             th:src="@{${child.child_img}}" 
+		             alt="프로필 사진" 
+		             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+		        <i th:if="${child.child_img == null}" 
+		           class="fa-solid fa-child-reaching"></i>
+		        
+		        <button class="avatar-camera-btn" onclick="changeAvatar()">
+		            <i class="fa-solid fa-camera"></i>
+		        </button>
+		    </div>
 
-            <!-- 보기 모드 -->
-            <div class="child-info" id="viewMode">
-                <h4 id="childName">토끼</h4>
-                <p>
-                    <span id="childBirthday">2024.01.01</span> (<span id="childGender">여</span>)<br>
-                    태어난지 <span id="childDays">722</span>일째예요
-                </p>
-            <input type="hidden" id="childId" th:value="${children[0].child_id}">
-            </div>
-
-            <!-- 편집 모드 -->
-            <div class="child-info-edit" id="editMode" style="display: none;">
-                <div class="edit-field">
-                    <label>이름</label>
-                    <input type="text" id="editName" value="토끼">
-                </div>
-                <div class="edit-field">
-                    <label>생년월일</label>
-                    <input type="date" id="editBirthday" value="2024-01-01">
-                </div>
-                <div class="edit-field">
-                    <label>성별</label>
-                    <div class="gender-select">
-                        <label class="gender-option">
-                            <input type="radio" name="gender" value="남" id="genderMale">
-                            <span>남</span>
-                        </label>
-                        <label class="gender-option">
-                            <input type="radio" name="gender" value="여" id="genderFemale" checked>
-                            <span>여</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 버튼 -->
-            <button class="child-edit-btn" id="editBtn" onclick="toggleEditMode()">수정</button>
-            <div class="edit-buttons" id="editButtons" style="display: none;">
-                <button class="btn-cancel" onclick="cancelEdit()">취소</button>
-                <button class="btn-save" onclick="saveEdit()">저장</button>
-            </div>
-        </div>
+		    <!-- 자녀 정보 -->
+		    <div class="child-info" id="viewMode">
+		        <h4 id="childName">
+		            <span th:text="${child.name}"></span>
+		        </h4>
+		        <p>
+		            <span id="childBirthday" th:text="${child.birth_date}"></span> 
+		            (<span th:text="${child.gender}" id="childGender"></span>)<br>
+		            태어난지 <span th:text="${child.ageInMonths}"></span>개월 됐어요.
+		        </p>
+		        <input type="hidden" id="childId" th:value="${child.child_id}">
+		    </div>
+			
+			<button class="child-edit-btn" id="editBtn" onclick="toggleEditMode()">수정</button>
+		</div>
 
         <!-- 접종 수첩 -->
         <div class="mypage-card">
@@ -355,100 +338,90 @@
       });
    }
 
-// 원본 데이터 저장
-let originalData = {
-    name: '젤리',
-    birthday: '2024-02-02',
-    gender: '여'
-};
 
-// 편집 모드 토글
-function toggleEditMode() {
-    const viewMode = document.getElementById('viewMode');
-    const editMode = document.getElementById('editMode');
-    const editBtn = document.getElementById('editBtn');
-    const editButtons = document.getElementById('editButtons');
-    const childCard = document.getElementById('childCard');
+   // 편집 모드 토글 (카메라만 보이게)
+   function toggleEditMode() {
+       const editBtn = document.getElementById('editBtn');
+       const childCard = document.getElementById('childCard');
+       const cameraBtn = document.querySelector('.avatar-camera-btn');
+       
+       if (childCard.classList.contains('editing')) {
+           // 편집 모드 종료
+           childCard.classList.remove('editing');
+           editBtn.textContent = '수정';
+       } else {
+           // 편집 모드 시작
+           childCard.classList.add('editing');
+           editBtn.textContent = '완료';
+       }
+   }
 
-    viewMode.style.display = 'none';
-    editMode.style.display = 'block';
-    editBtn.style.display = 'none';
-    editButtons.style.display = 'flex';
-    childCard.classList.add('editing');
-}
+   // 자녀 사진 저장
+   function changeAvatar(){
+       // 파일 선택 input 생성
+       const input = document.createElement('input');
+       input.type = 'file';
+       input.accept = 'image/*';
+       
+       input.onchange = function(e){
+           const file = e.target.files[0];
+           if(!file) return;
+           
+           // 파일 크기 제한
+           if(file.size > 5 * 1024 * 1024) {
+               alert('파일 크기는 5MB 이하여야 합니다.');
+               return;
+           }
+           
+           // 이미지 파일인지 확인 
+           if(!file.type.startsWith('image/')){
+               alert('이미지 파일만 업로드 가능합니다.');
+               return;
+           }
+           
+           // FormData 생성
+           const formData = new FormData();
+           formData.append('profileImage', file);
+           formData.append('childId', document.getElementById('childId').value);
+           
+           $.ajax({
+               url: '/myPage/uploadProfileImage',
+               type: 'POST',
+               data: formData,
+               processData: false,
+               contentType: false,  
+               success: function(response){
+                   // 성공시 이미지 미리보기
+                   const reader = new FileReader(); 
+                   reader.onload = function(e) {
+                       const avatar = document.querySelector('.child-avatar');
+                       // 아이콘 대신 이미지로 변경
+                       avatar.innerHTML = `
+                           <img src="${e.target.result}" alt="프로필 사진" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                           <button class="avatar-camera-btn" onclick="changeAvatar()">
+                               <i class="fa-solid fa-camera"></i>
+                           </button>
+                       `;
+                       
+                       // 편집 모드 종료
+                       const childCard = document.getElementById('childCard');
+                       const editBtn = document.getElementById('editBtn');
+                       childCard.classList.remove('editing');
+                       editBtn.textContent = '수정';
+                       
+                       alert('프로필 사진이 변경되었습니다.');
+                   };
+                   reader.readAsDataURL(file);
+               },
+               error: function() {
+                   alert('사진 업로드 중 오류가 발생했습니다.');
+               }
+           });
+       };
+       input.click();
+   }
 
-// 취소
-function cancelEdit() {
-    const viewMode = document.getElementById('viewMode');
-    const editMode = document.getElementById('editMode');
-    const editBtn = document.getElementById('editBtn');
-    const editButtons = document.getElementById('editButtons');
-    const childCard = document.getElementById('childCard');
 
-    // 원본 데이터로 복원
-    document.getElementById('editName').value = originalData.name;
-    document.getElementById('editBirthday').value = originalData.birthday;
-    if (originalData.gender === '남') {
-        document.getElementById('genderMale').checked = true;
-    } else {
-        document.getElementById('genderFemale').checked = true;
-    }
-
-    viewMode.style.display = 'block';
-    editMode.style.display = 'none';
-    editBtn.style.display = 'block';
-    editButtons.style.display = 'none';
-    childCard.classList.remove('editing');
-}
-
-// 저장
-function saveEdit() {
-    const name = document.getElementById('editName').value.trim();
-    const birthday = document.getElementById('editBirthday').value;
-    const gender = document.querySelector('input[name="gender"]:checked').value;
-
-    // 유효성 검사
-    if (!name) {
-        alert('이름을 입력해주세요.');
-        return;
-    }
-    if (!birthday) {
-        alert('생년월일을 선택해주세요.');
-        return;
-    }
-
-    // 데이터 업데이트
-    originalData = { name, birthday, gender };
-    
-    // 화면 업데이트
-    document.getElementById('childName').textContent = name;
-    document.getElementById('childBirthday').textContent = birthday.replace(/-/g, '.');
-    document.getElementById('childGender').textContent = gender;
-
-    // 일수 계산
-    const birthDate = new Date(birthday);
-    const today = new Date();
-    const diffTime = Math.abs(today - birthDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    document.getElementById('childDays').textContent = diffDays;
-
-    // 편집 모드 종료
-    const viewMode = document.getElementById('viewMode');
-    const editMode = document.getElementById('editMode');
-    const editBtn = document.getElementById('editBtn');
-    const editButtons = document.getElementById('editButtons');
-    const childCard = document.getElementById('childCard');
-
-    viewMode.style.display = 'block';
-    editMode.style.display = 'none';
-    editBtn.style.display = 'block';
-    editButtons.style.display = 'none';
-    childCard.classList.remove('editing');
-
-    // TODO: 서버에 데이터 전송
-    console.log('저장된 데이터:', originalData);
-    alert('자녀 정보가 수정되었습니다.');
-}
 </script>
 
 </body>

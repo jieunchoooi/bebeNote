@@ -11,6 +11,7 @@
     <result property="name" column="name"/>
     <result property="birth_date" column="birth_date" javaType="java.time.LocalDate"/>
     <result property="gender" column="gender"/>
+    <result property="child_img" column="child_img"/> 
     <result property="created_at" column="created_at"/>
     <result property="updated_at" column="updated_at"/>
 </resultMap>
