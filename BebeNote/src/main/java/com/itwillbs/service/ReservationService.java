@@ -1,6 +1,7 @@
 package com.itwillbs.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,6 +113,46 @@ public class ReservationService {
         return reservations.stream()
             .filter(r -> !"CANCELLED".equals(r.getStatus()))
             .map(Reservation::getReservationTime)
+            .collect(Collectors.toList());
+    }
+    
+    //나의병원 페이지용
+    
+    /**
+     * 다녀온 병원 조회 (예약 시간 1분 지난 병원들)
+     */
+    public List<ReservationVO> getVisitedHospitals(String userId) {
+        LocalDateTime now = LocalDateTime.now();
+        String currentDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm"));
+        
+        List<Reservation> reservations = reservationRepository
+            .findPastReservations(userId, currentDate, currentTime);
+        
+        return reservations.stream()
+            .map(ReservationVO::fromEntity)
+            .collect(Collectors.toList());
+    }
+    
+    /**
+     * 기간별 다녀온 병원 조회
+     * @param userId 사용자 ID
+     * @param months 조회 기간 (1, 6 등)
+     */
+    public List<ReservationVO> getVisitedHospitalsByPeriod(String userId, int months) {
+        LocalDateTime now = LocalDateTime.now();
+        String currentDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm"));
+        
+        // 시작 날짜 계산
+        LocalDate startDate = now.minusMonths(months).toLocalDate();
+        String startDateStr = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        
+        List<Reservation> reservations = reservationRepository
+            .findPastReservationsByPeriod(userId, startDateStr, currentDate, currentTime);
+        
+        return reservations.stream()
+            .map(ReservationVO::fromEntity)
             .collect(Collectors.toList());
     }
 }

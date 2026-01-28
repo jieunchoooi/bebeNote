@@ -31,4 +31,32 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     // 특정 날짜 이후의 예약 조회
     @Query("SELECT r FROM Reservation r WHERE r.userId = :userId AND r.reservationDate >= :date ORDER BY r.reservationDate, r.reservationTime")
     List<Reservation> findUpcomingReservations(@Param("userId") String userId, @Param("date") String date);
+    
+    //나의병원 페이지용
+    
+    // 예약 시간이 지난 병원 조회 (상태가 CANCELLED가 아닌 것만)
+    @Query("SELECT r FROM Reservation r WHERE r.userId = :userId " +
+           "AND r.status != 'CANCELLED' " +
+           "AND (r.reservationDate < :currentDate " +
+           "OR (r.reservationDate = :currentDate AND r.reservationTime < :currentTime)) " +
+           "ORDER BY r.reservationDate DESC, r.reservationTime DESC")
+    List<Reservation> findPastReservations(
+        @Param("userId") String userId,
+        @Param("currentDate") String currentDate,
+        @Param("currentTime") String currentTime
+    );
+    
+    // 기간별 필터링 (1개월, 6개월)
+    @Query("SELECT r FROM Reservation r WHERE r.userId = :userId " +
+           "AND r.status != 'CANCELLED' " +
+           "AND r.reservationDate >= :startDate " +
+           "AND (r.reservationDate < :currentDate " +
+           "OR (r.reservationDate = :currentDate AND r.reservationTime < :currentTime)) " +
+           "ORDER BY r.reservationDate DESC, r.reservationTime DESC")
+    List<Reservation> findPastReservationsByPeriod(
+        @Param("userId") String userId,
+        @Param("startDate") String startDate,
+        @Param("currentDate") String currentDate,
+        @Param("currentTime") String currentTime
+    );
 }

@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.itwillbs.domain.ChildVaccineVO;
 import com.itwillbs.domain.ChildrenVO;
+import com.itwillbs.domain.ReservationVO;
 import com.itwillbs.entity.ChildVaccine;
 import com.itwillbs.entity.Children;
 import com.itwillbs.service.ChildrenService;
 import com.itwillbs.service.MainService;
 import com.itwillbs.service.MyPageService;
 import com.itwillbs.service.PaymentService;
+import com.itwillbs.service.ReservationService;
 
 import groovy.util.logging.Log;
 import jakarta.servlet.http.HttpSession;
@@ -40,6 +44,7 @@ public class MyPageController {
    private final ChildrenService childrenService;
    private final PaymentService paymentService; 
    private final MainService mainService; 
+   private final ReservationService reservationService;
    
    @Value("${file.upload.path:${user.dir}/src/main/resources/static/img/child/}")
    private String uploadPath; 
@@ -100,9 +105,45 @@ public class MyPageController {
    }
    
    @GetMapping("/myHospital")
-   public String myHospital() {
+   public String myHospital(Model model, @AuthenticationPrincipal UserDetails userDetails) {
       System.out.println("MyPageController myHospital()");
-         return "myPage/myHospital";
+      
+      if (userDetails == null) {
+         return "redirect:/login";
+      }
+      
+      // 다녀온 병원 조회
+      List<ReservationVO> visitedHospitals = 
+         reservationService.getVisitedHospitals(userDetails.getUsername());
+      
+      model.addAttribute("hospitals", visitedHospitals);
+      
+      return "myPage/myHospital";
+   }
+   
+   // 기간별 필터링 (AJAX)
+   @GetMapping("/myHospital/filter")
+   @ResponseBody
+   public List<ReservationVO> filterHospitals(
+         @RequestParam(required = false) String period,
+         @AuthenticationPrincipal UserDetails userDetails) {
+      
+      System.out.println("MyPageController filterHospitals() - period: " + period);
+      
+      if (userDetails == null) {
+         throw new IllegalStateException("로그인이 필요합니다.");
+      }
+      
+      // 전체 또는 기간별 조회
+      if (period == null || "전체".equals(period)) {
+         return reservationService.getVisitedHospitals(userDetails.getUsername());
+      } else if ("1개월".equals(period)) {
+         return reservationService.getVisitedHospitalsByPeriod(userDetails.getUsername(), 1);
+      } else if ("6개월".equals(period)) {
+         return reservationService.getVisitedHospitalsByPeriod(userDetails.getUsername(), 6);
+      }
+      
+      return reservationService.getVisitedHospitals(userDetails.getUsername());
    }
    
    @GetMapping("/payHistory")

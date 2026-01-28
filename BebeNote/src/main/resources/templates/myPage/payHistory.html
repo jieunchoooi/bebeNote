@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>마이페이지 | 결제 내역</title>
 
 <link rel="stylesheet" href="/css/fragments/layout.css" />
 <link rel="stylesheet" href="/css/login/insertModal.css" />
 <link rel="stylesheet" href="/css/myPage/payHistory.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+
 
 </head>
 
@@ -26,61 +28,25 @@
 <!-- content -->
 <div class="mypage-wrapper">
 
-    <!-- 사이드바 -->
-    <aside class="mypage-sidebar">
-        <h3>결제 내역</h3>
-        <ul class="sidebar-menu">
-            <li><a href="/myPage/info">자녀 정보</a></li>
-            <li><a href="/myPage/myHospital">나의 병원</a></li>
-            <li><a href="/myPage/payHistory" class="active">결제 내역</a></li>
-            <li><a href="/myPage/payControl">결제 관리</a></li>
-        </ul>
-    </aside>
+  <!-- 사이드바 -->
+  <aside class="mypage-sidebar">
+    <h3>결제 내역</h3>
+    <ul class="sidebar-menu">
+      <li><a href="/myPage/info">자녀 정보</a></li>
+      <li><a href="/myPage/myHospital">나의 병원</a></li>
+      <li><a href="/myPage/payHistory" class="active">결제 내역</a></li>
+      <li><a href="/myPage/payControl">결제 관리</a></li>
+    </ul>
+  </aside>
 
-    <!-- 콘텐츠 -->
-    <section class="mypage-content">
-        <div class="payment-container">
-            <div class="payment-list">
-
-                <div class="payment-card">
-                    <div class="payment-left">
-                        <div class="payment-logo">GO</div>
-                    </div>
-                    <div class="payment-center">
-                        <div class="payment-title">결제취소</div>
-                        <div class="payment-desc">(티머니GO) 시외버스 승차권</div>
-                        <div class="payment-date">17,000원 · 12.23 11:08 결제</div>
-                    </div>
-                    <div class="payment-right">⋮</div>
-                </div>
-
-                <div class="payment-card">
-                    <div class="payment-left">
-                        <div class="payment-logo">GO</div>
-                    </div>
-                    <div class="payment-center">
-                        <div class="payment-title">결제취소</div>
-                        <div class="payment-desc">(티머니GO) 시외버스 승차권</div>
-                        <div class="payment-date">17,000원 · 12.23 10:51 결제</div>
-                    </div>
-                    <div class="payment-right">⋮</div>
-                </div>
-
-                <div class="payment-card">
-                    <div class="payment-left">
-                        <img src="/img/sample-product.png" class="payment-img">
-                    </div>
-                    <div class="payment-center">
-                        <div class="payment-title">결제완료</div>
-                        <div class="payment-desc">자연건조 유기농 양배추환스틱 100개입</div>
-                        <div class="payment-date">13,650원 · 12.20 10:47 결제</div>
-                    </div>
-                    <div class="payment-right">⋮</div>
-                </div>
-
-            </div>
-        </div>
-    </section>
+  <!-- 콘텐츠 -->
+  <section class="mypage-content">
+    <div class="payment-container">
+      <div class="payment-list" id="payment-list">
+        <!-- 결제내역 카드가 여기에 동적으로 삽입됩니다 -->
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- footer -->
@@ -88,6 +54,77 @@
 
 <!-- 모달 스크립트 -->
 <div th:replace="~{fragments/header::modalScript}"></div>
+
+<script>
+  // 페이지 로드 시 결제내역 API 호출 및 렌더링
+  async function loadPaymentHistory() {
+    try {
+      const response = await fetch('/api/payment/history');
+      const result = await response.json();
+
+      if (!result.success) {
+        alert('결제 내역을 불러오는 데 실패했습니다: ' + (result.message || ''));
+        return;
+      }
+
+      const payments = result.data;
+      const listContainer = document.getElementById('payment-list');
+      listContainer.innerHTML = ''; // 초기화
+
+      if (payments.length === 0) {
+        listContainer.innerHTML = '<p>결제 내역이 없습니다.</p>';
+        return;
+      }
+
+      payments.forEach(payment => {
+        // 날짜, 시간 포맷 예시: "2026-01-27 09:30:00" → "01.27 09:30"
+        const dateObj = new Date(payment.createdAt);
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const hours = dateObj.getHours().toString().padStart(2, '0');
+        const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+        const formattedDate = `${month}.${day} ${hours}:${minutes}`;
+
+        // 결제 상태 표시 텍스트
+        let statusText = '';
+        let statusClass = '';
+        switch(payment.paymentStatus) {
+          case 'COMPLETED': statusText = '결제완료'; statusClass = 'completed'; break;
+          case 'CANCELLED': statusText = '결제취소'; statusClass = 'cancelled'; break;
+          case 'REFUNDED': statusText = '환불됨'; statusClass = 'refunded'; break;
+          default: statusText = payment.paymentStatus;
+        }
+
+        // 가격 천단위 콤마
+        const formattedAmount = payment.paymentAmount.toLocaleString() + '원';
+
+        const card = document.createElement('div');
+        card.className = 'payment-card';
+
+        card.innerHTML = `
+          <div class="payment-left">
+            <div class="payment-logo">GO</div>
+          </div>
+          <div class="payment-center">
+            <div class="payment-title ${statusClass}">${statusText}</div>
+            <div class="payment-desc">${payment.description || payment.hospitalName}</div>
+            <div class="payment-date">${formattedAmount} · ${formattedDate} 결제</div>
+          </div>
+          <div class="payment-right">⋮</div>
+        `;
+
+        listContainer.appendChild(card);
+      });
+
+    } catch (error) {
+      console.error('결제내역 로드 오류:', error);
+      alert('결제 내역을 불러오는 중 오류가 발생했습니다.');
+    }
+  }
+
+  // 페이지 로드되면 실행
+  window.addEventListener('DOMContentLoaded', loadPaymentHistory);
+</script>
 
 </body>
 </html>

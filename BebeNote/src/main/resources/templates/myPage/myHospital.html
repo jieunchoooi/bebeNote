@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="_csrf" th:content="${_csrf.token}">
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
 <title>나의 병원 | 베베 접종 수첩</title>
 
 <link rel="stylesheet" href="/css/fragments/layout.css" />
@@ -35,83 +37,53 @@
             <div class="myhospital-section">
                 <div class="myhospital-section-header">
                     <h2 class="myhospital-section-title">다녀온 병원</h2>
-                    <select class="myhospital-filter-select">
-                        <option>전체</option>
-                        <option>1개월</option>
-                        <option>6개월</option>
+                    <select class="myhospital-filter-select" id="periodFilter" onchange="filterHospitals()">
+                        <option value="전체">전체</option>
+                        <option value="1개월">1개월</option>
+                        <option value="6개월">6개월</option>
                     </select>
                 </div>
 
                 <div class="myhospital-list-section">
-                    <div class="myhospital-list">
-                        <!-- 병원 카드 1 -->
-                        <div class="myhospital-item">
-                            <div class="myhospital-item-header">
-                                <div class="myhospital-item-date">2025-12-12</div>
-                                <button class="myhospital-bookmark active">
-                                    <i class="fa-solid fa-star"></i>
-                                </button>
-                            </div>
-                            <h3 class="myhospital-item-name">지은소아과</h3>
-                            <div class="myhospital-item-info">
-                                <div class="myhospital-info-row">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span>부산광역시 동래구 충렬대로 123</span>
-                                </div>
-                                <div class="myhospital-info-row">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span>051-1234-5678</span>
-                                </div>
-                            </div>
-                            <button class="myhospital-btn-reservation">예약하기</button>
-                            <button class="myhospital-btn-reservation">결제하기</button>
+                    <div class="myhospital-list" id="hospitalList">
+                        <!-- 병원이 없는 경우 -->
+                        <div th:if="${hospitals == null || hospitals.isEmpty()}" class="empty-message">
+                            <i class="fa-solid fa-hospital"></i>
+                            <p>다녀온 병원이 없습니다.</p>
                         </div>
-
-                        <!-- 병원 카드 2 -->
-                        <div class="myhospital-item">
+                        
+                        <!-- 병원 카드 반복 -->
+                        <div class="myhospital-item" th:each="hospital : ${hospitals}">
                             <div class="myhospital-item-header">
-                                <div class="myhospital-item-date">2025-11-25</div>
-                                <button class="myhospital-bookmark active">
-                                    <i class="fa-solid fa-star"></i>
+                                <div class="myhospital-item-date">
+                                    <span th:text="${hospital.reservationDate}">2025-12-12</span>
+                                    <span th:text="${hospital.reservationTime}">09:00</span>
+                                </div>
+                                <button class="myhospital-bookmark">
+                                    <i class="fa-regular fa-star"></i>
                                 </button>
                             </div>
-                            <h3 class="myhospital-item-name">현진병원</h3>
+                            <h3 class="myhospital-item-name" th:text="${hospital.hospitalName}">병원명</h3>
                             <div class="myhospital-item-info">
                                 <div class="myhospital-info-row">
                                     <i class="fa-solid fa-location-dot"></i>
-                                    <span>부산광역시 해운대구 해운대로 456</span>
+                                    <span th:text="${hospital.hospitalAddress}">주소</span>
                                 </div>
-                                <div class="myhospital-info-row">
+                                <div class="myhospital-info-row" th:if="${hospital.hospitalPhone != null && !hospital.hospitalPhone.isEmpty()}">
                                     <i class="fa-solid fa-phone"></i>
-                                    <span>051-9876-5432</span>
+                                    <span th:text="${hospital.hospitalPhone}">전화번호</span>
                                 </div>
                             </div>
-                            <button class="myhospital-btn-reservation">예약하기</button>
-							<button class="myhospital-btn-reservation">결제하기</button>
-
-                        </div>
-						
-						<!-- 병원 카드 3 -->
-                        <div class="myhospital-item">
-                            <div class="myhospital-item-header">
-                                <div class="myhospital-item-date">2025-12-12</div>
-                                <button class="myhospital-bookmark active">
-                                    <i class="fa-solid fa-star"></i>
-                                </button>
-                            </div>
-                            <h3 class="myhospital-item-name">지은소아과</h3>
-                            <div class="myhospital-item-info">
-                                <div class="myhospital-info-row">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span>부산광역시 동래구 충렬대로 123</span>
-                                </div>
-                                <div class="myhospital-info-row">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span>051-1234-5678</span>
-                                </div>
-                            </div>
-                            <button class="myhospital-btn-reservation">예약하기</button>
-							<button class="myhospital-btn-reservation">결제하기</button>
+                            <button class="myhospital-btn-reservation" 
+                                    th:attr="data-place-id=${hospital.kakaoPlaceId}"
+                                    onclick="goToReservation(this.getAttribute('data-place-id'))">
+                                재예약하기
+                            </button>
+							<button class="myhospital-btn-reservation" 
+							        th:attr="data-reservation-id=${hospital.reservationId},data-hospital-name=${hospital.hospitalName}"
+							        onclick="payHospital(this.getAttribute('data-reservation-id'), this.getAttribute('data-hospital-name'))">
+							    결제하기
+							</button>
                         </div>
                     </div>
                 </div>
@@ -119,6 +91,8 @@
 
         </section>
     </div>
+	
+	
 
     <!-- 모달들 -->
     <div th:replace="~{fragments/insertModal::insertModal}"></div>
@@ -130,7 +104,58 @@
     <!-- 모달 스크립트 -->
     <div th:replace="~{fragments/header::modalScript}"></div>
 
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+		
+		// CSRF 토큰
+		const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+		const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+		// 결제하기 버튼 클릭
+		async function payHospital(reservationId, hospitalName) {
+		    // 결제 금액 입력 받기
+		    const amountStr = prompt(`${hospitalName} 진료비를 입력해주세요 (원):`, '10000');
+		    
+		    if (!amountStr) return; // 취소
+		    
+		    const amount = parseInt(amountStr);
+		    
+		    if (isNaN(amount) || amount <= 0) {
+		        alert('올바른 금액을 입력해주세요.');
+		        return;
+		    }
+		    
+		    if (!confirm(`${amount.toLocaleString()}원을 결제하시겠습니까?`)) {
+		        return;
+		    }
+		    
+		    try {
+		        const response = await fetch('/api/payment/hospital', {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		                [csrfHeader]: csrfToken
+		            },
+		            body: JSON.stringify({
+		                reservationId: reservationId,
+		                amount: amount
+		            })
+		        });
+		        
+		        const result = await response.json();
+		        
+		        if (result.success) {
+		            alert('결제가 완료되었습니다!');
+		            location.reload(); // 페이지 새로고침
+		        } else {
+		            alert(result.message || '결제에 실패했습니다.');
+		        }
+		    } catch (error) {
+		        console.error('결제 실패:', error);
+		        alert('결제 처리 중 오류가 발생했습니다.');
+		    }
+		}
+        
         // 즐겨찾기 토글
         document.querySelectorAll('.myhospital-bookmark').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -145,6 +170,91 @@
                 }
             });
         });
+        
+        // 기간별 필터링
+        async function filterHospitals() {
+            const period = document.getElementById('periodFilter').value;
+            
+            try {
+                const response = await fetch('/myPage/myHospital/filter?period=' + encodeURIComponent(period));
+                const hospitals = await response.json();
+                
+                // 병원 목록 업데이트
+                updateHospitalList(hospitals);
+            } catch (error) {
+                console.error('필터링 실패:', error);
+            }
+        }
+        
+        // 병원 목록 DOM 업데이트
+        function updateHospitalList(hospitals) {
+            const hospitalList = document.getElementById('hospitalList');
+            
+            if (hospitals.length === 0) {
+                hospitalList.innerHTML = `
+                    <div class="empty-message">
+                        <i class="fa-solid fa-hospital"></i>
+                        <p>다녀온 병원이 없습니다.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            hospitalList.innerHTML = hospitals.map(hospital => `
+                <div class="myhospital-item">
+                    <div class="myhospital-item-header">
+                        <div class="myhospital-item-date">
+                            <span>${hospital.reservationDate}</span>
+                            <span>${hospital.reservationTime}</span>
+                        </div>
+                        <button class="myhospital-bookmark">
+                            <i class="fa-regular fa-star"></i>
+                        </button>
+                    </div>
+                    <h3 class="myhospital-item-name">${hospital.hospitalName}</h3>
+                    <div class="myhospital-item-info">
+                        <div class="myhospital-info-row">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>${hospital.hospitalAddress || '-'}</span>
+                        </div>
+                        ${hospital.hospitalPhone ? `
+                        <div class="myhospital-info-row">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>${hospital.hospitalPhone}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <button class="myhospital-btn-reservation" onclick="goToReservation('${hospital.kakaoPlaceId}')">
+                        재예약하기
+                    </button>
+                    <button class="myhospital-btn-reservation">결제하기</button>
+                </div>
+            `).join('');
+            
+            // 즐겨찾기 이벤트 재등록
+            document.querySelectorAll('.myhospital-bookmark').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const icon = this.querySelector('i');
+                    if (this.classList.contains('active')) {
+                        icon.classList.remove('fa-regular');
+                        icon.classList.add('fa-solid');
+                    } else {
+                        icon.classList.remove('fa-solid');
+                        icon.classList.add('fa-regular');
+                    }
+                });
+            });
+        }
+        
+        // 재예약하기 (예약 페이지로 이동)
+        function goToReservation(kakaoPlaceId) {
+            // TODO: 병원 정보를 sessionStorage에 저장하고 예약 페이지로 이동
+            alert('재예약 기능 준비중입니다.\nKakao Place ID: ' + kakaoPlaceId);
+            // location.href = '/reservation';
+        }
+        
+        /*]]>*/
     </script>
 </body>
 </html>
