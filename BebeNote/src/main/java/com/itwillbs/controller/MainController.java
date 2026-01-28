@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.itwillbs.domain.ChildrenVO;
+import com.itwillbs.domain.ReservationVO;
 import com.itwillbs.dto.BookmarkRequest;
 import com.itwillbs.entity.ChildVaccine;
 import com.itwillbs.entity.Member;
@@ -24,6 +25,7 @@ import com.itwillbs.entity.VaccineDose;
 import com.itwillbs.service.MainService;
 import com.itwillbs.service.MemberService;
 import com.itwillbs.service.MyPageService;
+import com.itwillbs.service.ReservationService;
 
 import groovy.util.logging.Log;
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +39,7 @@ public class MainController {
 	private final MainService mainService;
 	private final MemberService memberService;
 	private final MyPageService myPageService;
+	private final ReservationService reservationService;
 
 	@GetMapping("/")
 	public String index() {
@@ -105,11 +108,16 @@ public class MainController {
 	        String key = record.getVaccine_id() + "_" + record.getDose_id();
 	        vaccineRecords.put(key, record);
 	    }
+	    
+	    List<ReservationVO> reserveHospitalList = reservationService.getUpcomingReservations(userId);
 
+	    System.out.println("reserveHospitalList = " + reserveHospitalList);
+	    
 	    // 모델 추가
 	    model.addAttribute("vaccines", myPageService.findAllVaccines());
 	    model.addAttribute("doses", myPageService.findAllDoses());
 	    model.addAttribute("vaccineRecords", vaccineRecords);
+	    model.addAttribute("reserveHospitalList", reserveHospitalList);
 
 	    return "/main/main";
 	}
