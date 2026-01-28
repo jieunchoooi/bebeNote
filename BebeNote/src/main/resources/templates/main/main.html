@@ -14,62 +14,62 @@
 </head>
 <body>
 
-	<!-- header -->
-	<div th:replace="~{fragments/header::header}"></div>
+   <!-- header -->
+   <div th:replace="~{fragments/header::header}"></div>
 
     <!-- 회원가입 모달 -->
     <div th:replace="~{fragments/insertModal::insertModal}"></div>
 
-	<!-- 로그인 모달 -->
-	<div th:replace="~{fragments/loginModal::loginModal}"></div>
-	
-	<!-- 자녀추가 모달 -->
-	<div th:replace="~{fragments/addChildModal::addChildModal}"></div>
+   <!-- 로그인 모달 -->
+   <div th:replace="~{fragments/loginModal::loginModal}"></div>
+   
+   <!-- 자녀추가 모달 -->
+   <div th:replace="~{fragments/addChildModal::addChildModal}"></div>
 
     <div class="main-container">
         <div class="main-top-row">
             <div class="main-baby-info-card">
                 <div class="main-profile-section">
-					<div class="main-profile-image">
-			           <img th:if="${children != null && children.size() > 0 && children[0].child_img != null}" 
-			                th:src="@{${children[0].child_img}}" 
-			                alt="프로필 사진" 
-			                style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-			           <i th:if="${children == null || children.size() == 0 || children[0].child_img == null}" 
-			              class="fa-solid fa-child-reaching"></i>
-			        </div>
+               <div class="main-profile-image">
+                    <img th:if="${children != null && children.size() > 0 && children[0].child_img != null}" 
+                         th:src="@{${children[0].child_img}}" 
+                         alt="프로필 사진" 
+                         style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    <i th:if="${children == null || children.size() == 0 || children[0].child_img == null}" 
+                       class="fa-solid fa-child-reaching"></i>
+                 </div>
                     <div class="main-profile-info">
-						<div sec:authorize="isAuthenticated()">
-							<a href="#" onclick="openAddChildModal(); return false;" class="main-birth-info">자녀 추가</a>
-							
-						<!-- 자녀가 여러 명일 때 선택 UI -->
-						    <div th:if="${children != null and children.size() > 1}" class="child-selector">
-						        <select id="childSelect" onchange="selectChild()" class="child-select-dropdown">
-						            <option th:each="child, iterStat : ${children}" 
-						                    th:value="${iterStat.index}" 
-						                    th:text="${child.name}"
-						                    th:selected="${iterStat.index == 0}">
-						            </option>
-						        </select>
-						    </div>
-						<!-- 자녀정보 표시영역 -->
-							<div th:each="child, iterStat : ${children}" 
-						         th:id="'child-info-' + ${iterStat.index}"
-						         class="child-info"
-						         th:style="${iterStat.index == 0 ? 'display:block' : 'display:none'}">
-								<div class="main-baby-name">
-		                            <span class="main-name-text" th:text="${child.name}"></span>
-		                        </div>
-		                        <div class="main-birth-info"><span th:text="${child.birth_date}"></span>(<span th:text="${child.gender}"></span>)</div>
-		                        <div class="main-birth-info">태어난지 <span th:text="${child.ageInMonths}"></span>개월 됐어요.</div>
-							</div>
-						</div>
-						
-						<div sec:authorize="isAnonymous()">
-							<div class="main-baby-name">
-	                            <span class="main-name-text">로그인 해주세요.</span>
-	                        </div>
-						</div>
+                  <div sec:authorize="isAuthenticated()">
+                     <a href="#" onclick="openAddChildModal(); return false;" class="main-birth-info">자녀 추가</a>
+                     
+                  <!-- 자녀가 여러 명일 때 선택 UI -->
+                      <div th:if="${children != null and children.size() > 1}" class="child-selector">
+                          <select id="childSelect" onchange="selectChild()" class="child-select-dropdown">
+                              <option th:each="child, iterStat : ${children}" 
+                                      th:value="${iterStat.index}" 
+                                      th:text="${child.name}"
+                                      th:selected="${iterStat.index == 0}">
+                              </option>
+                          </select>
+                      </div>
+                  <!-- 자녀정보 표시영역 -->
+                     <div th:each="child, iterStat : ${children}" 
+                           th:id="'child-info-' + ${iterStat.index}"
+                           class="child-info"
+                           th:style="${iterStat.index == 0 ? 'display:block' : 'display:none'}">
+                        <div class="main-baby-name">
+                                  <span class="main-name-text" th:text="${child.name}"></span>
+                              </div>
+                              <div class="main-birth-info"><span th:text="${child.birth_date}"></span>(<span th:text="${child.gender}"></span>)</div>
+                              <div class="main-birth-info">태어난지 <span th:text="${child.ageInMonths}"></span>개월 됐어요.</div>
+                     </div>
+                  </div>
+                  
+                  <div sec:authorize="isAnonymous()">
+                     <div class="main-baby-name">
+                               <span class="main-name-text">로그인 해주세요.</span>
+                           </div>
+                  </div>
                     </div>
                 </div>
             </div>
@@ -88,86 +88,113 @@
         </div>
 
         <div class="main-middle-row">
-            <div class="main-card">
-                <div class="main-card-title">예약한 병원</div>
-                <div class="main-card-content"></div>
-					<div class="main-hospital-item" onclick="selectMainHospital(this, 0)">
-				         <div class="main-hospital-header">
-				              <div class="main-hospital-name">지은소아과</div>
-				              <button class="main-bookmark-btn" onclick="toggleMainBookmark(event, 0)">
-				                 <i class="fa-solid fa-star"></i>
-				              </button>
-				         </div>
-				    <div class="main-hospital-info">
-				    <div><i class="fa-solid fa-phone"></i> 051-1234-5678</div>
-				 </div>
-				 </div>
-            </div>
-
 			<div class="main-card">
-			    <div class="main-card-title">즐겨찾기 소아과</div>
-
-			    <!-- 즐겨찾기 있을 때 -->
-			    <div th:if="${!#lists.isEmpty(userBookmark)}" class="main-card-content">
-
-			        <div th:each="bookmark : ${userBookmark}"
-			             class="main-hospital-item hospital-item"
-						 th:data-kakao-place-id="${bookmark.kakaoPlaceId}"
-				         th:data-hospital-name="${bookmark.hospitalName}"
-				         th:data-address="${bookmark.address}"
-				         th:data-phone="${bookmark.phone}"
-				         th:data-latitude="${bookmark.latitude}"
-				         th:data-longitude="${bookmark.longitude}"
-				         onclick="goToBookmarkDetailFromElement(this)">
-
+			    <div class="main-card-title">예약한 병원</div>
+			    
+			    <!-- 예약한 병원이 있을 때 -->
+			    <div th:if="${!#lists.isEmpty(reserveHospitalList)}" class="main-card-content">
+			        <div th:each="reserve, stat : ${reserveHospitalList}"
+			             class="main-hospital-item"
+			             onclick="selectMainHospital(this, /*[[${stat.index}]]*/)">
+			            
 			            <div class="main-hospital-header">
-			                <div class="main-hospital-name"
-			                     th:text="${bookmark.hospitalName}"></div>
-
-			                <button class="main-bookmark-btn"
-									th:data-kakao-place-id="${bookmark.kakaoPlaceId}"
-							        onclick="removeBookmarkFromElement(event, this)">
-			                    <i class="fa-solid fa-star"></i>
+			                <div class="main-hospital-name" th:text="${reserve.hospitalName}">병원명</div>
+			                <button class="main-bookmark-btn" 
+			                        th:data-kakao-place-id="${reserve.kakaoPlaceId}"
+			                        onclick="toggleReserveBookmark(event, this)">
+			                    <i th:class="${#lists.contains(bookmarkedPlaceIds, reserve.kakaoPlaceId.toString())} 
+			                                  ? 'fa-solid fa-star' 
+			                                  : 'fa-regular fa-star'"></i>
 			                </button>
 			            </div>
-
+			            
 			            <div class="main-hospital-info">
 			                <div>
 			                    <i class="fa-solid fa-location-dot"></i>
-			                    <span th:text="${bookmark.address}"></span>
+			                    <span th:text="${reserve.hospitalAddress}"></span>
 			                </div>
 			                <div>
 			                    <i class="fa-solid fa-phone"></i>
-			                    <span th:text="${bookmark.phone}"></span>
+			                    <span th:text="${reserve.hospitalPhone}"></span>
+			                </div>
+			                <div th:if="${reserve.reservationDate}">
+			                    <i class="fa-solid fa-calendar-check"></i>
+			                    <span th:text="|${reserve.reservationDate} ${reserve.reservationTime}|">예약일시</span>
 			                </div>
 			            </div>
-
 			        </div>
 			    </div>
-				<div th:if="${#lists.isEmpty(userBookmark)}" class="main-card-content">
-					<span>즐겨찾기에 등록된 병원이 없습니다.</span>
-				</div>
+			    
+			    <!-- 예약한 병원이 없을 때 -->
+			    <div th:if="${#lists.isEmpty(reserveHospitalList)}" class="main-card-content">
+			        <span>예약한 병원이 없습니다.</span>
+			    </div>
 			</div>
+
+         <div class="main-card">
+             <div class="main-card-title">즐겨찾기 소아과</div>
+
+             <!-- 즐겨찾기 있을 때 -->
+             <div th:if="${!#lists.isEmpty(userBookmark)}" class="main-card-content">
+
+                 <div th:each="bookmark : ${userBookmark}"
+                      class="main-hospital-item hospital-item"
+                   th:data-kakao-place-id="${bookmark.kakaoPlaceId}"
+                     th:data-hospital-name="${bookmark.hospitalName}"
+                     th:data-address="${bookmark.address}"
+                     th:data-phone="${bookmark.phone}"
+                     th:data-latitude="${bookmark.latitude}"
+                     th:data-longitude="${bookmark.longitude}"
+                     onclick="goToBookmarkDetailFromElement(this)">
+
+                     <div class="main-hospital-header">
+                         <div class="main-hospital-name"
+                              th:text="${bookmark.hospitalName}"></div>
+
+                         <button class="main-bookmark-btn"
+                           th:data-kakao-place-id="${bookmark.kakaoPlaceId}"
+                             onclick="removeBookmarkFromElement(event, this)">
+                             <i class="fa-solid fa-star"></i>
+                         </button>
+                     </div>
+
+                     <div class="main-hospital-info">
+                         <div>
+                             <i class="fa-solid fa-location-dot"></i>
+                             <span th:text="${bookmark.address}"></span>
+                         </div>
+                         <div>
+                             <i class="fa-solid fa-phone"></i>
+                             <span th:text="${bookmark.phone}"></span>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+            <div th:if="${#lists.isEmpty(userBookmark)}" class="main-card-content">
+               <span>즐겨찾기에 등록된 병원이 없습니다.</span>
+            </div>
+         </div>
 
 
             <div class="main-card">
                 <div class="main-card-title">근처 소아과</div>
-			        <!-- 근처 소아과 목록 -->
-			        <div id="nearbyHospitalList" class="main-card-content">
-			            <div class="loading-message">
-			                <i class="fa-solid fa-spinner fa-spin"></i>
-			                근처 소아과를 검색 중입니다...
-			            </div>
-			        </div>
+                 <!-- 근처 소아과 목록 -->
+                 <div id="nearbyHospitalList" class="main-card-content">
+                     <div class="loading-message">
+                         <i class="fa-solid fa-spinner fa-spin"></i>
+                         근처 소아과를 검색 중입니다...
+                     </div>
+                 </div>
             </div>
         </div>
 
         <div class="main-section">
             <div class="main-title">접종 수첩</div>
-			<div class="main-vaccination-table-wrapper" th:if="${hasChild == null or !hasChild}">
-			    <p>등록된 자녀가 없습니다. 자녀를 먼저 등록해주세요.</p>
-			</div>
-            <div class="main-vaccination-table-wrapper"	th:if="${hasChild}">
+         <div class="main-vaccination-table-wrapper" th:if="${hasChild == null or !hasChild}">
+             <p>등록된 자녀가 없습니다. 자녀를 먼저 등록해주세요.</p>
+         </div>
+            <div class="main-vaccination-table-wrapper"   th:if="${hasChild}">
                 <table class="main-vaccination-table">
                     <thead>
                         <tr>
@@ -180,236 +207,236 @@
                             <th>6차</th>
                         </tr>
                     </thead>
-					<tbody>
-					    <tr th:each="vaccine : ${vaccines}">
-					        <!-- 대상전염병 -->
-					        <td th:text="${vaccine.vaccine_name}" class="disease-name"></td>
-					
-					        <!-- 1차 ~ 6차 고정 -->
-					        <td th:each="dose, stat : ${doses}"
-					            th:if="${stat.index < 6}"
-					            th:with="key=${vaccine.vaccine_id + '_' + dose.dose_id},
-					                     record=${vaccineRecords.get(key)}"
-					            th:classappend="${record != null ? 'vaccine-empty saved' : 'vaccine-empty'}"
-					            th:data-vaccine-id="${vaccine.vaccine_id}"
-					            th:data-dose-id="${dose.dose_id}">
-					
-					            <!-- 저장된 데이터가 있으면 표시 -->
-					            <div th:if="${record != null}" class="vaccination-info" >
-					                <div class="hospital-name" th:text="${record.hospital}">병원명</div>
-					                <div class="vaccination-date" th:text="${record.vaccinated_date}">날짜</div>
-					                <div class="vaccine-name" th:text="${record.vaccine_product}">백신명</div>
-					            </div>
-					        </td>
-					    </tr>
-					</tbody>
+               <tbody>
+                   <tr th:each="vaccine : ${vaccines}">
+                       <!-- 대상전염병 -->
+                       <td th:text="${vaccine.vaccine_name}" class="disease-name"></td>
+               
+                       <!-- 1차 ~ 6차 고정 -->
+                       <td th:each="dose, stat : ${doses}"
+                           th:if="${stat.index < 6}"
+                           th:with="key=${vaccine.vaccine_id + '_' + dose.dose_id},
+                                    record=${vaccineRecords.get(key)}"
+                           th:classappend="${record != null ? 'vaccine-empty saved' : 'vaccine-empty'}"
+                           th:data-vaccine-id="${vaccine.vaccine_id}"
+                           th:data-dose-id="${dose.dose_id}">
+               
+                           <!-- 저장된 데이터가 있으면 표시 -->
+                           <div th:if="${record != null}" class="vaccination-info" >
+                               <div class="hospital-name" th:text="${record.hospital}">병원명</div>
+                               <div class="vaccination-date" th:text="${record.vaccinated_date}">날짜</div>
+                               <div class="vaccine-name" th:text="${record.vaccine_product}">백신명</div>
+                           </div>
+                       </td>
+                   </tr>
+               </tbody>
                 </table>
-			</div>
+         </div>
             </div>
         </div>
     </div>
 
-	<!-- footer -->
-	<div th:replace="~{fragments/footer::footer}"></div>
+   <!-- footer -->
+   <div th:replace="~{fragments/footer::footer}"></div>
 
-	<!-- 모달 스크립트 -->
-	<div th:replace="~{fragments/header::modalScript}"></div>
+   <!-- 모달 스크립트 -->
+   <div th:replace="~{fragments/header::modalScript}"></div>
 
-	<!-- 카카오 맵 API -->
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=678d4ee39238b156ada265c491ad2c8c&libraries=services"></script>
-	
-	<script th:inline="javascript">
-	/*<![CDATA[*/
+   <!-- 카카오 맵 API -->
+   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=678d4ee39238b156ada265c491ad2c8c&libraries=services"></script>
+   
+   <script th:inline="javascript">
+   /*<![CDATA[*/
 
-	    // 메인 페이지 병원 선택
-	    function selectMainHospital(element, index) {
-	        console.log('선택된 병원 인덱스:', index);
-	    }
+       // 메인 페이지 병원 선택
+       function selectMainHospital(element, index) {
+           console.log('선택된 병원 인덱스:', index);
+       }
 
-	    // 메인 페이지 즐겨찾기 토글
-	    function toggleMainBookmark(event, index) {
-	        event.stopPropagation();
-	        const button = event.currentTarget;
-	        const icon = button.querySelector('i');
-	        
-	        if (icon.classList.contains('fa-solid')) {
-	            icon.classList.remove('fa-solid');
-	            icon.classList.add('fa-regular');
-	            console.log('즐겨찾기 해제:', index);
-	        } else {
-	            icon.classList.remove('fa-regular');
-	            icon.classList.add('fa-solid');
-	            console.log('즐겨찾기 추가:', index);
-	        }
-	    }
-	    
-	    // 자녀 선택 함수
-		// 자녀 선택 함수
-		function selectChild() {
-		    const select = document.getElementById('childSelect');
-		    const selectedIndex = select.value;
-		    
-		    sessionStorage.setItem('selectedChildIndex', selectedIndex);
-		    
-		    // 자녀 정보 변경
-		    const allChildren = document.querySelectorAll('.child-info');
-		    allChildren.forEach(child => {
-		        child.style.display = 'none';
-		    });
-		    
-		    const selectedChild = document.getElementById('child-info-' + selectedIndex);
-		    if (selectedChild) {
-		        selectedChild.style.display = 'block';
-		    }
-		    
-		    // 프로필 이미지 변경
-		    const selectedChildData = children[selectedIndex];
-		    const profileImage = document.querySelector('.main-profile-image');
-		    
-		    if (selectedChildData && selectedChildData.child_img) {
-		        profileImage.innerHTML = `<img src="${selectedChildData.child_img}" alt="프로필 사진" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-		    } else {
-		        profileImage.innerHTML = `<i class="fa-solid fa-child-reaching"></i>`;
-		    }
-		}
+       // 메인 페이지 즐겨찾기 토글
+       function toggleMainBookmark(event, index) {
+           event.stopPropagation();
+           const button = event.currentTarget;
+           const icon = button.querySelector('i');
+           
+           if (icon.classList.contains('fa-solid')) {
+               icon.classList.remove('fa-solid');
+               icon.classList.add('fa-regular');
+               console.log('즐겨찾기 해제:', index);
+           } else {
+               icon.classList.remove('fa-regular');
+               icon.classList.add('fa-solid');
+               console.log('즐겨찾기 추가:', index);
+           }
+       }
+       
+       // 자녀 선택 함수
+      // 자녀 선택 함수
+      function selectChild() {
+          const select = document.getElementById('childSelect');
+          const selectedIndex = select.value;
+          
+          sessionStorage.setItem('selectedChildIndex', selectedIndex);
+          
+          // 자녀 정보 변경
+          const allChildren = document.querySelectorAll('.child-info');
+          allChildren.forEach(child => {
+              child.style.display = 'none';
+          });
+          
+          const selectedChild = document.getElementById('child-info-' + selectedIndex);
+          if (selectedChild) {
+              selectedChild.style.display = 'block';
+          }
+          
+          // 프로필 이미지 변경
+          const selectedChildData = children[selectedIndex];
+          const profileImage = document.querySelector('.main-profile-image');
+          
+          if (selectedChildData && selectedChildData.child_img) {
+              profileImage.innerHTML = `<img src="${selectedChildData.child_img}" alt="프로필 사진" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+          } else {
+              profileImage.innerHTML = `<i class="fa-solid fa-child-reaching"></i>`;
+          }
+      }
 
-	    // 데이터 가져오기
-	    const children = /*[[${children}]]*/ [];
-	    const hasChild = /*[[${hasChild}]]*/ false;
-	    const userAddress = /*[[${userAddress}]]*/ "";
-	    const bookmarkedPlaceIds = /*[[${bookmarkedPlaceIds}]]*/ [];
+       // 데이터 가져오기
+       const children = /*[[${children}]]*/ [];
+       const hasChild = /*[[${hasChild}]]*/ false;
+       const userAddress = /*[[${userAddress}]]*/ "";
+       const bookmarkedPlaceIds = /*[[${bookmarkedPlaceIds}]]*/ [];
 
-	    // ⭐ DOMContentLoaded 하나로 통합
-	    document.addEventListener('DOMContentLoaded', function() {
-	        console.log('페이지 로드 완료');
-	        
-	        //  AI 추천 실행
-	        if (hasChild && children && children.length > 0) {
-	            getAIRecommendation();
-	        } else {
-	            console.log('자녀 정보가 없어 AI 추천을 건너뜁니다.');
-	        }
-	        
-	        //  근처 소아과 검색
-	        if (!userAddress || userAddress.trim().length === 0) {
-	            document.getElementById('nearbyHospitalList').innerHTML = 
-	                '<div class="empty-message"><p>로그인 후 근처 소아과를 확인할 수 있습니다.</p></div>';
-	        } else {
-	            searchNearbyHospitalsForMain(userAddress);
-	        }
-	    });
+       // ⭐ DOMContentLoaded 하나로 통합
+       document.addEventListener('DOMContentLoaded', function() {
+           console.log('페이지 로드 완료');
+           
+           //  AI 추천 실행
+           if (hasChild && children && children.length > 0) {
+               getAIRecommendation();
+           } else {
+               console.log('자녀 정보가 없어 AI 추천을 건너뜁니다.');
+           }
+           
+           //  근처 소아과 검색
+           if (!userAddress || userAddress.trim().length === 0) {
+               document.getElementById('nearbyHospitalList').innerHTML = 
+                   '<div class="empty-message"><p>로그인 후 근처 소아과를 확인할 수 있습니다.</p></div>';
+           } else {
+               searchNearbyHospitalsForMain(userAddress);
+           }
+       });
 
-	    // AI 추천 함수
-	    function getAIRecommendation() {
-	        if (!hasChild || !children || children.length === 0) {
-	            console.log('등록된 자녀가 없어 AI 추천을 건너뜁니다.');
-	            return;
-	        }
-	        
-	        const childId = children[0].child_id;
-	        console.log('AI 추천 요청 - Child ID:', childId);
-	        
-	        const aiText = document.querySelector('.main-ai-message');
-	        if (!aiText) {
-	            console.error('AI 추천 텍스트 영역을 찾을 수 없습니다.');
-	            return;
-	        }
-	        
-	        aiText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI가 추천을 생성하고 있습니다...';
-	        
-	        fetch(`/api/ai-recommendation/${childId}`)
-	            .then(response => {
-	                if (!response.ok) {
-	                    throw new Error('API 응답 오류: ' + response.status);
-	                }
-	                return response.json();
-	            })
-	            .then(data => {
-	                console.log('AI 추천 결과:', data);
-	                aiText.textContent = data.recommendation;
-	            })
-	            .catch(error => {
-	                console.error('AI 추천 오류:', error);
-	                aiText.textContent = '추천을 가져오는 중 오류가 발생했습니다.';
-	            });
-	    }
+       // AI 추천 함수
+       function getAIRecommendation() {
+           if (!hasChild || !children || children.length === 0) {
+               console.log('등록된 자녀가 없어 AI 추천을 건너뜁니다.');
+               return;
+           }
+           
+           const childId = children[0].child_id;
+           console.log('AI 추천 요청 - Child ID:', childId);
+           
+           const aiText = document.querySelector('.main-ai-message');
+           if (!aiText) {
+               console.error('AI 추천 텍스트 영역을 찾을 수 없습니다.');
+               return;
+           }
+           
+           aiText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI가 추천을 생성하고 있습니다...';
+           
+           fetch(`/api/ai-recommendation/${childId}`)
+               .then(response => {
+                   if (!response.ok) {
+                       throw new Error('API 응답 오류: ' + response.status);
+                   }
+                   return response.json();
+               })
+               .then(data => {
+                   console.log('AI 추천 결과:', data);
+                   aiText.textContent = data.recommendation;
+               })
+               .catch(error => {
+                   console.error('AI 추천 오류:', error);
+                   aiText.textContent = '추천을 가져오는 중 오류가 발생했습니다.';
+               });
+       }
 
-	    // 근처 소아과 검색 함수
-	    function searchNearbyHospitalsForMain(address) {
-	        const geocoder = new kakao.maps.services.Geocoder();
-	        
-	        geocoder.addressSearch(address, function(result, status) {
-	            if (status === kakao.maps.services.Status.OK) {
-	                const coords = {
-	                    lat: result[0].y,
-	                    lng: result[0].x
-	                };
-	                
-	                const ps = new kakao.maps.services.Places();
-	                
-	                ps.keywordSearch('소아과', function(data, status) {
-	                    if (status === kakao.maps.services.Status.OK) {
-	                        displayNearbyHospitals(data);
-	                    } else {
-	                        document.getElementById('nearbyHospitalList').innerHTML = 
-	                            '<div class="empty-message"><i class="fa-regular fa-hospital"></i><p>근처 소아과를 찾을 수 없습니다.</p></div>';
-	                    }
-	                }, {
-	                    location: new kakao.maps.LatLng(coords.lat, coords.lng),
-	                    radius: 2000,
-	                    size: 15
-	                });
-	            } else {
-	                document.getElementById('nearbyHospitalList').innerHTML = 
-	                    '<div class="empty-message"><i class="fa-regular fa-hospital"></i><p>주소 검색에 실패했습니다.</p></div>';
-	            }
-	        });
-	    }
+       // 근처 소아과 검색 함수
+       function searchNearbyHospitalsForMain(address) {
+           const geocoder = new kakao.maps.services.Geocoder();
+           
+           geocoder.addressSearch(address, function(result, status) {
+               if (status === kakao.maps.services.Status.OK) {
+                   const coords = {
+                       lat: result[0].y,
+                       lng: result[0].x
+                   };
+                   
+                   const ps = new kakao.maps.services.Places();
+                   
+                   ps.keywordSearch('소아과', function(data, status) {
+                       if (status === kakao.maps.services.Status.OK) {
+                           displayNearbyHospitals(data);
+                       } else {
+                           document.getElementById('nearbyHospitalList').innerHTML = 
+                               '<div class="empty-message"><i class="fa-regular fa-hospital"></i><p>근처 소아과를 찾을 수 없습니다.</p></div>';
+                       }
+                   }, {
+                       location: new kakao.maps.LatLng(coords.lat, coords.lng),
+                       radius: 2000,
+                       size: 15
+                   });
+               } else {
+                   document.getElementById('nearbyHospitalList').innerHTML = 
+                       '<div class="empty-message"><i class="fa-regular fa-hospital"></i><p>주소 검색에 실패했습니다.</p></div>';
+               }
+           });
+       }
 
-	    // 근처 소아과 화면에 표시
-	    function displayNearbyHospitals(hospitals) {
-	        const listContainer = document.getElementById('nearbyHospitalList');
-	        listContainer.innerHTML = '';
-	        
-	        if (hospitals.length === 0) {
-	            listContainer.innerHTML = '<div class="empty-message"><i class="fa-regular fa-hospital"></i><p>근처 소아과를 찾을 수 없습니다.</p></div>';
-	            return;
-	        }
-	        
-	        hospitals.forEach((hospital, index) => {
-	            const hospitalItem = document.createElement('div');
-	            hospitalItem.className = 'main-hospital-item';
-	            hospitalItem.onclick = function() {
-	                window.location.href = '/headerMenu/nearHospital';
-	            };
-	            
-	            const isBookmarked = bookmarkedPlaceIds.includes(String(hospital.id));
-	            
-	            hospitalItem.innerHTML = `
-	                <div class="main-hospital-header">
-	                    <div class="main-hospital-name">${hospital.place_name}</div>
-	                    <button class="main-bookmark-btn"
-	                            onclick="event.stopPropagation(); return false;">
-	                        <i class="fa-star ${isBookmarked ? 'fa-solid' : 'fa-regular'}"></i>
-	                    </button>
-	                </div>
-	                <div class="main-hospital-info">
-	                    <div><i class="fa-solid fa-location-dot"></i> ${hospital.address_name || hospital.road_address_name || '주소 정보 없음'}</div>
-	                    <div><i class="fa-solid fa-phone"></i> ${hospital.phone || '전화번호 정보 없음'}</div>
-	                </div>
-	            `;
-	            
-	            listContainer.appendChild(hospitalItem);
-	        });
-	    }
+       // 근처 소아과 화면에 표시
+       function displayNearbyHospitals(hospitals) {
+           const listContainer = document.getElementById('nearbyHospitalList');
+           listContainer.innerHTML = '';
+           
+           if (hospitals.length === 0) {
+               listContainer.innerHTML = '<div class="empty-message"><i class="fa-regular fa-hospital"></i><p>근처 소아과를 찾을 수 없습니다.</p></div>';
+               return;
+           }
+           
+           hospitals.forEach((hospital, index) => {
+               const hospitalItem = document.createElement('div');
+               hospitalItem.className = 'main-hospital-item';
+               hospitalItem.onclick = function() {
+                   window.location.href = '/headerMenu/nearHospital';
+               };
+               
+               const isBookmarked = bookmarkedPlaceIds.includes(String(hospital.id));
+               
+               hospitalItem.innerHTML = `
+                   <div class="main-hospital-header">
+                       <div class="main-hospital-name">${hospital.place_name}</div>
+                       <button class="main-bookmark-btn"
+                               onclick="event.stopPropagation(); return false;">
+                           <i class="fa-star ${isBookmarked ? 'fa-solid' : 'fa-regular'}"></i>
+                       </button>
+                   </div>
+                   <div class="main-hospital-info">
+                       <div><i class="fa-solid fa-location-dot"></i> ${hospital.address_name || hospital.road_address_name || '주소 정보 없음'}</div>
+                       <div><i class="fa-solid fa-phone"></i> ${hospital.phone || '전화번호 정보 없음'}</div>
+                   </div>
+               `;
+               
+               listContainer.appendChild(hospitalItem);
+           });
+       }
 
-	    // 즐겨찾기 병원 상세 페이지로 이동
-	    function goToBookmarkDetailFromElement(element) {
-	        const kakaoPlaceId = element.dataset.kakaoPlaceId;
-	        window.location.href = '/headerMenu/bookmark?selectedHospital=' + kakaoPlaceId;
-	    }
+       // 즐겨찾기 병원 상세 페이지로 이동
+       function goToBookmarkDetailFromElement(element) {
+           const kakaoPlaceId = element.dataset.kakaoPlaceId;
+           window.location.href = '/headerMenu/bookmark?selectedHospital=' + kakaoPlaceId;
+       }
 
-	/*]]>*/
-	</script>
+   /*]]>*/
+   </script>
 </body>
 </html>
