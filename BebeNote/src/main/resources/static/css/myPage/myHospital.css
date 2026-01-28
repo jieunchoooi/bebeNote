@@ -62,7 +62,6 @@
 	.myhospital-main-content {
 	    flex: 1;
 	    display: grid;
-	    grid-template-columns: 1fr 1fr;
 	    gap: 20px;
 	}
 	
@@ -148,8 +147,9 @@
 	/* ===== 병원 카드 스타일 (진료내역과 동일) ===== */
 	.myhospital-list {
 	    display: flex;
-	    flex-direction: column;
 	    gap: 15px;
+		flex-direction: row;
+		flex-wrap: wrap;
 	}
 	
 	.myhospital-item {
@@ -158,6 +158,8 @@
 	    padding: 20px;
 	    border: 2px solid #f5e0e0;
 	    transition: all 0.2s;
+		width: calc(50% - 7.5px);  
+		box-sizing: border-box;  
 	}
 	
 	.myhospital-item:hover {
@@ -244,6 +246,29 @@
 	    transform: translateY(-2px);
 	}
 	
+	.myhospital-list-section {
+	    max-height: 600px;        
+	    overflow-y: auto;      
+	    padding-right: 5px;       
+	}
+	
+	.myhospital-list-section::-webkit-scrollbar {
+	    width: 8px;
+	}
+
+	.myhospital-list-section::-webkit-scrollbar-track {
+	    background: #f5e0e0;
+	    border-radius: 4px;
+	}
+
+	.myhospital-list-section::-webkit-scrollbar-thumb {
+	    background: #deaaaa;
+	    border-radius: 4px;
+	}
+
+	.myhospital-list-section::-webkit-scrollbar-thumb:hover {
+	    background: #d19898;
+	}
 	/* ===== 진료내역 ===== */
 	.myhospital-history-list {
 	    display: flex;
